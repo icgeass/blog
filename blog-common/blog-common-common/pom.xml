@@ -203,7 +203,7 @@
             <artifactId>dubbo</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.6zeroq</groupId>
+            <groupId>com.zeroq6</groupId>
             <artifactId>sso-web-client</artifactId>
             <version>1.0.5</version>
         </dependency>
