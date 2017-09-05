@@ -1,0 +1,110 @@
+#set($layout='admin/layout/layout.vm')
+<div id="page-wrapper">
+    <form id="pageform" action="${request.contextPath}/admin/post" method="post">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">文章管理</h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default" style="border: 0;">
+                <div class="panel-body">
+                    <div class="row form-inline">
+                        <div class="col-xs-2 input-group">
+                            <span class="input-group-addon">编号</span>
+                            <input type="text" name="id" value="$!{postDomain.id}" maxlength="10" onchange='this.value = this.value.replace(/[^\d]*/gi,"")' class="form-control" >
+                        </div>
+                        <div class="col-xs-3 input-group">
+                            <span class="input-group-addon">标题</span>
+                            <input type="text" name="extendMap[titleLike]" value="$!{postDomain.extendMap.titleLike}"  onchange='this.value=this.value.replace(/(^\s*)|(\s*$)/gi,"")' class="form-control" >
+                        </div>
+                        <div class="col-xs-3 input-group">
+                            <span class="input-group-addon">内容</span>
+                            <input type="text" name="extendMap[contentLike]" value="$!{postDomain.extendMap.contentLike}"  onchange='this.value=this.value.replace(/(^\s*)|(\s*$)/gi,"")' class="form-control" >
+                        </div>
+                    </div>
+                    <div class="row form-inline">
+                        <div class="col-xs-3 input-group">
+                            <span class="input-group-addon">用户名</span>
+                            <input type="text" name="extendMap[usernameLike]" value="$!{postDomain.extendMap.usernameLike}"  onchange='this.value=this.value.replace(/(^\s*)|(\s*$)/gi,"")' class="form-control" >
+                        </div>
+                        <div class="col-xs-3 input-group">
+                            <span class="input-group-addon">文章类型</span>
+                            #emOptionAll('EmPostPostType', $!{postDomain.postType}, 'postType')
+                        </div>
+                        <div class="col-xs-2 input-group">
+                            <span class="input-group-addon">状态</span>
+                            #emOptionAll('EmPostStatus', $!{postDomain.status}, 'status')
+                        </div>
+                    </div>
+                    <div class="row form-inline">
+                        <div class="col-xs-3 input-group">
+                            <span class="input-group-addon">创建时间</span>
+                            <input type="text" name="extendMap[createdTimeBegin]" value="$!{postDomain.extendMap.createdTimeBegin}" class="form-control" id="createdTimeBegin" onfocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',lang:'zh-cn',skin:'twoer',maxDate:'#F{$dp.$D(\'createdTimeEnd\')}'})">
+                        </div>
+                        <div class="col-xs-3 input-group">
+                            <span class="input-group-addon">至</span>
+                            <input type="text" name="extendMap[createdTimeEnd]" value="$!{postDomain.extendMap.createdTimeEnd}" class="form-control" id="createdTimeEnd" onfocus="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',lang:'zh-cn',skin:'twoer',minDate:'#F{$dp.$D(\'createdTimeBegin\')}'})">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="button" id="query" name="query" class="btn btn-info">
+                                查询
+                            </button>
+                            <button type="button" id="create" name="create" class="btn btn-info">
+                                新增
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table width="100%" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th #sorting($!{postDomain}, 'id')>编号</th>
+                    <th #sorting($!{postDomain}, 'username')>用户名</th>
+                    <th #sorting($!{postDomain}, 'title')>标题</th>
+                    <th #sorting($!{postDomain}, 'content')>内容</th>
+                    <th #sorting($!{postDomain}, 'post_type')>文章类型</th>
+                    <th #sorting($!{postDomain}, 'status')>状态</th>
+                    <th #sorting($!{postDomain}, 'created_time')>创建时间</th>
+                    <th #sorting($!{postDomain}, 'modified_time')>修改时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+#foreach($!{item} in $!{page.data})
+                <tr>
+                    <td>$!{item.id}</td>
+                    <td>$!{item.username}</td>
+                    <td>$!{item.title}</td>
+                    <td>$!{item.extendMap.summary}</td>
+                    <td>#emTitle('EmPostPostType',$!{item.postType})</td>
+                    <td>#emTitle('EmPostStatus', $!{item.status})</td>
+                    <td>$DateUtils.format($!{item.createdTime})</td>
+                    <td>$DateUtils.format($!{item.modifiedTime})</td>
+                    <td>
+                        <a href="${request.contextPath}/post/show/$!{item.id}" target="_blank" class="btn btn-info">查看</a>
+                        <a href="${request.contextPath}/admin/post/edit/$!{item.id}" class="btn btn-warning">编辑</a>
+                        <a href="javascript:void(0);" class="btn btn-danger" onclick="del($!{item.id})">删除</a>
+                    </td>
+                </tr>
+#end
+                </tbody>
+            </table>
+            #showPageAdmin($!{page})
+        </div>
+    </div>
+    </form>
+</div>
+
+#initList('post')
+

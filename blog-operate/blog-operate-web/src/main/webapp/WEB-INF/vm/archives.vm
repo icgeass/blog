@@ -1,0 +1,17 @@
+#if($!{classify})
+<h1 class="label-title">正在查看 $!{classify} 下的文章</h1>
+#end
+<div class="post">
+    <div class="post-archive"><!--Use lodash to classify posts. See https://lodash.com/docs#groupBy-->
+#foreach($entry in $archiveMapList.entrySet())
+            <h2>$entry.key</h2>
+            <ul class="listing">
+#foreach($item in $entry.value)
+                <li><span class="date">$DateUtils.format($!{item.createdTime},'yyyy/MM/dd')</span><a
+                        href="${request.contextPath}/post/show/$!{item.id}" title="$!{item.title}" data-no-instant>$!{item.title}</a></li>
+#end
+            </ul>
+#end
+
+    </div>
+</div>

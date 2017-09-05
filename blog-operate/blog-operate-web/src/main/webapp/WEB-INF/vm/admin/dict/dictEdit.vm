@@ -1,0 +1,54 @@
+#set($layout='admin/layout/layout.vm')
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">字典编辑</h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <form id="pageform" class="form-inline" action="${request.contextPath}/admin/dict/save" method="post">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="dictType">字典类型：</label>
+                    #emOption('EmDictDictType', $!{dict.dictType}, 'dictType')
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="dictKey">字典键：</label>
+                    <input type="text" class="form-control" name="dictKey" value="$!{dict.dictKey}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="dictValue">字典值：</label>
+                    <input type="text" class="form-control" name="dictValue" value="$!{dict.dictValue}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="remark">备注：</label>
+                    <input type="text" class="form-control" name="remark" value="$!{dict.remark}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="hidden" name="id" value="$!{dict.id}">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    </form>
+</div>
+
+
+

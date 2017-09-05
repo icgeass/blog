@@ -1,0 +1,7 @@
+                <div class="post"><h1 class="post-title">$!{post.title}</h1>
+                    <div class="post-content">
+                        $!{post.extendMap.content}
+                    </div>
+#parse('layout/comment.vm')
+                </div>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>$!{title}</title>
+    <subtitle>$!{subtitle}</subtitle>
+    <link href="$!{atomUri}" rel="self"/>
+    <link href="$!{protocol}://$!{domain}"/>
+    <updated>$!{updated}</updated>
+    <id>$!{protocol}://$!{domain}</id>
+    <author>
+        <name>$!{username}</name>
+    </author>
+    <generator uri="$!{protocol}://$!{domain}">$!{username}</generator>
+#foreach($item in $postDomainList)
+    <entry>
+        <title>$!{item.title}</title>
+        <link href="$!{protocol}://$!{domain}$!{postUri}/$!{item.id}"/>
+        <id>$!{item.extendMap.url}</id>
+        <published>$!{item.extendMap.published}</published>
+        <updated>$!{item.extendMap.updated}</updated>
+        <content type="html"><![CDATA[$!{item.extendMap.content}]]></content>
+        <summary type="html">
+            <![CDATA[$!{item.extendMap.summary}]]>
+        </summary>
+        <category term="$!{item.extendMap.category.dictValue}" scheme="$!{protocol}://$!{domain}$!{categoryUri}/$!{item.extendMap.category.dictKey}"/>
+#foreach($entry in $item.extendMap.tags)
+        <category term="$!{entry.dictValue}" scheme="$!{protocol}://$!{domain}$!{tagUri}/$!{entry.dictKey}"/>
+#end
+    </entry>
+#end
+</feed>

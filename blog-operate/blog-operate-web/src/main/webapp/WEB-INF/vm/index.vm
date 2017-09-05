@@ -1,0 +1,13 @@
+#foreach($item in $page.data)
+                <div class="post">
+                    <h2 class="post-title"><a data-no-instant href="${request.contextPath}/post/show/${item.id}">${item.title}</a></h2>
+                    <div class="post-meta">$DateUtils.format($item.createdTime ,'yyyy年MM月dd日')</div>
+                    <div class="post-content">
+                        ${item.extendMap.contentSummary}
+                    </div>
+                    <p class="readmore"><a data-no-instant href="${request.contextPath}/post/show/${item.id}">阅读更多</a></p>
+                </div>
+#end
+#showPage($page)
+
+

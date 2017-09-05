@@ -1,0 +1,174 @@
+#*
+* 前台分页
+* *#
+#macro(showPage $page)
+#set($appendingNum = 2)
+#set($prefixAndSuffixNum = 1)
+    <nav class="page-navigator">
+#if($page && ${page.totalCount}>0)
+#if($page.hasPreviousPage)
+        <a class="extend prev" rel="prev" href="${request.contextPath}/post?page=$page.previousPage">上一页</a>
+#end
+#if($prefixAndSuffixNum >= 1 && $page.currentPage > $prefixAndSuffixNum)
+#foreach($i in [1..$prefixAndSuffixNum])
+        <a class="page-number" href="${request.contextPath}/post?page=$i">$i</a>
+#end
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 0 && $page.currentPage - 1 > $prefixAndSuffixNum + $appendingNum)
+        <a class="space">&hellip;</a>
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 1)
+#set($from = $prefixAndSuffixNum + 1)
+#set($to = $page.currentPage - 1)
+#foreach($i in [$from..$to])
+#if($i >= 0 && $i <= $page.pageCount && $to >= $from && $page.currentPage - $i <= $appendingNum)
+        <a class="page-number" href="${request.contextPath}/post?page=$i">$i</a>
+#end
+#end
+#end
+        <a class="page-number current">$page.currentPage</a>
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 1)
+#set($from = $page.currentPage + 1)
+#set($to = $page.currentPage + $appendingNum)
+#foreach($i in [$from..$to])
+#if($i >= 0 && $i <= $page.pageCount && $to >= $from && $i - $page.currentPage <= $appendingNum) ## 距离
+        <a class="page-number" href="${request.contextPath}/post?page=$i">$i</a>
+#end
+#end
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 0 && $page.pageCount - $page.currentPage > $prefixAndSuffixNum + $appendingNum)
+        <a class="space">&hellip;</a>
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 0)
+#set($from = $page.pageCount - $prefixAndSuffixNum + 1)
+#set($to = $page.pageCount)
+#foreach($i in [$from..$to])
+#if($i >= 0 && $i <= $page.pageCount && $to >= $from && $i > $page.currentPage + $appendingNum)
+        <a class="page-number" href="${request.contextPath}/post?page=$i">$i</a>
+#end
+#end
+#end
+#if($page.hasNextPage)
+        <a class="extend next" rel="next" href="${request.contextPath}/post?page=$page.nextPage">下一页</a>
+#end
+#else
+#end
+    </nav>
+#end
+
+#*
+* 后台分页
+* *#
+#macro(showPageAdmin $page)
+#set($appendingNum = 2)
+#set($prefixAndSuffixNum = 1)
+    <input type="hidden" id="currentPage" name="currentPage" value="1">
+    <nav aria-label="...">
+        <ul class="pagination">
+#if($page && ${page.totalCount}>0)
+#if($page.hasPreviousPage)
+        <li><a href="javascript:void(0);" onclick="submitPage($!{page.previousPage})" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+#end
+#if($prefixAndSuffixNum >= 1 && $page.currentPage > $prefixAndSuffixNum)
+#foreach($i in [1..$prefixAndSuffixNum])
+        <li><a href="javascript:void(0);" onclick="submitPage($!{i})">$i</a></li>
+#end
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 0 && $page.currentPage - 1 > $prefixAndSuffixNum + $appendingNum)
+        <li class="disabled"><a>&hellip;</a></li>
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 1)
+#set($from = $prefixAndSuffixNum + 1)
+#set($to = $page.currentPage - 1)
+#foreach($i in [$from..$to])
+#if($i >= 0 && $i <= $page.pageCount && $to >= $from && $page.currentPage - $i <= $appendingNum)
+        <li><a href="javascript:void(0);" onclick="submitPage($!{i})">$i</a></li>
+#end
+#end
+#end
+        <li class="active"><a href="javascript:void(0);">$page.currentPage</a></li>
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 1)
+#set($from = $page.currentPage + 1)
+#set($to = $page.currentPage + $appendingNum)
+#foreach($i in [$from..$to])
+#if($i >= 0 && $i <= $page.pageCount && $to >= $from && $i - $page.currentPage <= $appendingNum) ## 距离
+        <li><a href="javascript:void(0);" onclick="submitPage($!{i})">$i</a></li>
+#end
+#end
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 0 && $page.pageCount - $page.currentPage > $prefixAndSuffixNum + $appendingNum)
+        <li class="disabled"><a>&hellip;</a></li>
+#end
+#if($prefixAndSuffixNum >= 0 && $appendingNum >= 0)
+#set($from = $page.pageCount - $prefixAndSuffixNum + 1)
+#set($to = $page.pageCount)
+#foreach($i in [$from..$to])
+#if($i >= 0 && $i <= $page.pageCount && $to >= $from && $i > $page.currentPage + $appendingNum)
+        <li><a href="javascript:void(0);" onclick="submitPage($!{i})">$i</a></li>
+#end
+#end
+#end
+#if($page.hasNextPage)
+        <li><a href="javascript:void(0);" onclick="submitPage($page.nextPage)" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+#end
+        <li><a>共${page.totalCount}条记录&nbsp;&nbsp;&nbsp;共${page.pageCount}页&nbsp;&nbsp;每页&nbsp;<input type="text" id="pageSize" name="pageSize" value="${page.pageSize}" maxlength="10" class="text-center" style="max-height: 18px; max-width: 28px; padding: 0px; margin:0px;"/>&nbsp;条</a></li>
+#else
+#end
+        </ul>
+    </nav>
+#end
+
+#*
+* 枚举翻译
+* *#
+#macro(emTitle $classSimpleName $value)#set($flag=false)#set($obj=$EmUtils.values($classSimpleName))#foreach($em in $obj)#if($value == $em.value())#set($flag=true)$em.title()#break#end#end#if($flag == false)#end#end
+
+#*
+* 下拉框不带全部选项
+* *#
+#macro(emOption $classSimpleName $value $name)<select id='$name' name='$name' class='form-control' style='width:150px;'> #set($obj=$EmUtils.values($classSimpleName))#foreach($em in $obj)<option value='$em.value()' #if($value == $em.value()) selected #end>$em.title()</option>#end</select>#end
+
+#*
+* 下拉框带全部选项
+* *#
+#macro(emOptionAll $classSimpleName $value $name)<select id='$name' name='$name' class='form-control' style='width:150px;'> <option value=''>全部</option> #set($obj=$EmUtils.values($classSimpleName))#foreach($em in $obj)<option value='$em.value()' #if($value == $em.value()) selected #end>$em.title()</option>#end</select>#end
+
+#*
+* 排序
+* *#
+#macro(sorting $obj $field)#if($obj && $obj.orderField == $field) class="sorting_$obj.orderFieldType" data-orderFieldType="$obj.orderFieldType" #else class="sorting" data-orderFieldType="ASC" #end data-orderField="$field" #end
+
+
+#*
+* 表格初始化
+* postDomain => post
+* *#
+#macro(initList $domainName)
+<script type="text/javascript">
+    $(function () {
+        var form = $("#pageform");
+        if ($("#orderField").val() == null) {
+            form.append('<input type="hidden" id="orderField" name="orderField">');
+        }
+        if ($("#orderFieldType").val() == null) {
+            form.append('<input type="hidden" id="orderFieldType" name="orderFieldType">');
+        }
+        sortingTable();//列表排序
+        onEnterPageSizeClick();
+        $('#query').click(function () {
+            submitFun("pageform", "${request.contextPath}/admin/${domainName}");
+        });
+        $('#create').click(function () {
+            submitFun("pageform", "${request.contextPath}/admin/${domainName}/edit/0");
+        });
+    });
+
+    <!-- 删除函数 -->
+    function del(id) {
+        submitConfirmFun("pageform", "${request.contextPath}/admin/${domainName}/delete/" + id, "确定删除编号为" + id + "的数据？")
+    }
+</script>
+#end
+
+
+

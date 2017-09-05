@@ -1,0 +1,214 @@
+div.response-list > div.comment {
+    float: left;
+    margin-bottom: 1.5em
+}
+
+div.response-list#forum {
+    width: 50em
+}
+
+div.response-list > div.comment > div.author {
+    float: left;
+    width: 12em;
+    padding-right: 1em;
+    overflow: hidden
+}
+
+div.response-list > div.comment > div.author > h6 {
+    font-size: 1.3em;
+    margin: 0;
+    padding: 0
+}
+
+div.response-list > div.comment > div.content {
+    float: left;
+    width: 36em;
+    padding: 0 0 0 10px;
+    margin: 0
+}
+
+div.response-list > div.comment > div.content > div.post-footer {
+    margin-top: 1em;
+    color: #CCC
+}
+
+div.response-list > div.comment > div.content > div.post-footer a {
+    color: #666
+}
+
+div#comment-list > div.post .preview {
+    margin-bottom: 1em
+}
+
+div#comment-list > div.post > div.col1 {
+    width: 200px;
+    float: left;
+    clear: left
+}
+
+div#comment-list > div.post > div.col2 {
+    float: left;
+    width: 50em;
+    background-color: #333;
+    padding: 1px 4px 3px 4px;
+    margin-bottom: 1em
+}
+
+div#comment-list > div.post > div.col2 > div.header {
+    margin-bottom: 1em
+}
+
+div#comment-list > div.post > div.col2 > div.header > div > span.info {
+    margin-right: 1em
+}
+
+div#comment-list > div.post > div.col2 > div.header > div.tags > span {
+    margin: 0 0.5em 0 0
+}
+
+
+span.date {
+    color: #AAA
+}
+
+span.date a {
+    color: #AAA
+}
+
+.comment-avatar-container {
+    margin-top: .5em;
+    margin-left: .5em
+}
+
+.forum-avatar-container {
+    margin-top: .5em;
+    margin-left: .5em
+}
+
+ul.flat-list {
+    display: block;
+    margin: 0;
+    padding: 0
+}
+
+ul.flat-list {
+    display: block;
+    margin: 0;
+    padding: 0
+}
+
+ul.flat-list li {
+    display: inline;
+    list-style-type: none;
+    font-weight: bold;
+    padding: 0;
+    margin: 0 1em 0 0
+}
+
+ul.flat-list li a {
+    font-weight: normal
+}
+
+
+ul.flat-list li a.mod-pending {
+    font-weight: bold
+}
+
+
+ul.pipe-list {
+    display: inline
+}
+
+ul.pipe-list li + li:before {
+    content: "| ";
+    color: #CCC
+}
+
+ul.pipe-list li {
+    display: inline;
+    list-style-type: none;
+    margin: 0;
+    font-weight: normal
+}
+
+div.body .quote {
+    margin: 0 0 1em 0;
+    padding: 1em;
+    border: 1px solid #666;
+    background: rgba(252, 249, 249, 0.5);
+    word-wrap: break-word;
+    max-width: 75ch;
+    line-height:1.5
+}
+div.content .body {
+    word-wrap: break-word;
+    max-width: 75ch;
+    line-height:1.5
+}
+
+.quote p, .quote div {
+    margin-bottom: 0em
+}
+.submit {
+    display: block;
+    margin: 0 auto;
+    padding: 0 25px;
+    height: 36px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #999;
+    text-align: center;
+    line-height: 36px;
+    cursor: pointer;
+    -webkit-transition-duration: .4s;
+    transition-duration: .4s
+}
+
+
+.submit:active, .submit:active:focus, .submit:focus, .submit:hover {
+    outline-style: none;
+    border-color: #2479cc;
+    color: #2479cc
+}
+
+
+.form-control {
+    margin: 15px 0;
+    padding: 6px 9pt;
+    width: 100%;
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff
+}
+
+.form-control, output {
+    display: block;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.42857
+}
+
+.form-control:focus {
+    outline: 0;
+    border-color: #2479cc
+}
+
+textarea.form-control {
+    height: 10rem;
+    resize: none
+}
+
+
+.cancel-comment-reply, .comment-meta {
+    margin-top: 1rem;
+    color: #aaa;
+    font-size: .8rem
+}
+
+
+.response {
+    font-size: .9rem
+}
+

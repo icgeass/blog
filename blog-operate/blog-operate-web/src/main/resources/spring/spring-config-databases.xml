@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    		http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+       default-autowire="byName">
+
+    <!-- 不要修改，系统自动生成 -->
+
+    <tx:annotation-driven transaction-manager="tx" proxy-target-class="true"/>
+
+    <!-- BoneCP configuration -->
+    <bean id="abstractDataSource" abstract="true" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driver}" />
+        <property name="idleConnectionTestPeriodInMinutes" value="${jdbc.idleConnectionTestPeriod}" />
+        <property name="idleMaxAgeInMinutes" value="${jdbc.idleMaxAge}" />
+        <property name="maxConnectionsPerPartition" value="${jdbc.maxConnectionsPerPartition}" />
+        <property name="minConnectionsPerPartition" value="${jdbc.minConnectionsPerPartition}" />
+        <property name="partitionCount" value="${jdbc.partitionCount}" />
+        <property name="acquireIncrement" value="${jdbc.acquireIncrement}" />
+        <property name="statementsCacheSize" value="${jdbc.statementsCacheSize}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+    <bean id="masterDataSource" parent="abstractDataSource">
+        <property name="jdbcUrl" value="${jdbc.master.url}" />
+    </bean>
+
+    <bean id="slaveDataSource" parent="abstractDataSource">
+        <property name="jdbcUrl" value="${jdbc.slave.url}" />
+    </bean>
+    <!--动态数据源，选择主库或从库-->
+    <bean id="dataSource" class="com.zeroq6.common.datasource.DynamicDataSource">
+        <property name="masterDataSource" ref="masterDataSource" />
+        <property name="slaveDataSourceList">
+            <list>
+                <ref bean="slaveDataSource" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="tx" class="com.zeroq6.common.datasource.DynamicDataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 集成Mybatis -->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:spring/mybatis-config.xml" />
+        <property name="mapperLocations" value="classpath*:sqlmap/**/*.xml"/>
+        <property name="plugins">
+            <array>
+                <bean class="com.zeroq6.common.mybatis.MybatisSqlInterceptor"/>
+                <bean class="com.zeroq6.common.datasource.DynamicDataSourceInterceptor"/>
+            </array>
+        </property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.zeroq6.blog.common.dao,com.zeroq6.blog.operate.dao,com.zeroq6.blog.service.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory" />
+    </bean>
+
+    <bean id="sqlTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sessionFactory" />
+    </bean>
+    <bean id="batchSqlTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sessionFactory" />
+        <constructor-arg index="1" value="BATCH" />
+    </bean>
+
+</beans>

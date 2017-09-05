@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+    <tool>
+        <key>StringUtils</key>
+        <class>org.apache.commons.lang3.StringUtils</class>
+        <scope>application</scope>
+    </tool>
+    <tool>
+        <key>EmUtils</key>
+        <class>com.zeroq6.blog.common.enums.EnumUtils</class>
+        <scope>application</scope>
+    </tool>
+    <tool>
+        <key>MyStringUtils</key>
+        <class>com.zeroq6.common.utils.MyStringUtils</class>
+        <scope>application</scope>
+    </tool>
+    <tool>
+        <key>DateUtils</key>
+        <class>com.zeroq6.common.utils.MyDateUtils</class>
+        <scope>application</scope>
+    </tool>
+    <tool>
+        <key>LoginContextErp</key>
+        <class>com.zeroq6.common.web.LoginContextErp</class>
+        <scope>application</scope>
+    </tool>
+    <tool>
+        <key>DictUtils</key>
+        <class>com.zeroq6.blog.common.utils.DictUtils</class>
+        <scope>application</scope>
+    </tool>
+    <tool>
+        <key>FileUtils</key>
+        <class>com.zeroq6.blog.common.utils.FileUtils</class>
+        <scope>application</scope>
+    </tool>
+</toolbox>

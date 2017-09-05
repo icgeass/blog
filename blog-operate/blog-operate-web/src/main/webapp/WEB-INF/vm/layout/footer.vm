@@ -1,0 +1,20 @@
+    <a id="rocket" href="#top" class="show"></a>
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/totop.js?v=2.0.1" async></script>
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/jquery.fancybox.min.js?v=2.0.1" async></script>
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/fancybox.js?v=2.0.1" async></script>
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/jquery.fancybox.min.css?v=2.0.1">
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/codeblock-resizer.js?v=2.0.1"></script>
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/smartresize.js?v=2.0.1"></script>
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/js.cookie-2.1.4.min.js?v=2.0.1"></script>
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/comment.js?v=2.0.1"></script>
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/prism.js?v=2.0.1"></script>
+    <script src="//cdn.bootcss.com/instantclick/3.0.1/instantclick.min.js"></script>
+
+    <script data-no-instant>
+        InstantClick.on('change', function(isInitialLoad) {
+            if (isInitialLoad === false) {
+                if (typeof Prism !== 'undefined') Prism.highlightAll(true,null);
+            }
+        });
+        InstantClick.init();
+    </script>

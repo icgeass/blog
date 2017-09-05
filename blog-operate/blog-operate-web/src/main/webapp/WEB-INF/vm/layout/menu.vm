@@ -1,0 +1,27 @@
+    <div id="header">
+        <div class="site-name">
+            <h1 class="hidden">$!{title}</h1>
+            <a id="logo" href="${request.contextPath}/">$!{title}</a>
+            <p class="description">$!{subtitle}</p>
+        </div>
+        <div id="nav-menu">
+            <a href="${request.contextPath}/" #if($!{menu} == 'index') class="current"#end>
+                <i class="fa fa-home"> 首页</i>
+            </a>
+            <a href="${request.contextPath}/archives" #if($!{menu} == 'archives') class="current"#end>
+                <i class="fa fa-archive"> 归档</i>
+            </a>
+            <a href="${request.contextPath}/about" #if($!{menu} == 'about') class="current"#end>
+                <i class="fa fa-user"> 关于</i>
+            </a>
+            <a href="${request.contextPath}/history" #if($!{menu} == 'history') class="current"#end>
+                <i class="fa fa-book"> 历史</i>
+            </a>
+            <a href="${request.contextPath}/guestbook" #if($!{menu} == 'guestbook') class="current"#end>
+                <i class="fa fa-comments"> 留言</i>
+            </a>
+            <a href="${request.contextPath}/atom.xml" data-no-instant>
+                <i class="fa fa-rss"> 订阅</i>
+            </a>
+        </div>
+    </div>

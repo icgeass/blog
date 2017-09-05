@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeroq6.blog.common.dao.RelationDao">
+
+    <sql id="TABLE_T"><![CDATA[relation t]]></sql>
+
+    <sql id="TABLE"><![CDATA[relation]]></sql>
+
+    <sql id="SELECT_COLUMN_LIST">
+        <![CDATA[
+            t.id AS id, /*主键*/
+            t.type AS type, /*类型，1，文章标签，2，文章分类*/
+            t.parent_id AS parentId, /*父id*/
+            t.child_id AS childId, /*子id*/
+            t.remark AS remark, /*备注*/
+            t.modified_time AS modifiedTime, /*修改时间*/
+            t.created_time AS createdTime, /*创建时间*/
+            t.yn AS yn /*是否有效，1，有效，0，无效*/
+        ]]>
+    </sql>
+
+    <sql id="WHERE_CLAUSE_SELECT">
+        WHERE t.yn = 1
+        <if test="id != null">
+            <![CDATA[AND t.id = #{id}]]> /*主键*/
+        </if>
+        <if test="type != null">
+            <![CDATA[AND t.type = #{type}]]> /*类型，1，文章标签，2，文章分类*/
+        </if>
+        <if test="parentId != null and parentId.trim() != ''">
+            <![CDATA[AND t.parent_id = #{parentId}]]> /*父id*/
+        </if>
+        <if test="childId != null and childId.trim() != ''">
+            <![CDATA[AND t.child_id = #{childId}]]> /*子id*/
+        </if>
+        <if test="remark != null and remark.trim() != ''">
+            <![CDATA[AND t.remark = #{remark}]]> /*备注*/
+        </if>
+        <if test="modifiedTime != null">
+            <![CDATA[AND t.modified_time = #{modifiedTime}]]> /*修改时间*/
+        </if>
+        <if test="createdTime != null">
+            <![CDATA[AND t.created_time = #{createdTime}]]> /*创建时间*/
+        </if>
+        <if test="yn != null">
+            <![CDATA[AND t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/
+        </if>
+        <if test="extendMap!=null">
+            <if test="extendMap.parentIdLike!= null and extendMap.parentIdLike.trim() != ''">
+                <![CDATA[AND t.parent_id like concat('%',#{extendMap.parentIdLike},'%' )]]> /*父id*/
+            </if>
+            <if test="extendMap.childIdLike!= null and extendMap.childIdLike.trim() != ''">
+                <![CDATA[AND t.child_id like concat('%',#{extendMap.childIdLike},'%' )]]> /*子id*/
+            </if>
+            <if test="extendMap.remarkLike!= null and extendMap.remarkLike.trim() != ''">
+                <![CDATA[AND t.remark like concat('%',#{extendMap.remarkLike},'%' )]]> /*备注*/
+            </if>
+            <if test="extendMap.modifiedTimeBegin!= null and extendMap.modifiedTimeBegin != ''">
+                <![CDATA[AND t.modified_time >= STR_TO_DATE(#{extendMap.modifiedTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*修改时间开始*/
+            </if>
+            <if test="extendMap.modifiedTimeEnd!= null and extendMap.modifiedTimeEnd != ''">
+                <![CDATA[AND t.modified_time <= STR_TO_DATE(#{extendMap.modifiedTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*修改时间结束*/
+            </if>
+            <if test="extendMap.createdTimeBegin!= null and extendMap.createdTimeBegin != ''">
+                <![CDATA[AND t.created_time >= STR_TO_DATE(#{extendMap.createdTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*创建时间开始*/
+            </if>
+            <if test="extendMap.createdTimeEnd!= null and extendMap.createdTimeEnd != ''">
+                <![CDATA[AND t.created_time <= STR_TO_DATE(#{extendMap.createdTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*创建时间结束*/
+            </if>
+            <if test="extendMap.idIn!= null">
+                <![CDATA[AND t.id in ]]>
+                <foreach item="item" index="index" collection="extendMap.idIn" open="(" separator="," close=")">
+                  #{item}
+                </foreach>
+            </if>
+            <if test="extendMap.typeIn!= null">
+                <![CDATA[AND t.type in ]]>
+                <foreach item="item" index="index" collection="extendMap.typeIn" open="(" separator="," close=")">
+                  #{item}
+                </foreach>
+            </if>
+            <!--自定义开始 -->
+
+            <!--自定义结束 -->
+        </if>
+    </sql>
+
+    <sql id="WHERE_CLAUSE_UPDATE">
+        <!--如果extendMap或where为空，则mybatis解析表达式空指针，执行不了-->
+        WHERE t.yn = 1
+        <if test="extendMap.where.id!= null">
+            <![CDATA[AND t.id = #{extendMap.where.id}]]> /*主键*/
+        </if>
+        <if test="extendMap.where.type!= null">
+            <![CDATA[AND t.type = #{extendMap.where.type}]]> /*类型，1，文章标签，2，文章分类*/
+        </if>
+        <if test="extendMap.where.parentId!= null and extendMap.where.parentId.trim() != ''">
+            <![CDATA[AND t.parent_id = #{extendMap.where.parentId}]]> /*父id*/
+        </if>
+        <if test="extendMap.where.childId!= null and extendMap.where.childId.trim() != ''">
+            <![CDATA[AND t.child_id = #{extendMap.where.childId}]]> /*子id*/
+        </if>
+        <if test="extendMap.where.remark!= null and extendMap.where.remark.trim() != ''">
+            <![CDATA[AND t.remark = #{extendMap.where.remark}]]> /*备注*/
+        </if>
+        <if test="extendMap.where.modifiedTime!= null">
+            <![CDATA[AND t.modified_time = #{extendMap.where.modifiedTime}]]> /*修改时间*/
+        </if>
+        <if test="extendMap.where.createdTime!= null">
+            <![CDATA[AND t.created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
+        </if>
+        <if test="extendMap.where.yn!= null">
+            <![CDATA[AND t.yn = #{extendMap.where.yn}]]> /*是否有效，1，有效，0，无效*/
+        </if>
+    </sql>
+
+    <!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+    <sql id="UPDATE_COLUMN_SET">
+        <set>
+            <if test="type!= null">
+                <![CDATA[ t.type = #{type}]]> /*类型，1，文章标签，2，文章分类*/,
+            </if>
+            <if test="parentId!= null and parentId.trim() != ''">
+                <![CDATA[ t.parent_id = #{parentId}]]> /*父id*/,
+            </if>
+            <if test="childId!= null and childId.trim() != ''">
+                <![CDATA[ t.child_id = #{childId}]]> /*子id*/,
+            </if>
+            <if test="remark!= null and remark.trim() != ''">
+                <![CDATA[ t.remark = #{remark}]]> /*备注*/,
+            </if>
+            <if test="modifiedTime!= null">
+                <![CDATA[ t.modified_time = #{modifiedTime}]]> /*修改时间*/,
+            </if>
+            <if test="createdTime!= null">
+                <![CDATA[ t.created_time = #{createdTime}]]> /*创建时间*/,
+            </if>
+            <if test="yn!= null">
+                <![CDATA[ t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/,
+            </if>
+        </set>
+    </sql>
+
+
+    <!-- 智能排序与分页 -->
+    <sql id="QUERY_ORDER_LIMIT_CONDITION">
+        <if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+        <if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
+    </sql>
+
+
+    <sql id="INSERT_COLUMN"><if test="type != null ">type,</if><if test="parentId != null and parentId.trim() != ''">parent_id,</if><if test="childId != null and childId.trim() != ''">child_id,</if><if test="remark != null and remark.trim() != ''">remark,</if><if test="modifiedTime != null ">modified_time,</if><if test="createdTime != null ">created_time,</if><if test="yn != null ">yn</if></sql>
+
+    <sql id="INSERT_COLUMN_VALUES"><if test="type != null ">#{type},</if><if test="parentId != null and parentId.trim() != ''">#{parentId},</if><if test="childId != null and childId.trim() != ''">#{childId},</if><if test="remark != null and remark.trim() != ''">#{remark},</if><if test="modifiedTime != null ">#{modifiedTime},</if><if test="createdTime != null ">#{createdTime},</if><if test="yn != null ">#{yn}</if></sql>
+
+    <insert id="insert" parameterType="com.zeroq6.blog.common.domain.RelationDomain">
+        INSERT INTO <include refid="TABLE"/>
+        (
+          <include refid="INSERT_COLUMN"/>
+        )
+        VALUES
+        (
+        <include refid="INSERT_COLUMN_VALUES"/>
+        )
+    </insert>
+
+    <insert id="insertFillingId" parameterType="com.zeroq6.blog.common.domain.RelationDomain" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO <include refid="TABLE"/>
+        (
+        <include refid="INSERT_COLUMN"/>
+        )
+        VALUES
+        (
+        <include refid="INSERT_COLUMN_VALUES"/>
+        )
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO <include refid="TABLE"/>
+        (
+        type,parent_id,child_id,remark,modified_time,created_time,yn
+        )
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.type},#{item.parentId},#{item.childId},#{item.remark},#{item.modifiedTime},#{item.createdTime},#{item.yn})
+        </foreach>
+
+    </insert>
+
+    <select id="selectByKey" parameterType="long" resultType="com.zeroq6.blog.common.domain.RelationDomain">
+        SELECT
+        <include refid="SELECT_COLUMN_LIST"/>
+        FROM
+        <include refid="TABLE_T"/>
+        WHERE t.yn = 1 AND t.id = #{id}
+    </select>
+
+    <select id="selectList" parameterType="com.zeroq6.blog.common.domain.RelationDomain" resultType="com.zeroq6.blog.common.domain.RelationDomain">
+        SELECT
+        <include refid="SELECT_COLUMN_LIST"/>
+        FROM
+        <include refid="TABLE_T"/>
+        <include refid="WHERE_CLAUSE_SELECT"/>
+        <include refid="QUERY_ORDER_LIMIT_CONDITION"/>
+    </select>
+
+    <select id="selectListCount" parameterType="com.zeroq6.blog.common.domain.RelationDomain" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        <include refid="TABLE_T"/>
+        <include refid="WHERE_CLAUSE_SELECT"/>
+    </select>
+
+    <update id="updateByKey" parameterType="com.zeroq6.blog.common.domain.RelationDomain" >
+        UPDATE <include refid="TABLE_T"/>
+        <include refid="UPDATE_COLUMN_SET"/>
+        WHERE t.yn = 1 AND t.id = #{id}
+    </update>
+
+    <update id="updateByCondition" parameterType="com.zeroq6.blog.common.domain.RelationDomain">
+        UPDATE <include refid="TABLE_T"/>
+        <include refid="UPDATE_COLUMN_SET"/>
+        <include refid="WHERE_CLAUSE_UPDATE"/>
+    </update>
+
+    <update id="disableByKey" parameterType="long">
+        UPDATE <include refid="TABLE_T"/>
+        SET t.yn = 0
+        WHERE t.yn = 1 AND t.id = #{_parameter}
+    </update>
+
+    <update id="disableByCondition" parameterType="com.zeroq6.blog.common.domain.RelationDomain">
+        UPDATE <include refid="TABLE_T"/>
+        SET t.yn = 0
+        <include refid="WHERE_CLAUSE_SELECT"/> AND t.yn = 1
+    </update>
+
+
+    <!--系统生成结束,请勿修改,重新生成会覆盖 -->
+    <!--自定义开始 -->
+
+    <!--自定义结束 -->
+</mapper>

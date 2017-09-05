@@ -1,0 +1,84 @@
+#set($layout='admin/layout/layout.vm')
+<link rel="stylesheet" href="${request.contextPath}/static/admin/vendor/mditor/mditor.min.css"/>
+<link rel="stylesheet" href="${request.contextPath}/static/admin/vendor/multiselect/bootstrap-multiselect.css"/>
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">文章编辑</h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <form id="pageform" class="form-inline" action="${request.contextPath}/admin/post/save" method="post">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="title">标题：</label>
+                    <input type="text" class="form-control" id="title" name="title" value="$!{post.title}" placeholder="请输入标题...">
+                </div>
+            </div>
+        </div>
+#if(!$!{post} || $!{post.postType} == 1)
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="tags">标签：</label>
+                    <select id="tags" name="extendMap[tags]" multiple="multiple">
+#foreach($item in $tagsAll)
+                            <option value="$item.id" #if($DictUtils.contains($tags, $item))selected#end>$item.dictValue</option>
+#end
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="category">分类：</label>
+                    <select id="category" name="extendMap[category]">
+#foreach($item in $categoryAll)
+                            <option value="$item.id" #if($DictUtils.contains($category, $item))selected#end>$item.dictValue</option>
+#end
+                    </select>
+                </div>
+            </div>
+        </div>
+#end
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="postType">文章类型：</label>
+                    #emOption('EmPostPostType', $!{post.postType}, 'postType')
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="hidden" name="id" value="$!{post.id}">
+                <textarea name="content" id="content">$!{post.content}</textarea>
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    </form>
+</div>
+<script src="${request.contextPath}/static/admin/vendor/multiselect/bootstrap-multiselect.js"></script>
+<script src="${request.contextPath}/static/admin/vendor/mditor/mditor.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // http://davidstutz.github.io/bootstrap-multiselect/
+        $('#tags').multiselect();
+        $('#category').multiselect();
+        $('#postType').multiselect();
+
+        // https://github.com/houfeng/mditor
+        var mditor = Mditor.fromTextarea(document.getElementById('content'));
+
+        //获取或设置编辑器的值
+        mditor.on('ready', function () {
+            console.log(mditor.value);
+            mditor.value = '** hello **';
+        });
+    });
+</script>

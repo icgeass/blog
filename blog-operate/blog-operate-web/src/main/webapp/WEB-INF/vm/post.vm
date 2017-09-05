@@ -1,0 +1,30 @@
+#if($!{post})
+                <div class="post">
+                    <h1 class="post-title">$!{post.title}</h1>
+                    <div class="post-meta">$DateUtils.format($!{post.createdTime}, 'MMM dd, yyyy')<span> | </span><span class="category"><a href="${request.contextPath}/categories/$!{category.dictKey}">$!{category.dictValue}</a></span></div>
+                    <a href="#comments" class="disqus-comment-count">$!{post.extendMap.commentCount}条评论</a>
+                    <div class="post-content">
+                        $!{post.extendMap.content}
+                    </div>
+                    <script type="text/javascript" src="${request.contextPath}/static/default/js/share.js?v=1.5.0" async></script>
+                    <a data-url="${request.contextPath}/post/show/$!{post.id}" class="article-share-link">分享到</a>
+                    <div class="tags">
+#if($!{tags})
+#foreach($item in $tags)
+                        <a href="${request.contextPath}/tags/$!{item.dictKey}">$!{item.dictValue}</a>
+#end
+#end
+                    </div>
+                    <div class="post-nav">
+#if($!{prev})
+                        <a href="${request.contextPath}/post/show/$!{prev.id}" class="pre">$!{prev.title}</a>
+#end
+#if($!{next})
+                        <a href="${request.contextPath}/post/show/$!{next.id}" class="next">$!{next.title}</a>
+#end
+                    </div>
+                    <div class="post-nav">
+                    </div>
+#parse('layout/comment.vm')
+                </div>
+#end

@@ -1,0 +1,20 @@
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta name="description" content="$!{title} | $!{subtitle}">
+    <meta name="google-site-verification" content="">
+    <title>#if($!{categoryTitle})$!{categoryTitle} |#end $!{title}</title>
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/style.css?v=2.0.1">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/comment.css?v=2.0.1">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/prism.css?v=2.0.1">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/normalize.min.css?v=2.0.1">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/pure-min.css?v=2.0.1">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/grids-responsive-min.css?v=2.0.1">
+    <link rel="stylesheet" href="${request.contextPath}/static/default/vendor/font-awesome/css/font-awesome.css">
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/jquery.min.js?v=2.0.1"></script>
+    <link rel="Shortcut Icon" type="image/x-icon" href="${request.contextPath}/favicon.ico">
+    <link rel="apple-touch-icon" href="${request.contextPath}/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="${request.contextPath}/apple-touch-icon.png">
+    <link rel="alternate" type="application/atom+xml" href="${request.contextPath}/atom.xml">
