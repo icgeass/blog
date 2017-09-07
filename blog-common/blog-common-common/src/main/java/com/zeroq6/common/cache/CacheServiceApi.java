@@ -1,9 +1,6 @@
+
 package com.zeroq6.common.cache;
 
-/**
- * @author icgeass@hotmail.com
- * @date 2017-05-17
- */
 public interface CacheServiceApi {
 
 
@@ -18,12 +15,5 @@ public interface CacheServiceApi {
 
     boolean remove(String key) throws Exception;
 
-    Long hset(String key, String field, String value) throws Exception;
-
-    Long hset(String key, String field, String value, int expiredInSeconds) throws Exception;
-
-    String hget(String key, String field) throws Exception;
-
-    Long hdel(String key, String... fields) throws Exception;
 
 }

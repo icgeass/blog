@@ -2,20 +2,17 @@ package com.zeroq6.common.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * 连接池和连接池配置整个应用只有一份，每个线程只持有一个资源，线程结束时自动关闭
- *
+ * <p>
  * Created by yuuki asuna on 2016/10/20.
  */
-/**
- * @author icgeass@hotmail.com
- * @date 2017-05-17
- */
-public class RedisService implements CacheServiceApi {
+public class RedisCacheService implements CacheServiceApi, InitializingBean {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -23,7 +20,7 @@ public class RedisService implements CacheServiceApi {
     /**
      * 写入成功redis返回
      */
-    private final static String OK = "OK";
+    private final static String OK = "OK" ;
 
     private static ThreadLocal<Jedis> jedisThreadLocal = new ThreadLocal<Jedis>();
 
@@ -32,21 +29,21 @@ public class RedisService implements CacheServiceApi {
     private static JedisPool jedisPool;
 
 
-    private int expiredInSeconds = DEFAULT_EXPIRED_IN_SECONDS;
+    private Integer expiredInSeconds = DEFAULT_EXPIRED_IN_SECONDS;
 
-    private String host = "127.0.0.1";
+    private String host;
 
-    private int port = 6379;
+    private Integer port;
 
-    private int minIdle = 5;
-    private int maxIdle = 8;
+    private Integer minIdle;
+    private Integer maxIdle;
 
-    private int maxTotal = 40;
+    private Integer maxTotal;
 
-    private int maxWaitMillis = 5 * 1000;
+    private Integer maxWaitMillis;
 
 
-    public RedisService() {
+    public RedisCacheService() {
 
     }
 
@@ -79,44 +76,28 @@ public class RedisService implements CacheServiceApi {
     }
 
     /**
-        * 获得一个连接实例
-        *
-        * @return
-        */
+     * 获得一个连接实例
+     *
+     * @return
+     */
     public Jedis getResource() {
-        if (null == jedisPool) {
-            jedisPoolConfig = new JedisPoolConfig();
-            // 连接池配置
-            jedisPoolConfig.setMinIdle(minIdle);
-            jedisPoolConfig.setMaxIdle(maxIdle);
-            jedisPoolConfig.setMaxTotal(maxTotal);
-            jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-            // 如果线程池满阻塞则等待
-            jedisPoolConfig.setBlockWhenExhausted(true);
-            // 测试实例是否可用
-            jedisPoolConfig.setTestOnBorrow(true);
-            jedisPoolConfig.setTestOnCreate(true);
-            jedisPoolConfig.setTestOnReturn(true);
-            // 扫描空闲实例是否有效，如果验证失败则销毁，setTimeBetweenEvictionRunsMillis必须大于0才有效
-            jedisPoolConfig.setTestWhileIdle(true);
-            // 扫描空闲实例是否有效的时间间隔，毫秒
-            jedisPoolConfig.setTimeBetweenEvictionRunsMillis(120 * 1000);
-            jedisPool = new JedisPool(jedisPoolConfig, host, port);
-        }
         if (null == jedisThreadLocal.get()) {
             final Jedis jedis = jedisPool.getResource();
             final Thread targetThread = Thread.currentThread();
             jedisThreadLocal.set(jedis);
+            // 这种方式如果获取资源的链接不关闭，比如说线程池，那边始终无法归还资源
             new Thread() {
                 @Override
                 public void run() {
                     try {
+                        logger.info("监听归还redis链接, " + targetThread.getName());
                         targetThread.join();
                     } catch (Exception e) {
                         logger.error("加入线程阻塞失败", e);
                     } finally {
                         try {
                             returnResource(jedis);
+                            logger.info("归还redis链接成功, " + targetThread.getName());
                         } catch (Exception e) {
                             logger.error("归还redis连接失败", e);
                         }
@@ -130,7 +111,7 @@ public class RedisService implements CacheServiceApi {
     /**
      * 归还连接实例
      */
-    public void returnResource(Jedis jedis) {
+    private void returnResource(Jedis jedis) {
         // 方法jedisPool.returnResource(jedis); 已被弃用
         if (null != jedis) {
             jedis.close();
@@ -139,7 +120,6 @@ public class RedisService implements CacheServiceApi {
 
     /**
      * 当系统关闭时调用，可在spring中配置
-     *
      */
     public void destroy() {
         jedisPool.destroy();
@@ -167,24 +147,29 @@ public class RedisService implements CacheServiceApi {
         return getResource().del(key) > 0;
     }
 
-    @Override
-    public Long hset(String key, String field, String value) throws Exception {
-        throw new RuntimeException("No implements");
-    }
 
     @Override
-    public Long hset(String key, String field, String value, int expiredInSeconds) throws Exception {
-        throw new RuntimeException("No implements");
+    public void afterPropertiesSet() throws Exception {
+        jedisPoolConfig = new JedisPoolConfig();
+        // 连接池配置
+        jedisPoolConfig.setMinIdle(minIdle);
+        jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMaxTotal(maxTotal);
+        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
+        // 如果线程池满阻塞则等待
+        jedisPoolConfig.setBlockWhenExhausted(true);
+        // 测试实例是否可用
+        jedisPoolConfig.setTestOnBorrow(true);
+        jedisPoolConfig.setTestOnCreate(false);
+        jedisPoolConfig.setTestOnReturn(false);
+        // 扫描空闲实例是否有效，如果验证失败则销毁，setTimeBetweenEvictionRunsMillis必须大于0才有效
+        jedisPoolConfig.setTestWhileIdle(true);
+        // 扫描空闲实例是否有效的时间间隔，毫秒
+        jedisPoolConfig.setTimeBetweenEvictionRunsMillis(120 * 1000);
+        // 每次扫描空闲对象的次数
+        jedisPoolConfig.setNumTestsPerEvictionRun(10);
+        // 最小空闲对象保留时间
+        jedisPoolConfig.setMinEvictableIdleTimeMillis(60 * 1000);
+        jedisPool = new JedisPool(jedisPoolConfig, host, port);
     }
-
-    @Override
-    public String hget(String key, String field) throws Exception {
-        throw new RuntimeException("No implements");
-    }
-
-    @Override
-    public Long hdel(String key, String... fields) throws Exception {
-        throw new RuntimeException("No implements");
-    }
-
 }

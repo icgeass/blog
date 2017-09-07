@@ -2,6 +2,7 @@ package com.zeroq6.blog.operate.web.controller.admin;
 
 import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.common.enums.field.EmDictDictType;
+import com.zeroq6.blog.common.enums.field.EmPostPostType;
 import com.zeroq6.blog.common.utils.PostUtils;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.PostManager;
@@ -67,8 +68,12 @@ public class AdminPostController {
 
     @RequestMapping("/save")
     public String save(PostDomain postDomain, Model view) {
-        List<String> tags = Arrays.asList(MyStringUtils.toStringArray(postDomain.get("tags")));
-        String category = (String)postDomain.get("category");
+        List<String> tags = null;
+        String category = null;
+        if(postDomain.getPostType() != EmPostPostType.LIUYAN.value()){
+            tags = Arrays.asList(MyStringUtils.toStringArray(postDomain.get("tags")));
+            category = (String)postDomain.get("category");
+        }
         if(null == postDomain.getId() || postDomain.getId() <= 0L){
             postService.addPost(postDomain, tags, category);
         }else{
