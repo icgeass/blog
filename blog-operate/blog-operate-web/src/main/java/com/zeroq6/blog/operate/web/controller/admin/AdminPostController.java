@@ -18,7 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +71,10 @@ public class AdminPostController {
         List<String> tags = null;
         String category = null;
         if(postDomain.getPostType() != EmPostPostType.LIUYAN.value()){
-            tags = Arrays.asList(MyStringUtils.toStringArray(postDomain.get("tags")));
+            tags = new ArrayList<String>();
+            for(String tag : MyStringUtils.toStringArray(postDomain.get("tags"))){
+                tags.add(tag);
+            }
             category = (String)postDomain.get("category");
         }
         if(null == postDomain.getId() || postDomain.getId() <= 0L){

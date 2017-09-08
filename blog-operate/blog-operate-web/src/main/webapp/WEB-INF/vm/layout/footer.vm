@@ -10,11 +10,11 @@
     <script type="text/javascript" src="${request.contextPath}/static/default/js/prism.js?v=$!{version}"></script>
     <script type="text/javascript" src="${request.contextPath}/static/default/js/instantclick.min.js?v=$!{version}"></script>
 
-    <script data-no-instant>
+#*    <script data-no-instant>
         InstantClick.on('change', function(isInitialLoad) {
             if (isInitialLoad === false) {
                 if (typeof Prism !== 'undefined') Prism.highlightAll(true,null);
             }
         });
         InstantClick.init();
-    </script>
+    </script>*#
