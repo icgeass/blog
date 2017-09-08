@@ -6,14 +6,14 @@
     <meta name="description" content="$!{title} | $!{subtitle}">
     <meta name="google-site-verification" content="">
     <title>#if($!{categoryTitle})$!{categoryTitle} |#end $!{title}</title>
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/style.css?v=2.0.1">
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/comment.css?v=2.0.1">
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/prism.css?v=2.0.1">
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/normalize.min.css?v=2.0.1">
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/pure-min.css?v=2.0.1">
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/grids-responsive-min.css?v=2.0.1">
-    <link rel="stylesheet" href="${request.contextPath}/static/default/vendor/font-awesome/css/font-awesome.css">
-    <script type="text/javascript" src="${request.contextPath}/static/default/js/jquery.min.js?v=2.0.1"></script>
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/style.css?v=$!{version}">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/comment.css?v=$!{version}">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/prism.css?v=$!{version}">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/normalize.min.css?v=$!{version}">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/pure-min.css?v=$!{version}">
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/default/css/grids-responsive-min.css?v=$!{version}">
+    <link rel="stylesheet" href="${request.contextPath}/static/default/vendor/font-awesome/css/font-awesome.css?v=$!{version}">
+    <script type="text/javascript" src="${request.contextPath}/static/default/js/jquery.min.js?v=$!{version}"></script>
     <link rel="Shortcut Icon" type="image/x-icon" href="${request.contextPath}/favicon.ico">
     <link rel="apple-touch-icon" href="${request.contextPath}/apple-touch-icon.png">
     <link rel="apple-touch-icon-precomposed" href="${request.contextPath}/apple-touch-icon.png">

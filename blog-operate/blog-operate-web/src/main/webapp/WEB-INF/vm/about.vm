@@ -25,7 +25,7 @@
                             Twitter: <a href="https://twitter.com/$!{twitter}" target="_blank" rel="external">@$!{twitter}</a>
                         </p>
 #end
-                        <iframe src="${request.contextPath}/static/default/donate-page/simple/index.html?item=easy-select-style" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; height:190px; width:310px"
+                        <iframe src="${request.contextPath}/static/default/donate-page/simple/index.html?item=easy-select-style&v=$!{version}" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; height:190px; width:310px"
                                 frameborder="0" scrolling="no">
                         </iframe>
                     </div>

@@ -6,7 +6,7 @@
                     <div class="post-content">
                         $!{post.extendMap.content}
                     </div>
-                    <script type="text/javascript" src="${request.contextPath}/static/default/js/share.js?v=1.5.0" async></script>
+                    <script type="text/javascript" src="${request.contextPath}/static/default/js/share.js?v=$!{version}" async></script>
                     <a data-url="${request.contextPath}/post/show/$!{post.id}" class="article-share-link">分享到</a>
                     <div class="tags">
 #if($!{tags})
