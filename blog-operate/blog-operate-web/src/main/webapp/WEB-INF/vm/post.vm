@@ -1,3 +1,5 @@
+<script src="${request.contextPath}/static/default/js/jr-qrcode.js"></script>
+
 #if($!{post})
                 <div class="post">
                     <h1 class="post-title">$!{post.title}</h1>
@@ -7,7 +9,7 @@
                         $!{post.extendMap.content}
                     </div>
                     <script type="text/javascript" src="${request.contextPath}/static/default/js/share.js?v=$!{version}" async></script>
-                    <a data-url="${request.contextPath}/post/show/$!{post.id}" class="article-share-link">分享到</a>
+                    <a data-url="$!{protocol}://$!{domain}${request.contextPath}/post/show/$!{post.id}" data-id="$!{post.id}" class="article-share-link">分享到</a>
                     <div class="tags">
 #if($!{tags})
 #foreach($item in $tags)
@@ -28,3 +30,11 @@
 #parse('layout/comment.vm')
                 </div>
 #end
+
+<script type="text/javascript">
+    var share = $('.article-share-link');
+    share.attr('data-qrcode', jrQrcode.getQrBase64(share.attr('data-url',{width:202,height:202})));
+
+</script>
+
+

@@ -13,10 +13,6 @@
 
     <packaging>pom</packaging>
 
-    <properties>
-        <project.domain>operate.6zeroq.com</project.domain>
-    </properties>
-
     <modules>
         <module>blog-operate-api</module>
         <module>blog-operate-dao</module>
