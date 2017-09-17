@@ -14,7 +14,7 @@
     <entry>
         <title>$!{item.title}</title>
         <link href="$!{protocol}://$!{domain}$!{postUri}/$!{item.id}"/>
-        <id>$!{item.extendMap.url}</id>
+        <id>$!{protocol}://$!{domain}$!{postUri}/$!{item.id}</id>
         <published>$!{item.extendMap.published}</published>
         <updated>$!{item.extendMap.updated}</updated>
         <content type="html"><![CDATA[$!{item.extendMap.content}]]></content>
