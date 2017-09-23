@@ -266,6 +266,9 @@ public class PostService extends BaseService<PostDomain, Long> {
                 }
                 postManager.addPost(postDomain, relationDomain, tagsList);
             } else {
+                if(null != selectOne(new PostDomain().setPostType(EmPostPostType.LIUYAN.value()), true)){
+                    throw new RuntimeException("留言只能发布一篇");
+                }
                 postManager.addPost(postDomain, null, null);
             }
             return new BaseResponse<String>(true, "成功", null);
@@ -278,7 +281,10 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     public BaseResponse<String> editPost(PostDomain postDomain, List<String> tags, String category) {
         try {
-
+            PostDomain postDomainDb = selectByKey(postDomain.getId());
+            if(postDomainDb.getPostType() != postDomain.getPostType()){
+                throw new RuntimeException("暂不支持文章类型修改");
+            }
             if (postDomain.getPostType() == EmPostPostType.WENZHANG.value()) {
                 // 标签最终写数据
                 List<RelationDomain> addTags = new ArrayList<RelationDomain>();
@@ -286,11 +292,11 @@ public class PostService extends BaseService<PostDomain, Long> {
                 //
                 List<RelationDomain> dbTags = relationService.selectList(new RelationDomain().setType(EmRelationType.WEN_ZHANG_BIAOQIAN.value()).setParentId(postDomain.getId() + ""));
                 for (RelationDomain dbTag : dbTags) {
-                    if (!tags.contains(dbTag.getParentId())) {
+                    if (!tags.contains(dbTag.getChildId())) {
                         deleteTags.add(dbTag);
                     } else {
                         // 更新忽略，移除最后剩下需要增加的
-                        tags.remove(dbTag.getParentId());
+                        tags.remove(dbTag.getChildId());
                     }
                 }
                 for (String tag : tags) {

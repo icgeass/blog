@@ -38,7 +38,7 @@
                     <label for="category">分类：</label>
                     <select id="category" name="extendMap[category]">
 #foreach($item in $categoryAll)
-                            <option value="$item.id" #if($DictUtils.contains($category, $item))selected#end>$item.dictValue</option>
+                            <option value="$item.id" #if($!{category.dictType} == $!{item.dictType} and $!{category.dictKey} == $!{item.dictKey})selected#end>$item.dictValue</option>
 #end
                     </select>
                 </div>
