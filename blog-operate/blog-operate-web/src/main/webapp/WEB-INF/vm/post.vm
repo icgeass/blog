@@ -8,6 +8,8 @@
                     <div class="post-content">
                         $!{post.extendMap.content}
                     </div>
+                    <div class="post-nav">
+                    </div>
                     <a data-url="$!{protocol}://$!{domain}${request.contextPath}/post/show/$!{post.id}" data-id="$!{post.id}" class="article-share-link">分享到</a>
                     <script type="text/javascript" src="${request.contextPath}/static/default/js/share.js?v=$!{version}" async></script>
                     <script type="text/javascript">
