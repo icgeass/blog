@@ -226,7 +226,10 @@ public class PostService extends BaseService<PostDomain, Long> {
                     ids.add(relationDomain.getParentId() + "");
                 }
             }
-            if (null != ids && !ids.isEmpty()) {
+            if (null == ids || ids.isEmpty()) {
+                ids.add("-1"); // 如果查询不到则放置一个不存在id
+            }
+            if(StringUtils.isNotBlank(tag) || StringUtils.isNotBlank(category)){
                 query0.put("idIn", ids);
             }
             List<PostDomain> contentDomainList = postManager.selectList(query0);
