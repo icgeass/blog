@@ -1,7 +1,7 @@
 package com.zeroq6.blog.common.domain;
 
 import java.util.Date;
-import com.zeroq6.common.base.BaseDomain;
+import com.zeroq6.blog.common.base.BaseDomain;
 
 /**
  * @author icgeass@hotmail.com

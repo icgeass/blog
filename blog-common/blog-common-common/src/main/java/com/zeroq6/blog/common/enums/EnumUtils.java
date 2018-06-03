@@ -1,5 +1,6 @@
 package com.zeroq6.blog.common.enums;
 
+import com.zeroq6.blog.common.domain.enums.EnumApi;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.slf4j.Logger;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
 public class EnumUtils {
 

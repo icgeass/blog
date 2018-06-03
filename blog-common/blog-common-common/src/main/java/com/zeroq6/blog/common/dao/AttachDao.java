@@ -5,15 +5,12 @@ import com.zeroq6.blog.common.domain.AttachDomain;
 import org.springframework.stereotype.Service;
 
 
-
 /**
  * @author icgeass@hotmail.com
- * @date 2017-07-08
+ * @date 2017-11-10
  */
 @Service
 public interface AttachDao extends BaseDao<AttachDomain, Long> {
-
-
 
 
 }

@@ -2,7 +2,7 @@ package com.zeroq6.blog.common.base;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
 public class AppException extends RuntimeException {
 

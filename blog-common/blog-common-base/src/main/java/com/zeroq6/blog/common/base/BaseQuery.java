@@ -1,10 +1,10 @@
-package com.zeroq6.common.base;
+package com.zeroq6.blog.common.base;
 
 import java.io.Serializable;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
 public abstract class BaseQuery<T extends BaseQuery> implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -38,11 +38,15 @@ public abstract class BaseQuery<T extends BaseQuery> implements Serializable {
         return orderField;
     }
     public T setOrderField(String orderField) {
-        if(null == orderField || orderField.replace("_", "").trim().length() == 0){
+        if (null == orderField) {
+            this.orderField = orderField;
+            return (T) this;
+        }
+        if(orderField.replace("_", "").trim().length() == 0){
             return (T)this;
         }
         for (int i = 0; i < orderField.length(); i++) {
-            if (!Character.isLetterOrDigit(orderField.charAt(i)) && orderField.charAt(i) != '_') {
+            if (!Character.isLetter(orderField.charAt(i)) && orderField.charAt(i) != '_') {
                 return (T)this;
             }
         }
@@ -55,6 +59,10 @@ public abstract class BaseQuery<T extends BaseQuery> implements Serializable {
     }
 
     public T setOrderFieldType(String orderFieldType) {
+        if (null == orderFieldType) {
+            this.orderFieldType = orderFieldType;
+            return (T) this;
+        }
         if(!"ASC".equalsIgnoreCase(orderFieldType) && !"DESC".equalsIgnoreCase(orderFieldType)){
             return (T)this;
         }

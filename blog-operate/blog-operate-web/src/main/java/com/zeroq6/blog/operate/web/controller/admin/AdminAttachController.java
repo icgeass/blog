@@ -3,7 +3,7 @@ package com.zeroq6.blog.operate.web.controller.admin;
 import com.zeroq6.blog.common.domain.AttachDomain;
 import com.zeroq6.blog.operate.manager.AttachManager;
 import com.zeroq6.blog.operate.service.AttachService;
-import com.zeroq6.common.base.Page;
+import com.zeroq6.blog.common.base.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

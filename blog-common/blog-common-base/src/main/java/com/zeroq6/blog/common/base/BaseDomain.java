@@ -1,4 +1,4 @@
-package com.zeroq6.common.base;
+package com.zeroq6.blog.common.base;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
 public abstract class BaseDomain<T extends BaseDomain> extends BaseQuery<T> {
     private static final long serialVersionUID = 1L;
@@ -77,8 +77,9 @@ public abstract class BaseDomain<T extends BaseDomain> extends BaseQuery<T> {
         return (T)this;
     }
 
-    public Object get(String key) {
+    public Object get(String key){
         return getExtendMap().get(key);
     }
+
 
 }

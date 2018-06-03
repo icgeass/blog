@@ -1,9 +1,9 @@
-package com.zeroq6.blog.common.enums;
+package com.zeroq6.blog.common.domain.enums;
 
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
 public interface EnumApi {
 

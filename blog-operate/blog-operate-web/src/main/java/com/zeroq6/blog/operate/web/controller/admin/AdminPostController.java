@@ -1,14 +1,14 @@
 package com.zeroq6.blog.operate.web.controller.admin;
 
 import com.zeroq6.blog.common.domain.PostDomain;
-import com.zeroq6.blog.common.enums.field.EmDictDictType;
-import com.zeroq6.blog.common.enums.field.EmPostPostType;
+import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
+import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
 import com.zeroq6.blog.common.utils.PostUtils;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.PostManager;
 import com.zeroq6.blog.operate.service.PostService;
-import com.zeroq6.common.base.BaseResponse;
-import com.zeroq6.common.base.Page;
+import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.blog.common.base.Page;
 import com.zeroq6.common.utils.MyStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

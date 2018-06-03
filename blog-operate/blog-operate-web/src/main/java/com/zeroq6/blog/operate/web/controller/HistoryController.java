@@ -2,10 +2,9 @@ package com.zeroq6.blog.operate.web.controller;
 
 import com.zeroq6.blog.common.base.BaseController;
 import com.zeroq6.blog.common.domain.DictDomain;
-import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.service.DictService;
 import com.zeroq6.blog.operate.service.PostService;
-import com.zeroq6.common.base.BaseResponse;
+import com.zeroq6.blog.common.base.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

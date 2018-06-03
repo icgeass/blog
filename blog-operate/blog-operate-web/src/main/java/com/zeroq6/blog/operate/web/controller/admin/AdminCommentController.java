@@ -2,7 +2,7 @@ package com.zeroq6.blog.operate.web.controller.admin;
 
 import com.zeroq6.blog.common.domain.CommentDomain;
 import com.zeroq6.blog.operate.service.CommentService;
-import com.zeroq6.common.base.Page;
+import com.zeroq6.blog.common.base.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

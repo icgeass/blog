@@ -1,11 +1,12 @@
 package com.zeroq6.blog.common.enums;
 
+import com.zeroq6.blog.common.domain.enums.EnumApi;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
-public enum EmYn implements EnumApi{
+public enum EmYn implements EnumApi {
 
     YES(1, "有效"),
     NO(0, "无效"),

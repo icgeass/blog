@@ -1,12 +1,12 @@
-package com.zeroq6.blog.common.enums.field;
+package com.zeroq6.blog.common.domain.enums.field;
 
-import com.zeroq6.blog.common.enums.EnumApi;
+import com.zeroq6.blog.common.domain.enums.EnumApi;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-07-08
+ * @date 2017-11-10
  */
-public enum EmRelationType implements EnumApi{
+public enum EmRelationType implements EnumApi {
 
     /**
      *  关系 => relation
@@ -39,11 +39,20 @@ public enum EmRelationType implements EnumApi{
         return getTitle();
     }
 
-    public static EmRelationType of(final int value) {
-        for (EmRelationType em : EmRelationType.values()) {
-            if (em.value == value) {
-                return em;
+    public static EmRelationType of(final Integer value) {
+        return of(value, false);
+    }
+
+    public static EmRelationType of(final Integer value, boolean acceptNull) {
+        if(null != value){
+            for (EmRelationType em : EmRelationType.values()) {
+                if (em.value == value) {
+                    return em;
+                }
             }
+        }
+        if(acceptNull){
+            return null;
         }
         throw new RuntimeException("无法查找枚举值: " + EmRelationType.class.getSimpleName() + ", " + value);
     }
@@ -62,6 +71,9 @@ public enum EmRelationType implements EnumApi{
         return this.title;
     }
 
+    /**系统生成结束,请勿修改,重新生成会覆盖*/
 
+    /**自定义开始 */
 
+    /**自定义结束 */
 }

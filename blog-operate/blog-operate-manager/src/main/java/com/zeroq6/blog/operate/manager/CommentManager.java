@@ -5,7 +5,7 @@ import com.zeroq6.blog.common.base.BaseDao;
 import com.zeroq6.blog.common.base.BaseManager;
 import com.zeroq6.blog.common.domain.CommentDomain;
 import com.zeroq6.blog.common.domain.PostDomain;
-import com.zeroq6.common.base.BaseResponse;
+import com.zeroq6.blog.common.base.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

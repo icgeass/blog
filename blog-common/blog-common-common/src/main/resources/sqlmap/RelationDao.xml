@@ -28,13 +28,13 @@
         <if test="type != null">
             <![CDATA[AND t.type = #{type}]]> /*类型，1，文章标签，2，文章分类*/
         </if>
-        <if test="parentId != null and parentId.trim() != ''">
+        <if test="parentId != null">
             <![CDATA[AND t.parent_id = #{parentId}]]> /*父id*/
         </if>
-        <if test="childId != null and childId.trim() != ''">
+        <if test="childId != null">
             <![CDATA[AND t.child_id = #{childId}]]> /*子id*/
         </if>
-        <if test="remark != null and remark.trim() != ''">
+        <if test="remark != null">
             <![CDATA[AND t.remark = #{remark}]]> /*备注*/
         </if>
         <if test="modifiedTime != null">
@@ -42,9 +42,6 @@
         </if>
         <if test="createdTime != null">
             <![CDATA[AND t.created_time = #{createdTime}]]> /*创建时间*/
-        </if>
-        <if test="yn != null">
-            <![CDATA[AND t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/
         </if>
         <if test="extendMap!=null">
             <if test="extendMap.parentIdLike!= null and extendMap.parentIdLike.trim() != ''">
@@ -95,13 +92,13 @@
         <if test="extendMap.where.type!= null">
             <![CDATA[AND t.type = #{extendMap.where.type}]]> /*类型，1，文章标签，2，文章分类*/
         </if>
-        <if test="extendMap.where.parentId!= null and extendMap.where.parentId.trim() != ''">
+        <if test="extendMap.where.parentId!= null">
             <![CDATA[AND t.parent_id = #{extendMap.where.parentId}]]> /*父id*/
         </if>
-        <if test="extendMap.where.childId!= null and extendMap.where.childId.trim() != ''">
+        <if test="extendMap.where.childId!= null">
             <![CDATA[AND t.child_id = #{extendMap.where.childId}]]> /*子id*/
         </if>
-        <if test="extendMap.where.remark!= null and extendMap.where.remark.trim() != ''">
+        <if test="extendMap.where.remark!= null">
             <![CDATA[AND t.remark = #{extendMap.where.remark}]]> /*备注*/
         </if>
         <if test="extendMap.where.modifiedTime!= null">
@@ -110,49 +107,52 @@
         <if test="extendMap.where.createdTime!= null">
             <![CDATA[AND t.created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
         </if>
-        <if test="extendMap.where.yn!= null">
-            <![CDATA[AND t.yn = #{extendMap.where.yn}]]> /*是否有效，1，有效，0，无效*/
-        </if>
+        <!--自定义开始 -->
+
+        <!--自定义结束 -->
     </sql>
 
-    <!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+    <!-- 更新列字段,只要不为NULL则更新,除开主键列,创建时间,yn -->
     <sql id="UPDATE_COLUMN_SET">
         <set>
             <if test="type!= null">
                 <![CDATA[ t.type = #{type}]]> /*类型，1，文章标签，2，文章分类*/,
             </if>
-            <if test="parentId!= null and parentId.trim() != ''">
+            <if test="parentId!= null">
                 <![CDATA[ t.parent_id = #{parentId}]]> /*父id*/,
             </if>
-            <if test="childId!= null and childId.trim() != ''">
+            <if test="childId!= null">
                 <![CDATA[ t.child_id = #{childId}]]> /*子id*/,
             </if>
-            <if test="remark!= null and remark.trim() != ''">
+            <if test="remark!= null">
                 <![CDATA[ t.remark = #{remark}]]> /*备注*/,
             </if>
-            <if test="modifiedTime!= null">
-                <![CDATA[ t.modified_time = #{modifiedTime}]]> /*修改时间*/,
-            </if>
-            <if test="createdTime!= null">
-                <![CDATA[ t.created_time = #{createdTime}]]> /*创建时间*/,
-            </if>
-            <if test="yn!= null">
-                <![CDATA[ t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/,
-            </if>
+                <![CDATA[ t.modified_time = NOW()]]> /*修改时间*/,
+            <!--自定义开始 -->
+
+            <!--自定义结束 -->
         </set>
     </sql>
 
 
     <!-- 智能排序与分页 -->
     <sql id="QUERY_ORDER_LIMIT_CONDITION">
+        <!--自定义开始（GROUP BY） -->
+
+        <!--自定义结束 -->
         <if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+        <if test="orderField == null or orderField == '' or orderFieldType == null or orderFieldType == ''">
+        <!--自定义开始（ORDER BY） -->
+
+        <!--自定义结束 -->
+        </if>
         <if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
     </sql>
 
 
-    <sql id="INSERT_COLUMN"><if test="type != null ">type,</if><if test="parentId != null and parentId.trim() != ''">parent_id,</if><if test="childId != null and childId.trim() != ''">child_id,</if><if test="remark != null and remark.trim() != ''">remark,</if><if test="modifiedTime != null ">modified_time,</if><if test="createdTime != null ">created_time,</if><if test="yn != null ">yn</if></sql>
+    <sql id="INSERT_COLUMN"><if test="type != null">type,</if><if test="parentId != null">parent_id,</if><if test="childId != null">child_id,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="type != null ">#{type},</if><if test="parentId != null and parentId.trim() != ''">#{parentId},</if><if test="childId != null and childId.trim() != ''">#{childId},</if><if test="remark != null and remark.trim() != ''">#{remark},</if><if test="modifiedTime != null ">#{modifiedTime},</if><if test="createdTime != null ">#{createdTime},</if><if test="yn != null ">#{yn}</if></sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="type != null">#{type},</if><if test="parentId != null">#{parentId},</if><if test="childId != null">#{childId},</if><if test="remark != null">#{remark},</if>NOW(),NOW(),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.RelationDomain">
         INSERT INTO <include refid="TABLE"/>
@@ -183,7 +183,7 @@
         )
         VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.type},#{item.parentId},#{item.childId},#{item.remark},#{item.modifiedTime},#{item.createdTime},#{item.yn})
+            (#{item.type},#{item.parentId},#{item.childId},#{item.remark},NOW(),NOW(),1)
         </foreach>
 
     </insert>
@@ -234,7 +234,7 @@
     <update id="disableByCondition" parameterType="com.zeroq6.blog.common.domain.RelationDomain">
         UPDATE <include refid="TABLE_T"/>
         SET t.yn = 0
-        <include refid="WHERE_CLAUSE_SELECT"/> AND t.yn = 1
+        <include refid="WHERE_CLAUSE_SELECT"/>
     </update>
 
 

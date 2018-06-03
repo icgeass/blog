@@ -6,17 +6,15 @@ import com.zeroq6.blog.common.domain.enums.EnumApi;
  * @author icgeass@hotmail.com
  * @date 2017-11-10
  */
-public enum EmOperate implements EnumApi {
+public enum EmPreventRepeatType implements EnumApi {
 
-    VIEW(1, "查看"),
-    EDIT(2, "编辑"),
-    ADD(3, "新增"),
-    DELETE(4, "删除"),;
+    CHANGE_IT(0, "请修改"),;
+
 
     private final int value;
     private final String title;
 
-    private EmOperate(int value, String title) {
+    private EmPreventRepeatType(int value, String title) {
         this.value = value;
         this.title = title;
     }
@@ -37,17 +35,17 @@ public enum EmOperate implements EnumApi {
         return getTitle();
     }
 
-    public static EmOperate of(final int value) {
-        for (EmOperate em : EmOperate.values()) {
+    public static EmPreventRepeatType of(final int value) {
+        for (EmPreventRepeatType em : EmPreventRepeatType.values()) {
             if (em.value == value) {
                 return em;
             }
         }
-        throw new RuntimeException("无法查找枚举值: " + EmOperate.class.getSimpleName() + ", " + value);
+        throw new RuntimeException("无法查找枚举值: " + EmPreventRepeatType.class.getSimpleName() + ", " + value);
     }
 
     public static String getTitle(final int value){
-        EmOperate em = of(value);
+        EmPreventRepeatType em = of(value);
         return em.title();
     }
 
@@ -59,5 +57,4 @@ public enum EmOperate implements EnumApi {
     public String toString() {
         return this.title;
     }
-
 }

@@ -3,9 +3,9 @@ package com.zeroq6.blog.operate.service;
 import com.zeroq6.blog.common.base.BaseManager;
 import com.zeroq6.blog.common.base.BaseService;
 import com.zeroq6.blog.common.domain.DictDomain;
-import com.zeroq6.blog.common.enums.field.EmDictDictType;
+import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
 import com.zeroq6.blog.operate.manager.DictManager;
-import com.zeroq6.common.base.BaseResponse;
+import com.zeroq6.blog.common.base.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +52,7 @@ public class DictService extends BaseService<DictDomain, Long> {
 
     public BaseResponse<Map<String, String>> getAboutInfo() {
         try {
-            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.SHEJIAO.value(), EmDictDictType.ZHANDIAN_XINXI.value()));
+            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.SHE_JIAO.value(), EmDictDictType.ZHAN_DIAN_XINXI.value()));
             Map<String, String> result = dictManager.transferMap(list);
             return new BaseResponse<Map<String, String>>(true, "成功", result);
         } catch (Exception e) {

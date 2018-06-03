@@ -27,10 +27,10 @@
         <if test="id != null">
             <![CDATA[AND t.id = #{id}]]> /*主键*/
         </if>
-        <if test="name != null and name.trim() != ''">
+        <if test="name != null">
             <![CDATA[AND t.name = #{name}]]> /*文件名*/
         </if>
-        <if test="md5 != null and md5.trim() != ''">
+        <if test="md5 != null">
             <![CDATA[AND t.md5 = #{md5}]]> /*文件md5*/
         </if>
         <if test="size != null">
@@ -42,7 +42,7 @@
         <if test="localMtime != null">
             <![CDATA[AND t.local_mtime = #{localMtime}]]> /*本地修改时间*/
         </if>
-        <if test="remark != null and remark.trim() != ''">
+        <if test="remark != null">
             <![CDATA[AND t.remark = #{remark}]]> /*备注*/
         </if>
         <if test="modifiedTime != null">
@@ -50,9 +50,6 @@
         </if>
         <if test="createdTime != null">
             <![CDATA[AND t.created_time = #{createdTime}]]> /*创建时间*/
-        </if>
-        <if test="yn != null">
-            <![CDATA[AND t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/
         </if>
         <if test="extendMap!=null">
             <if test="extendMap.nameLike!= null and extendMap.nameLike.trim() != ''">
@@ -106,10 +103,10 @@
         <if test="extendMap.where.id!= null">
             <![CDATA[AND t.id = #{extendMap.where.id}]]> /*主键*/
         </if>
-        <if test="extendMap.where.name!= null and extendMap.where.name.trim() != ''">
+        <if test="extendMap.where.name!= null">
             <![CDATA[AND t.name = #{extendMap.where.name}]]> /*文件名*/
         </if>
-        <if test="extendMap.where.md5!= null and extendMap.where.md5.trim() != ''">
+        <if test="extendMap.where.md5!= null">
             <![CDATA[AND t.md5 = #{extendMap.where.md5}]]> /*文件md5*/
         </if>
         <if test="extendMap.where.size!= null">
@@ -121,7 +118,7 @@
         <if test="extendMap.where.localMtime!= null">
             <![CDATA[AND t.local_mtime = #{extendMap.where.localMtime}]]> /*本地修改时间*/
         </if>
-        <if test="extendMap.where.remark!= null and extendMap.where.remark.trim() != ''">
+        <if test="extendMap.where.remark!= null">
             <![CDATA[AND t.remark = #{extendMap.where.remark}]]> /*备注*/
         </if>
         <if test="extendMap.where.modifiedTime!= null">
@@ -130,18 +127,18 @@
         <if test="extendMap.where.createdTime!= null">
             <![CDATA[AND t.created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
         </if>
-        <if test="extendMap.where.yn!= null">
-            <![CDATA[AND t.yn = #{extendMap.where.yn}]]> /*是否有效，1，有效，0，无效*/
-        </if>
+        <!--自定义开始 -->
+
+        <!--自定义结束 -->
     </sql>
 
-    <!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+    <!-- 更新列字段,只要不为NULL则更新,除开主键列,创建时间,yn -->
     <sql id="UPDATE_COLUMN_SET">
         <set>
-            <if test="name!= null and name.trim() != ''">
+            <if test="name!= null">
                 <![CDATA[ t.name = #{name}]]> /*文件名*/,
             </if>
-            <if test="md5!= null and md5.trim() != ''">
+            <if test="md5!= null">
                 <![CDATA[ t.md5 = #{md5}]]> /*文件md5*/,
             </if>
             <if test="size!= null">
@@ -153,32 +150,35 @@
             <if test="localMtime!= null">
                 <![CDATA[ t.local_mtime = #{localMtime}]]> /*本地修改时间*/,
             </if>
-            <if test="remark!= null and remark.trim() != ''">
+            <if test="remark!= null">
                 <![CDATA[ t.remark = #{remark}]]> /*备注*/,
             </if>
-            <if test="modifiedTime!= null">
-                <![CDATA[ t.modified_time = #{modifiedTime}]]> /*修改时间*/,
-            </if>
-            <if test="createdTime!= null">
-                <![CDATA[ t.created_time = #{createdTime}]]> /*创建时间*/,
-            </if>
-            <if test="yn!= null">
-                <![CDATA[ t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/,
-            </if>
+                <![CDATA[ t.modified_time = NOW()]]> /*修改时间*/,
+            <!--自定义开始 -->
+
+            <!--自定义结束 -->
         </set>
     </sql>
 
 
     <!-- 智能排序与分页 -->
     <sql id="QUERY_ORDER_LIMIT_CONDITION">
+        <!--自定义开始（GROUP BY） -->
+
+        <!--自定义结束 -->
         <if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+        <if test="orderField == null or orderField == '' or orderFieldType == null or orderFieldType == ''">
+        <!--自定义开始（ORDER BY） -->
+
+        <!--自定义结束 -->
+        </if>
         <if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
     </sql>
 
 
-    <sql id="INSERT_COLUMN"><if test="name != null and name.trim() != ''">name,</if><if test="md5 != null and md5.trim() != ''">md5,</if><if test="size != null ">size,</if><if test="localCtime != null ">local_ctime,</if><if test="localMtime != null ">local_mtime,</if><if test="remark != null and remark.trim() != ''">remark,</if><if test="modifiedTime != null ">modified_time,</if><if test="createdTime != null ">created_time,</if><if test="yn != null ">yn</if></sql>
+    <sql id="INSERT_COLUMN"><if test="name != null">name,</if><if test="md5 != null">md5,</if><if test="size != null">size,</if><if test="localCtime != null">local_ctime,</if><if test="localMtime != null">local_mtime,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="name != null and name.trim() != ''">#{name},</if><if test="md5 != null and md5.trim() != ''">#{md5},</if><if test="size != null ">#{size},</if><if test="localCtime != null ">#{localCtime},</if><if test="localMtime != null ">#{localMtime},</if><if test="remark != null and remark.trim() != ''">#{remark},</if><if test="modifiedTime != null ">#{modifiedTime},</if><if test="createdTime != null ">#{createdTime},</if><if test="yn != null ">#{yn}</if></sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="name != null">#{name},</if><if test="md5 != null">#{md5},</if><if test="size != null">#{size},</if><if test="localCtime != null">#{localCtime},</if><if test="localMtime != null">#{localMtime},</if><if test="remark != null">#{remark},</if>NOW(),NOW(),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.AttachDomain">
         INSERT INTO <include refid="TABLE"/>
@@ -209,7 +209,7 @@
         )
         VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.name},#{item.md5},#{item.size},#{item.localCtime},#{item.localMtime},#{item.remark},#{item.modifiedTime},#{item.createdTime},#{item.yn})
+            (#{item.name},#{item.md5},#{item.size},#{item.localCtime},#{item.localMtime},#{item.remark},NOW(),NOW(),1)
         </foreach>
 
     </insert>
@@ -260,7 +260,7 @@
     <update id="disableByCondition" parameterType="com.zeroq6.blog.common.domain.AttachDomain">
         UPDATE <include refid="TABLE_T"/>
         SET t.yn = 0
-        <include refid="WHERE_CLAUSE_SELECT"/> AND t.yn = 1
+        <include refid="WHERE_CLAUSE_SELECT"/>
     </update>
 
 

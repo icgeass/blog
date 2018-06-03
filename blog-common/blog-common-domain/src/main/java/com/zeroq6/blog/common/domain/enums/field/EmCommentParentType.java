@@ -1,12 +1,12 @@
-package com.zeroq6.blog.common.enums.field;
+package com.zeroq6.blog.common.domain.enums.field;
 
-import com.zeroq6.blog.common.enums.EnumApi;
+import com.zeroq6.blog.common.domain.enums.EnumApi;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-07-08
+ * @date 2017-11-10
  */
-public enum EmCommentParentType implements EnumApi{
+public enum EmCommentParentType implements EnumApi {
 
     /**
      *  评论 => comment
@@ -39,11 +39,20 @@ public enum EmCommentParentType implements EnumApi{
         return getTitle();
     }
 
-    public static EmCommentParentType of(final int value) {
-        for (EmCommentParentType em : EmCommentParentType.values()) {
-            if (em.value == value) {
-                return em;
+    public static EmCommentParentType of(final Integer value) {
+        return of(value, false);
+    }
+
+    public static EmCommentParentType of(final Integer value, boolean acceptNull) {
+        if(null != value){
+            for (EmCommentParentType em : EmCommentParentType.values()) {
+                if (em.value == value) {
+                    return em;
+                }
             }
+        }
+        if(acceptNull){
+            return null;
         }
         throw new RuntimeException("无法查找枚举值: " + EmCommentParentType.class.getSimpleName() + ", " + value);
     }
@@ -62,6 +71,9 @@ public enum EmCommentParentType implements EnumApi{
         return this.title;
     }
 
+    /**系统生成结束,请勿修改,重新生成会覆盖*/
 
+    /**自定义开始 */
 
+    /**自定义结束 */
 }

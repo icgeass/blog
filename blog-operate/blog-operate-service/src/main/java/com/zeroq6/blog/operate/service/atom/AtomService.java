@@ -2,9 +2,9 @@ package com.zeroq6.blog.operate.service.atom;
 
 import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.common.domain.PostDomain;
-import com.zeroq6.blog.common.enums.field.EmDictDictType;
-import com.zeroq6.blog.common.enums.field.EmPostPostType;
-import com.zeroq6.blog.common.enums.field.EmPostStatus;
+import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
+import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
+import com.zeroq6.blog.common.domain.enums.field.EmPostStatus;
 import com.zeroq6.blog.common.utils.PostUtils;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.velocity.VelocityManager;
@@ -48,7 +48,7 @@ public class AtomService implements InitializingBean {
     public void genAtomXml() {
         logger.info("开始生成atom.xml");
         try {
-            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.ZHANDIAN_XINXI.value()));
+            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.ZHAN_DIAN_XINXI.value()));
             Map<String, String> dataMap = dictManager.transferMap(list);
             //
             VelocityContext vc = new VelocityContext(dataMap);

@@ -1,7 +1,5 @@
 package com.zeroq6.blog.common.base;
 
-import com.zeroq6.common.base.Page;
-import com.zeroq6.common.base.BaseDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +8,7 @@ import java.util.List;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
 public abstract class BaseService<T extends BaseDomain, KEY extends Serializable> {
 
@@ -64,6 +62,15 @@ public abstract class BaseService<T extends BaseDomain, KEY extends Serializable
 
     public T selectOne(T t, boolean acceptNull) {
         return getManager().selectOne(t, acceptNull);
+    }
+
+
+    public T selectLimitOne(T t) {
+        return getManager().selectLimitOne(t);
+    }
+
+    public T selectLimitOne(T t, boolean acceptNull) {
+        return getManager().selectLimitOne(t, acceptNull);
     }
 
     public int disableByKey(KEY key){

@@ -7,12 +7,12 @@ import com.zeroq6.blog.common.domain.CommentDomain;
 import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.common.domain.RelationDomain;
-import com.zeroq6.blog.common.enums.field.*;
+import com.zeroq6.blog.common.domain.enums.field.*;
 import com.zeroq6.blog.common.utils.PostUtils;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.PostManager;
-import com.zeroq6.common.base.BaseResponse;
-import com.zeroq6.common.base.Page;
+import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.blog.common.base.Page;
 import com.zeroq6.common.utils.GravatarUtils;
 import com.zeroq6.common.utils.MyDateUtils;
 import com.zeroq6.sso.web.client.context.LoginContext;
@@ -86,7 +86,7 @@ public class PostService extends BaseService<PostDomain, Long> {
             List<DictDomain> sidebarTags = dictManager.getDictByType(EmDictDictType.BIAOQIAN.value());
             List<DictDomain> sidebarLinks = dictManager.getDictByType(EmDictDictType.LIANJIE.value());
             // 站点信息
-            List<DictDomain> siteInfo = dictManager.getDictByType(EmDictDictType.ZHANDIAN_XINXI.value());
+            List<DictDomain> siteInfo = dictManager.getDictByType(EmDictDictType.ZHAN_DIAN_XINXI.value());
             dataMap.putAll(dictManager.transferMap(siteInfo));
             PostDomain query0 = new PostDomain();
             query0.setPostType(EmPostPostType.WENZHANG.value());

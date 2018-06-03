@@ -1,17 +1,22 @@
 package com.zeroq6.blog.common.enums;
 
+import com.zeroq6.blog.common.domain.enums.EnumApi;
+
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
-public enum EmRedisKeyType implements EnumApi{
+public enum EmPreventRepeatResult implements EnumApi {
 
-    CHANGE_IT(0, "请修改"),;
+    INSERT_SUCCESS(1, "插入成功"),
+    INSERT_REPEAT(2, "插入重复")
+
+    ;
 
     private final int value;
     private final String title;
 
-    private EmRedisKeyType(int value, String title) {
+    private EmPreventRepeatResult(int value, String title) {
         this.value = value;
         this.title = title;
     }
@@ -32,17 +37,17 @@ public enum EmRedisKeyType implements EnumApi{
         return getTitle();
     }
 
-    public static EmRedisKeyType of(final int value) {
-        for (EmRedisKeyType em : EmRedisKeyType.values()) {
+    public static EmPreventRepeatResult of(final int value) {
+        for (EmPreventRepeatResult em : EmPreventRepeatResult.values()) {
             if (em.value == value) {
                 return em;
             }
         }
-        throw new RuntimeException("无法查找枚举值: " + EmRedisKeyType.class.getSimpleName() + ", " + value);
+        throw new RuntimeException("无法查找枚举值: " + EmPreventRepeatResult.class.getSimpleName() + ", " + value);
     }
 
     public static String getTitle(final int value){
-        EmRedisKeyType em = of(value);
+        EmPreventRepeatResult em = of(value);
         return em.title();
     }
 
@@ -54,5 +59,4 @@ public enum EmRedisKeyType implements EnumApi{
     public String toString() {
         return this.title;
     }
-
 }

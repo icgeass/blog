@@ -1,13 +1,11 @@
 package com.zeroq6.blog.common.base;
 
-import com.zeroq6.common.base.BaseDomain;
-
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
 public interface BaseDao<T extends BaseDomain, KEY extends Serializable> {
 

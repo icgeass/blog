@@ -29,16 +29,16 @@
         <if test="dictType != null">
             <![CDATA[AND t.dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
         </if>
-        <if test="dictKey != null and dictKey.trim() != ''">
+        <if test="dictKey != null">
             <![CDATA[AND t.dict_key = #{dictKey}]]> /*字典键*/
         </if>
-        <if test="dictValue != null and dictValue.trim() != ''">
+        <if test="dictValue != null">
             <![CDATA[AND t.dict_value = #{dictValue}]]> /*字典值*/
         </if>
-        <if test="dictDesc != null and dictDesc.trim() != ''">
+        <if test="dictDesc != null">
             <![CDATA[AND t.dict_desc = #{dictDesc}]]> /*描述*/
         </if>
-        <if test="remark != null and remark.trim() != ''">
+        <if test="remark != null">
             <![CDATA[AND t.remark = #{remark}]]> /*备注*/
         </if>
         <if test="modifiedTime != null">
@@ -46,9 +46,6 @@
         </if>
         <if test="createdTime != null">
             <![CDATA[AND t.created_time = #{createdTime}]]> /*创建时间*/
-        </if>
-        <if test="yn != null">
-            <![CDATA[AND t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/
         </if>
         <if test="extendMap!=null">
             <if test="extendMap.dictKeyLike!= null and extendMap.dictKeyLike.trim() != ''">
@@ -102,16 +99,16 @@
         <if test="extendMap.where.dictType!= null">
             <![CDATA[AND t.dict_type = #{extendMap.where.dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
         </if>
-        <if test="extendMap.where.dictKey!= null and extendMap.where.dictKey.trim() != ''">
+        <if test="extendMap.where.dictKey!= null">
             <![CDATA[AND t.dict_key = #{extendMap.where.dictKey}]]> /*字典键*/
         </if>
-        <if test="extendMap.where.dictValue!= null and extendMap.where.dictValue.trim() != ''">
+        <if test="extendMap.where.dictValue!= null">
             <![CDATA[AND t.dict_value = #{extendMap.where.dictValue}]]> /*字典值*/
         </if>
-        <if test="extendMap.where.dictDesc!= null and extendMap.where.dictDesc.trim() != ''">
+        <if test="extendMap.where.dictDesc!= null">
             <![CDATA[AND t.dict_desc = #{extendMap.where.dictDesc}]]> /*描述*/
         </if>
-        <if test="extendMap.where.remark!= null and extendMap.where.remark.trim() != ''">
+        <if test="extendMap.where.remark!= null">
             <![CDATA[AND t.remark = #{extendMap.where.remark}]]> /*备注*/
         </if>
         <if test="extendMap.where.modifiedTime!= null">
@@ -120,52 +117,55 @@
         <if test="extendMap.where.createdTime!= null">
             <![CDATA[AND t.created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
         </if>
-        <if test="extendMap.where.yn!= null">
-            <![CDATA[AND t.yn = #{extendMap.where.yn}]]> /*是否有效，1，有效，0，无效*/
-        </if>
+        <!--自定义开始 -->
+
+        <!--自定义结束 -->
     </sql>
 
-    <!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+    <!-- 更新列字段,只要不为NULL则更新,除开主键列,创建时间,yn -->
     <sql id="UPDATE_COLUMN_SET">
         <set>
             <if test="dictType!= null">
                 <![CDATA[ t.dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/,
             </if>
-            <if test="dictKey!= null and dictKey.trim() != ''">
+            <if test="dictKey!= null">
                 <![CDATA[ t.dict_key = #{dictKey}]]> /*字典键*/,
             </if>
-            <if test="dictValue!= null and dictValue.trim() != ''">
+            <if test="dictValue!= null">
                 <![CDATA[ t.dict_value = #{dictValue}]]> /*字典值*/,
             </if>
-            <if test="dictDesc!= null and dictDesc.trim() != ''">
+            <if test="dictDesc!= null">
                 <![CDATA[ t.dict_desc = #{dictDesc}]]> /*描述*/,
             </if>
-            <if test="remark!= null and remark.trim() != ''">
+            <if test="remark!= null">
                 <![CDATA[ t.remark = #{remark}]]> /*备注*/,
             </if>
-            <if test="modifiedTime!= null">
-                <![CDATA[ t.modified_time = #{modifiedTime}]]> /*修改时间*/,
-            </if>
-            <if test="createdTime!= null">
-                <![CDATA[ t.created_time = #{createdTime}]]> /*创建时间*/,
-            </if>
-            <if test="yn!= null">
-                <![CDATA[ t.yn = #{yn}]]> /*是否有效，1，有效，0，无效*/,
-            </if>
+                <![CDATA[ t.modified_time = NOW()]]> /*修改时间*/,
+            <!--自定义开始 -->
+
+            <!--自定义结束 -->
         </set>
     </sql>
 
 
     <!-- 智能排序与分页 -->
     <sql id="QUERY_ORDER_LIMIT_CONDITION">
+        <!--自定义开始（GROUP BY） -->
+
+        <!--自定义结束 -->
         <if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+        <if test="orderField == null or orderField == '' or orderFieldType == null or orderFieldType == ''">
+        <!--自定义开始（ORDER BY） -->
+
+        <!--自定义结束 -->
+        </if>
         <if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
     </sql>
 
 
-    <sql id="INSERT_COLUMN"><if test="dictType != null ">dict_type,</if><if test="dictKey != null and dictKey.trim() != ''">dict_key,</if><if test="dictValue != null and dictValue.trim() != ''">dict_value,</if><if test="dictDesc != null and dictDesc.trim() != ''">dict_desc,</if><if test="remark != null and remark.trim() != ''">remark,</if><if test="modifiedTime != null ">modified_time,</if><if test="createdTime != null ">created_time,</if><if test="yn != null ">yn</if></sql>
+    <sql id="INSERT_COLUMN"><if test="dictType != null">dict_type,</if><if test="dictKey != null">dict_key,</if><if test="dictValue != null">dict_value,</if><if test="dictDesc != null">dict_desc,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="dictType != null ">#{dictType},</if><if test="dictKey != null and dictKey.trim() != ''">#{dictKey},</if><if test="dictValue != null and dictValue.trim() != ''">#{dictValue},</if><if test="dictDesc != null and dictDesc.trim() != ''">#{dictDesc},</if><if test="remark != null and remark.trim() != ''">#{remark},</if><if test="modifiedTime != null ">#{modifiedTime},</if><if test="createdTime != null ">#{createdTime},</if><if test="yn != null ">#{yn}</if></sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="dictType != null">#{dictType},</if><if test="dictKey != null">#{dictKey},</if><if test="dictValue != null">#{dictValue},</if><if test="dictDesc != null">#{dictDesc},</if><if test="remark != null">#{remark},</if>NOW(),NOW(),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.DictDomain">
         INSERT INTO <include refid="TABLE"/>
@@ -196,7 +196,7 @@
         )
         VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.dictType},#{item.dictKey},#{item.dictValue},#{item.dictDesc},#{item.remark},#{item.modifiedTime},#{item.createdTime},#{item.yn})
+            (#{item.dictType},#{item.dictKey},#{item.dictValue},#{item.dictDesc},#{item.remark},NOW(),NOW(),1)
         </foreach>
 
     </insert>
@@ -247,13 +247,12 @@
     <update id="disableByCondition" parameterType="com.zeroq6.blog.common.domain.DictDomain">
         UPDATE <include refid="TABLE_T"/>
         SET t.yn = 0
-        <include refid="WHERE_CLAUSE_SELECT"/> AND t.yn = 1
+        <include refid="WHERE_CLAUSE_SELECT"/>
     </update>
 
 
     <!--系统生成结束,请勿修改,重新生成会覆盖 -->
     <!--自定义开始 -->
-
 
     <!--自定义结束 -->
 </mapper>

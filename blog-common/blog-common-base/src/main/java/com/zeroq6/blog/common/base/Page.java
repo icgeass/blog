@@ -1,12 +1,13 @@
-package com.zeroq6.common.base;
+package com.zeroq6.blog.common.base;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-05-17
+ * @date 2017-11-10
  */
+
 /**
  *
  * 根据总记录数，当前页，分页大小计算
