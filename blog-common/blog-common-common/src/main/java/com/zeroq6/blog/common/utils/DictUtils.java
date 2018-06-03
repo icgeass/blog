@@ -15,7 +15,7 @@ public class DictUtils {
             return false;
         }
         for (DictDomain dictDomain : list) {
-            if (dictDomain.getDictType() == item.getDictType() && dictDomain.getDictKey().equals(item.getDictKey())) {
+            if (dictDomain.getDictType().equals(item.getDictType()) && dictDomain.getDictKey().equals(item.getDictKey())) {
                 return true;
             }
         }

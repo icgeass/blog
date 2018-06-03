@@ -16,12 +16,6 @@ public class GravatarUtils {
 
     private final static String DEFAULT_GRAVATAR_URL = "https://www.gravatar.com/avatar/00000000000000000000000000000000?s=125";
 
-    private final static Map<String, String> GRAVATAR_URL_CACHE = Collections.synchronizedMap(new LinkedHashMap(10, 0.75F, true) {
-        protected boolean removeEldestEntry(Map.Entry eldest) {
-            return this.size() > 1000;
-        }
-    });
-
 
     public static String getAvatar(String email) {
         if (!EmailValidator.getInstance().isValid(email)) {
@@ -30,7 +24,6 @@ public class GravatarUtils {
         StringBuffer sb = new StringBuffer("https://www.gravatar.com/avatar/");
         sb.append(DigestUtils.md5Hex(email));
         sb.append("?s=125");
-        GRAVATAR_URL_CACHE.put(email, sb.toString());
-        return GRAVATAR_URL_CACHE.get(email);
+        return sb.toString();
     }
 }

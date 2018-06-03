@@ -20,7 +20,7 @@
         <!---->
         <project.domain>6zeroq.com</project.domain>
         <!---->
-        <spring.version>4.3.7.RELEASE</spring.version>
+        <spring.version>4.3.16.RELEASE</spring.version>
         <jdk.version>1.8</jdk.version>
         <project.upload.path><![CDATA[/export/Data/${project.domain}/upload]]></project.upload.path>
         <!--日志配置-->

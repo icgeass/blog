@@ -21,11 +21,6 @@
         <scope>application</scope>
     </tool>
     <tool>
-        <key>LoginContextErp</key>
-        <class>com.zeroq6.common.web.LoginContextErp</class>
-        <scope>application</scope>
-    </tool>
-    <tool>
         <key>DictUtils</key>
         <class>com.zeroq6.blog.common.utils.DictUtils</class>
         <scope>application</scope>

@@ -26,15 +26,15 @@
         <property name="jdbcUrl" value="${jdbc.master.url}" />
     </bean>
 
-    <bean id="slaveDataSource" parent="abstractDataSource">
+    <!--<bean id="slaveDataSource" parent="abstractDataSource">
         <property name="jdbcUrl" value="${jdbc.slave.url}" />
-    </bean>
+    </bean>-->
     <!--动态数据源，选择主库或从库-->
     <bean id="dataSource" class="com.zeroq6.common.datasource.DynamicDataSource">
         <property name="masterDataSource" ref="masterDataSource" />
         <property name="slaveDataSourceList">
             <list>
-                <ref bean="slaveDataSource" />
+                <!--<ref bean="slaveDataSource" />-->
             </list>
         </property>
     </bean>
@@ -58,7 +58,7 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.zeroq6.blog.common.dao,com.zeroq6.blog.operate.dao,com.zeroq6.blog.service.dao"/>
+        <property name="basePackage" value="com.zeroq6.blog.common.dao,com.zeroq6.blog.operate.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sessionFactory" />
     </bean>
 

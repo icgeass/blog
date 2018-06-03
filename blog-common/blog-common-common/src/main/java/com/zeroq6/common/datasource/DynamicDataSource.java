@@ -8,12 +8,11 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
 // import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
@@ -48,7 +47,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                 targetDataSources.put(EmDataSourceType.SLAVE.name() + i, slaveDataSourceList.get(i));
             }
         }
-        slaveDataSourceSize = slaveDataSourceList.size();
+        slaveDataSourceSize = null == slaveDataSourceList ? 0 : slaveDataSourceList.size();
         setTargetDataSources(targetDataSources);
         super.afterPropertiesSet();
     }
