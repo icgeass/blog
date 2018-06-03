@@ -4,7 +4,7 @@ import com.zeroq6.blog.common.base.BaseDomain;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-07-08
+ * @date 2017-11-10
  */
 public class RelationDomain extends BaseDomain<RelationDomain> {
 
@@ -33,7 +33,7 @@ public class RelationDomain extends BaseDomain<RelationDomain> {
     /**
      * 获取类型，1，文章标签，2，文章分类 type
      *
-     * @return
+     * @return 类型，1，文章标签，2，文章分类
      */
     public Integer getType() {
         return type;
@@ -51,7 +51,7 @@ public class RelationDomain extends BaseDomain<RelationDomain> {
     /**
      * 获取父id parentId
      *
-     * @return
+     * @return 父id
      */
     public String getParentId() {
         return parentId;
@@ -69,7 +69,7 @@ public class RelationDomain extends BaseDomain<RelationDomain> {
     /**
      * 获取子id childId
      *
-     * @return
+     * @return 子id
      */
     public String getChildId() {
         return childId;
@@ -85,6 +85,9 @@ public class RelationDomain extends BaseDomain<RelationDomain> {
     }
 
 
+    /**系统生成结束,请勿修改,重新生成会覆盖*/
 
+    /**自定义开始 */
 
+    /**自定义结束 */
 }

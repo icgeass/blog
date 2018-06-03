@@ -4,7 +4,7 @@ import com.zeroq6.blog.common.base.BaseDomain;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-07-08
+ * @date 2017-11-10
  */
 public class CommentDomain extends BaseDomain<CommentDomain> {
 
@@ -57,7 +57,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取用户名 username
      *
-     * @return
+     * @return 用户名
      */
     public String getUsername() {
         return username;
@@ -75,7 +75,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取邮箱 email
      *
-     * @return
+     * @return 邮箱
      */
     public String getEmail() {
         return email;
@@ -93,7 +93,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取链接 url
      *
-     * @return
+     * @return 链接
      */
     public String getUrl() {
         return url;
@@ -111,7 +111,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取内容 content
      *
-     * @return
+     * @return 内容
      */
     public String getContent() {
         return content;
@@ -129,7 +129,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取文章id postId
      *
-     * @return
+     * @return 文章id
      */
     public Long getPostId() {
         return postId;
@@ -147,7 +147,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取父id parentId
      *
-     * @return
+     * @return 父id
      */
     public Long getParentId() {
         return parentId;
@@ -165,7 +165,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取父类型，1，文章，2，评论 parentType
      *
-     * @return
+     * @return 父类型，1，文章，2，评论
      */
     public Integer getParentType() {
         return parentType;
@@ -183,7 +183,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取ip地址 ip
      *
-     * @return
+     * @return ip地址
      */
     public String getIp() {
         return ip;
@@ -201,7 +201,7 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     /**
      * 获取用户代理 userAgent
      *
-     * @return
+     * @return 用户代理
      */
     public String getUserAgent() {
         return userAgent;
@@ -217,6 +217,9 @@ public class CommentDomain extends BaseDomain<CommentDomain> {
     }
 
 
+    /**系统生成结束,请勿修改,重新生成会覆盖*/
 
+    /**自定义开始 */
 
+    /**自定义结束 */
 }

@@ -4,7 +4,7 @@ import com.zeroq6.blog.common.base.BaseDomain;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-07-08
+ * @date 2017-11-10
  */
 public class DictDomain extends BaseDomain<DictDomain> {
 
@@ -29,15 +29,11 @@ public class DictDomain extends BaseDomain<DictDomain> {
      * 字典值
      */
     private String dictValue;
-    /**
-     * 描述
-     */
-    private String dictDesc;
 
     /**
      * 获取字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息 dictType
      *
-     * @return
+     * @return 字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息
      */
     public Integer getDictType() {
         return dictType;
@@ -55,7 +51,7 @@ public class DictDomain extends BaseDomain<DictDomain> {
     /**
      * 获取字典键 dictKey
      *
-     * @return
+     * @return 字典键
      */
     public String getDictKey() {
         return dictKey;
@@ -73,7 +69,7 @@ public class DictDomain extends BaseDomain<DictDomain> {
     /**
      * 获取字典值 dictValue
      *
-     * @return
+     * @return 字典值
      */
     public String getDictValue() {
         return dictValue;
@@ -88,25 +84,10 @@ public class DictDomain extends BaseDomain<DictDomain> {
         return this;
     }
 
-    /**
-     * 获取描述 dictDesc
-     *
-     * @return
-     */
-    public String getDictDesc() {
-        return dictDesc;
-    }
-    /**
-     * 设置描述 dictDesc
-     *
-     * @param dictDesc 描述
-     */
-    public DictDomain setDictDesc(String dictDesc) {
-        this.dictDesc = dictDesc;
-        return this;
-    }
 
+    /**系统生成结束,请勿修改,重新生成会覆盖*/
 
+    /**自定义开始 */
 
-
+    /**自定义结束 */
 }

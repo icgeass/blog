@@ -1,11 +1,12 @@
 package com.zeroq6.blog.common.domain;
 
-import java.util.Date;
 import com.zeroq6.blog.common.base.BaseDomain;
+
+import java.util.Date;
 
 /**
  * @author icgeass@hotmail.com
- * @date 2017-07-08
+ * @date 2017-11-10
  */
 public class AttachDomain extends BaseDomain<AttachDomain> {
 
@@ -42,7 +43,7 @@ public class AttachDomain extends BaseDomain<AttachDomain> {
     /**
      * 获取文件名 name
      *
-     * @return
+     * @return 文件名
      */
     public String getName() {
         return name;
@@ -60,7 +61,7 @@ public class AttachDomain extends BaseDomain<AttachDomain> {
     /**
      * 获取文件md5 md5
      *
-     * @return
+     * @return 文件md5
      */
     public String getMd5() {
         return md5;
@@ -78,7 +79,7 @@ public class AttachDomain extends BaseDomain<AttachDomain> {
     /**
      * 获取文件大小 size
      *
-     * @return
+     * @return 文件大小
      */
     public Long getSize() {
         return size;
@@ -96,7 +97,7 @@ public class AttachDomain extends BaseDomain<AttachDomain> {
     /**
      * 获取本地创建时间 localCtime
      *
-     * @return
+     * @return 本地创建时间
      */
     public Date getLocalCtime() {
         return localCtime;
@@ -114,7 +115,7 @@ public class AttachDomain extends BaseDomain<AttachDomain> {
     /**
      * 获取本地修改时间 localMtime
      *
-     * @return
+     * @return 本地修改时间
      */
     public Date getLocalMtime() {
         return localMtime;
@@ -130,6 +131,9 @@ public class AttachDomain extends BaseDomain<AttachDomain> {
     }
 
 
+    /**系统生成结束,请勿修改,重新生成会覆盖*/
 
+    /**自定义开始 */
 
+    /**自定义结束 */
 }
