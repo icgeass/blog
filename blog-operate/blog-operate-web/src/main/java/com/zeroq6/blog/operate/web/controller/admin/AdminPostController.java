@@ -53,7 +53,7 @@ public class AdminPostController {
 
     @RequestMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model view) {
-        if (id > 0) {
+        if (null != id && id > 0) {
             BaseResponse<Map<String, Object>> response = postService.show(id);
             if (response.isSuccess()) {
                 view.addAllAttributes(response.getBody());

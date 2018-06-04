@@ -32,9 +32,6 @@ public class PostManager extends BaseManager<PostDomain, Long> {
     private PostDao postDao;
 
     @Autowired
-    private DictManager dictManager;
-
-    @Autowired
     private CommentManager commentManager;
 
     @Autowired
@@ -86,8 +83,13 @@ public class PostManager extends BaseManager<PostDomain, Long> {
         updateByKey(postDomain);
         if (StringUtils.isNotBlank(categoryId)) {
             relationManager.updateByCondition(new RelationDomain().setChildId(categoryId), new RelationDomain().setType(EmRelationType.WEN_ZHANG_FENLEI.value()).setParentId(postDomain.getId() + ""), 1);
-
+        }
+        // 新增标签
+        if (null != addList && !addList.isEmpty()) {
             relationManager.insertBatch(addList);
+        }
+        // 删除标签
+        if (null != deleteList && !deleteList.isEmpty()) {
             for (RelationDomain delete : deleteList) {
                 relationManager.disableByKey(delete.getId());
             }

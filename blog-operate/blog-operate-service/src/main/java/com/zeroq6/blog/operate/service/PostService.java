@@ -195,6 +195,9 @@ public class PostService extends BaseService<PostDomain, Long> {
      */
     public BaseResponse<Map<String, List<PostDomain>>> getArchiveList(String category, String tag) {
         try {
+            if (StringUtils.isBlank(category) && StringUtils.isBlank(tag)) {
+                throw new RuntimeException("必须制定分类或标签");
+            }
             if (StringUtils.isNotBlank(category) && StringUtils.isNotBlank(tag)) {
                 throw new RuntimeException("不能同时指定分类和标签");
             }
@@ -212,9 +215,7 @@ public class PostService extends BaseService<PostDomain, Long> {
                 for (RelationDomain relationDomain : relationDomainList) {
                     ids.add(relationDomain.getParentId() + "");
                 }
-            }
-            // 分类对应文章id
-            if (StringUtils.isNotBlank(category)) {
+            }else if (StringUtils.isNotBlank(category)) {
                 DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI.value(), category);
                 RelationDomain query2 = new RelationDomain();
                 query2.setType(EmRelationType.WEN_ZHANG_FENLEI.value());
