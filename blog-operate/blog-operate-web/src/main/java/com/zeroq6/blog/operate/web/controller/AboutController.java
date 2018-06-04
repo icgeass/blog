@@ -28,20 +28,24 @@ public class AboutController extends BaseController {
 
     @ModelAttribute
     public void loadState(Model model) {
-        model.addAttribute("menu", "about");
-        model.addAttribute("categoryTitle", "关于");
+        model.addAttribute(NAME_MENU, "about");
+        model.addAttribute(NAME_CATEGORY_TITLE, "关于");
         model.addAllAttributes(postService.getSidebarInfo().getBody());
     }
 
 
     @RequestMapping
     public String index(Model view) {
-        BaseResponse<Map<String, String>> result = dictService.getAboutInfo();
-        if (result.isSuccess()) {
-            view.addAllAttributes(result.getBody());
-            return "/about";
+        try {
+            BaseResponse<Map<String, String>> result = dictService.getAboutInfo();
+            if (result.isSuccess()) {
+                view.addAllAttributes(result.getBody());
+                return "/about";
+            }
+        } catch (Exception e) {
+            logger.error("关于页面异常", e);
         }
-        return null;
+        return redirectIndex();
 
     }
 }

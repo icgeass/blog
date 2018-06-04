@@ -1,10 +1,10 @@
 package com.zeroq6.blog.operate.web.controller;
 
 import com.zeroq6.blog.common.base.BaseController;
+import com.zeroq6.blog.common.base.BaseResponse;
 import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.operate.service.DictService;
 import com.zeroq6.blog.operate.service.PostService;
-import com.zeroq6.blog.common.base.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,20 +31,24 @@ public class HistoryController extends BaseController{
 
     @ModelAttribute
     public void loadState(Model model) {
-        model.addAttribute("menu", "history");
-        model.addAttribute("categoryTitle", "历史");
+        model.addAttribute(NAME_MENU, "history");
+        model.addAttribute(NAME_CATEGORY_TITLE, "历史");
         model.addAllAttributes(postService.getSidebarInfo().getBody());
     }
 
 
     @RequestMapping
     public String index(Model view){
-        BaseResponse<List<DictDomain>> result = dictService.getHistory();
-        if(result.isSuccess()){
-            view.addAttribute("historyList", result.getBody());
-            return "/history";
+        try {
+            BaseResponse<List<DictDomain>> result = dictService.getHistory();
+            if(result.isSuccess()){
+                view.addAttribute("historyList", result.getBody());
+                return "/history";
+            }
+        } catch (Exception e) {
+            logger.error("历史页面异常", e);
         }
-        return null;
+        return redirectIndex();
 
     }
 }

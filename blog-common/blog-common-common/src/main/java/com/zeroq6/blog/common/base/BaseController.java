@@ -19,7 +19,12 @@ import java.util.Date;
  */
 public abstract class BaseController {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+    public final static String NAME_MENU = "menu";
+
+    public final static String NAME_CATEGORY_TITLE = "categoryTitle";
+
+    public final Logger logger = LoggerFactory.getLogger(getClass());
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {

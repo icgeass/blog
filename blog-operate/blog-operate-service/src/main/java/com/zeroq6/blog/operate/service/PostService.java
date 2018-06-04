@@ -1,7 +1,6 @@
 package com.zeroq6.blog.operate.service;
 
-import com.zeroq6.blog.common.base.BaseManager;
-import com.zeroq6.blog.common.base.BaseService;
+import com.zeroq6.blog.common.base.*;
 import com.zeroq6.blog.common.dao.PostDao;
 import com.zeroq6.blog.common.domain.CommentDomain;
 import com.zeroq6.blog.common.domain.DictDomain;
@@ -11,8 +10,6 @@ import com.zeroq6.blog.common.domain.enums.field.*;
 import com.zeroq6.blog.common.utils.PostUtils;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.PostManager;
-import com.zeroq6.blog.common.base.BaseResponse;
-import com.zeroq6.blog.common.base.Page;
 import com.zeroq6.common.utils.GravatarUtils;
 import com.zeroq6.common.utils.MyDateUtils;
 import com.zeroq6.sso.web.client.context.LoginContext;
@@ -88,6 +85,7 @@ public class PostService extends BaseService<PostDomain, Long> {
             // 站点信息
             List<DictDomain> siteInfo = dictManager.getDictByType(EmDictDictType.ZHAN_DIAN_XINXI.value());
             dataMap.putAll(dictManager.transferMap(siteInfo));
+            // 最近，最新文章
             PostDomain query0 = new PostDomain();
             query0.setPostType(EmPostPostType.WENZHANG.value());
             query0.setStatus(EmPostStatus.YI_FABU.value());
@@ -177,7 +175,7 @@ public class PostService extends BaseService<PostDomain, Long> {
                 if (null != next) {
                     dataMap.put("next", next);
                 }
-                dataMap.put("categoryTitle", post.getTitle());
+                dataMap.put(BaseController.NAME_CATEGORY_TITLE, post.getTitle());
             }
             dataMap.put("post", post);
             dataMap.put("commentList", commentDomainList);

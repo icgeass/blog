@@ -34,23 +34,27 @@ public class TagsController extends BaseController {
 
     @ModelAttribute
     public void loadState(Model model) {
-        model.addAttribute("menu", "archives");
+        model.addAttribute(NAME_MENU, "archives");
         model.addAllAttributes(postService.getSidebarInfo().getBody());
     }
 
     @RequestMapping(value = "/{tag}")
     public String index(@PathVariable String tag, Model view) {
-        if (StringUtils.isBlank(tag)) {
-            return redirectIndex();
+        try {
+            if (StringUtils.isBlank(tag)) {
+                return redirectIndex();
+            }
+            BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(null, tag);
+            if (result.isSuccess()) {
+                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.BIAOQIAN.value(), tag);
+                view.addAttribute(NAME_CATEGORY_TITLE, dictDomain.getDictValue());
+                view.addAttribute("archiveMapList", result.getBody());
+                view.addAttribute("classify", dictDomain.getDictValue());
+                return "/archives";
+            }
+        } catch (Exception e) {
+            logger.error("标签文章列表异常: " + tag, e);
         }
-        BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(null, tag);
-        if (result.isSuccess()) {
-            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.BIAOQIAN.value(), tag);
-            view.addAttribute("categoryTitle", dictDomain.getDictValue());
-            view.addAttribute("archiveMapList", result.getBody());
-            view.addAttribute("classify", dictDomain.getDictValue());
-            return "/archives";
-        }
-        return null;
+        return redirectIndex();
     }
 }

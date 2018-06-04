@@ -35,23 +35,27 @@ public class CategoryController extends BaseController {
 
     @ModelAttribute
     public void loadState(Model model) {
-        model.addAttribute("menu", "archives");
+        model.addAttribute(NAME_MENU, "archives");
         model.addAllAttributes(postService.getSidebarInfo().getBody());
     }
 
     @RequestMapping(value = "/{category}")
     public String show(@PathVariable String category, Model view) {
-        if (StringUtils.isBlank(category)) {
-            return redirectIndex();
+        try {
+            if (StringUtils.isBlank(category)) {
+                return redirectIndex();
+            }
+            BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(category, null);
+            if (result.isSuccess()) {
+                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI.value(), category);
+                view.addAttribute(NAME_CATEGORY_TITLE, dictDomain.getDictValue());
+                view.addAttribute("classify", dictDomain.getDictValue());
+                view.addAttribute("archiveMapList", result.getBody());
+                return "/archives";
+            }
+        } catch (Exception e) {
+            logger.error("标签文章列表异常", e);
         }
-        BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(category, null);
-        if (result.isSuccess()) {
-            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI.value(), category);
-            view.addAttribute("categoryTitle", dictDomain.getDictValue());
-            view.addAttribute("classify", dictDomain.getDictValue());
-            view.addAttribute("archiveMapList", result.getBody());
-            return "/archives";
-        }
-        return null;
+        return redirectIndex();
     }
 }

@@ -52,7 +52,7 @@ public class DictService extends BaseService<DictDomain, Long> {
 
     public BaseResponse<Map<String, String>> getAboutInfo() {
         try {
-            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.SHE_JIAO.value(), EmDictDictType.ZHAN_DIAN_XINXI.value()));
+            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.SHE_JIAO.value()));
             Map<String, String> result = dictManager.transferMap(list);
             return new BaseResponse<Map<String, String>>(true, "成功", result);
         } catch (Exception e) {

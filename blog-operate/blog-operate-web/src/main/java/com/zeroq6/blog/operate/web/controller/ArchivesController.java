@@ -27,19 +27,23 @@ public class ArchivesController extends BaseController {
 
     @ModelAttribute
     public void loadState(Model model) {
-        model.addAttribute("menu", "archives");
-        model.addAttribute("categoryTitle", "归档");
+        model.addAttribute(NAME_MENU, "archives");
+        model.addAttribute(NAME_CATEGORY_TITLE, "归档");
         model.addAllAttributes(postService.getSidebarInfo().getBody());
     }
 
     @RequestMapping
     public String index(Model view) {
-        BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(null, null);
-        if (result.isSuccess()) {
-            view.addAttribute("archiveMapList", result.getBody());
-            return "/archives";
+        try {
+            BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(null, null);
+            if (result.isSuccess()) {
+                view.addAttribute("archiveMapList", result.getBody());
+                return "/archives";
+            }
+        } catch (Exception e) {
+            logger.error("归档页面异常", e);
         }
-        return null;
+        return redirectIndex();
     }
 
 

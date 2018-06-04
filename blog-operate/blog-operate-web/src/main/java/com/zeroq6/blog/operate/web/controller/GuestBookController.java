@@ -23,20 +23,24 @@ public class GuestBookController extends BaseController {
 
     @ModelAttribute
     public void loadState(Model model) {
-        model.addAttribute("menu", "guestbook");
-        model.addAttribute("categoryTitle", "留言");
+        model.addAttribute(NAME_MENU, "guestbook");
+        model.addAttribute(NAME_CATEGORY_TITLE, "留言");
         model.addAllAttributes(postService.getSidebarInfo().getBody());
     }
 
 
     @RequestMapping
     public String index(Model view) {
-        BaseResponse<Map<String, Object>> result = postService.getGuestBook();
-        if (result.isSuccess()) {
-            view.addAllAttributes(result.getBody());
-            return "/guestbook";
+        try {
+            BaseResponse<Map<String, Object>> result = postService.getGuestBook();
+            if (result.isSuccess()) {
+                view.addAllAttributes(result.getBody());
+                return "/guestbook";
+            }
+        } catch (Exception e) {
+            logger.error("留言板页面异常", e);
         }
-        return null;
+        return redirectIndex();
     }
 
 }

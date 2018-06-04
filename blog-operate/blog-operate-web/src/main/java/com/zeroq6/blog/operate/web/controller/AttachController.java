@@ -43,6 +43,8 @@ public class AttachController {
      */
     @RequestMapping(value = "/download/{md5}/{name}", method = RequestMethod.GET)
     public void downloadFile(HttpServletResponse response, @PathVariable("md5") String md5, @PathVariable("name") String name) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
         try {
             File file = null;
             AttachDomain attachDomain = attachService.selectOne(new AttachDomain().setMd5(md5), true);
@@ -50,7 +52,7 @@ public class AttachController {
                 file = new File(attachManager.getUploadPath() + File.separator + attachDomain.getName());
             }
             if (null == attachDomain || !file.exists()) {
-                throw new RuntimeException("Sorry. The file you are looking for does not exist");
+                throw new RuntimeException("Not Found");
             }
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
             if (mimeType == null) {
@@ -60,21 +62,36 @@ public class AttachController {
             // inline 浏览器打开, attachment 下载框下载
             response.setHeader("Content-Disposition", "inline; filename=\"" + URLEncoder.encode(attachDomain.getName(), "utf-8") + "\"");
             response.setContentLength((int) file.length());
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-
+            inputStream = new BufferedInputStream(new FileInputStream(file));
+            outputStream = response.getOutputStream();
             //Copy bytes from source to destination(outputstream in this example), closes both streams.
-            FileCopyUtils.copy(inputStream, response.getOutputStream());
+            FileCopyUtils.copy(inputStream, outputStream);
 
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
+            logger.info("下载失败", e);
             try {
-                OutputStream outputStream = response.getOutputStream();
+                if (null != outputStream) {
+                    outputStream = response.getOutputStream();
+                }
                 outputStream.write(e.getMessage().getBytes(Charset.forName("UTF-8")));
-                outputStream.close();
             } catch (Exception ee) {
-                // ignore
+                logger.error("输出错误信息到前端异常", ee);
             }
-            return;
+        } finally {
+            if (null != outputStream) {
+                try {
+                    outputStream.close();
+                } catch (Exception e) {
+                    logger.error("关闭输出流异常", e);
+                }
+            }
+            if (null != inputStream) {
+                try {
+                    inputStream.close();
+                } catch (Exception e) {
+                    logger.error("关闭输入流异常", e);
+                }
+            }
         }
     }
 

@@ -60,6 +60,12 @@ public class DictManager extends BaseManager<DictDomain, Long> implements Initia
         return list;
     }
 
+    /**
+     * 调用方保证dictKey不重复
+     *
+     * @param dictDomainList
+     * @return
+     */
     public Map<String, String> transferMap(List<DictDomain> dictDomainList) {
         Map<String, String> result = new HashMap<String, String>();
         if (null == dictDomainList || dictDomainList.isEmpty()) {

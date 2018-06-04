@@ -1,6 +1,7 @@
 package com.zeroq6.blog.operate.web.controller;
 
 import com.zeroq6.blog.common.base.BaseController;
+import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.operate.service.PostService;
 import com.zeroq6.blog.common.base.BaseResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,31 +29,39 @@ public class PostController extends BaseController {
 
     @ModelAttribute
     public void loadState(Model model) {
-        model.addAttribute("menu", "index");
-        model.addAttribute("categoryTitle", "首页");
+        model.addAttribute(NAME_MENU, "index");
+        model.addAttribute(NAME_CATEGORY_TITLE, "首页");
         model.addAllAttributes(postService.getSidebarInfo().getBody());
     }
 
 
     @RequestMapping
     public String index(String page, Model view) throws Exception {
-        BaseResponse<Page<PostDomain>> result = postService.index(page);
-        if (result.isSuccess()) {
-            view.addAttribute("page", result.getBody());
-            return "/index";
+        try {
+            BaseResponse<Page<PostDomain>> result = postService.index(page);
+            if (result.isSuccess()) {
+                view.addAttribute("page", result.getBody());
+                return "/index";
+            }
+        } catch (Exception e) {
+            logger.error("首页文章列表异常", e);
         }
-        return null;
-
+        return redirectIndex();
     }
 
     @RequestMapping(value = "/show/{id}")
     public String show(@PathVariable Long id, Model view) throws Exception {
-        BaseResponse<Map<String, Object>> result = postService.show(id);
-        if (result.isSuccess()) {
-            view.addAllAttributes(result.getBody());
-            return "/post";
+
+        try {
+            BaseResponse<Map<String, Object>> result = postService.show(id);
+            if (result.isSuccess()) {
+                view.addAllAttributes(result.getBody());
+                return "/post";
+            }
+        } catch (Exception e) {
+            logger.error("文章详情异常: " + id, e);
         }
-        return null;
+        return redirectIndex();
     }
 
 
