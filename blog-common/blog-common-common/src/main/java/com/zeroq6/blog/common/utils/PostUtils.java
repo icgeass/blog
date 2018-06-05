@@ -17,6 +17,8 @@ public class PostUtils {
 
     private final static HtmlRenderer renderer = HtmlRenderer.builder().build();
 
+    private final static String CLIPPED = "...";
+
     public static String substring(String content) {
         return substring(content, SUBSTRING_LENGTH);
     }
@@ -25,7 +27,7 @@ public class PostUtils {
         if (null == content) {
             return "";
         }
-        return content.length() > length ? content.substring(0, length) + "..." : content;
+        return content.length() > length ? content.substring(0, length) + CLIPPED : content;
     }
 
     public static String parseMarkdownText(String markdownText) {
@@ -43,8 +45,13 @@ public class PostUtils {
 
     }
 
-    public static String getHtmlTextSubstring(PostDomain postDomain, int length){
-        return substring(getHtmlText(parseMarkdownText(postDomain.getContent())), length);
+    public static String getHtmlTextSubstring(PostDomain postDomain, int length) {
+        String result = substring(getHtmlText(parseMarkdownText(postDomain.getContent())), length);
+        int index = result.indexOf("<");
+        if (index != -1) {
+            result = result.substring(0, index) + CLIPPED;
+        }
+        return result;
     }
 
     public static String getHtmlTextSubstring(PostDomain postDomain){

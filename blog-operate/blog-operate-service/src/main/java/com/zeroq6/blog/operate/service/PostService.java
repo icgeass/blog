@@ -195,9 +195,6 @@ public class PostService extends BaseService<PostDomain, Long> {
      */
     public BaseResponse<Map<String, List<PostDomain>>> getArchiveList(String category, String tag) {
         try {
-            if (StringUtils.isBlank(category) && StringUtils.isBlank(tag)) {
-                throw new RuntimeException("必须制定分类或标签");
-            }
             if (StringUtils.isNotBlank(category) && StringUtils.isNotBlank(tag)) {
                 throw new RuntimeException("不能同时指定分类和标签");
             }
