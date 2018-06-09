@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <maven.compiler.encoding>${encoding}</maven.compiler.encoding>
         <!---->
-        <project.domain>6zeroq.com</project.domain>
+        <project.domain>www.6zeroq.com</project.domain>
         <!---->
         <spring.version>4.3.16.RELEASE</spring.version>
         <jdk.version>1.8</jdk.version>
