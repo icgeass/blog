@@ -19,6 +19,11 @@ public class IndexController extends BaseController{
         return "redirect:/post" ;
     }
 
+    @RequestMapping(value = "/404", method = {RequestMethod.GET})
+    public String notFound() throws Exception {
+        return "/404" ;
+    }
+
 
 }
 
