@@ -73,7 +73,7 @@
                             <td>$FileUtils.getReadableSize($!{item.size})</td>
                             <td>$DateUtils.format($!{item.createdTime})</td>
                             <td>
-                                <a href="${request.contextPath}/attach/download/$!{item.md5}/$!{item.name}" target="_blank" class="btn btn-info">下载</a>
+                                <a href="$!{protocol}://$!{domain}${request.contextPath}/attach/download/$!{item.md5}/$!{item.name}" target="_blank" class="btn btn-info">下载</a>
                                 <a id="attach${item.id}" class="btn btn-warning">复制</a>
                                 <script>
                                     $('#attach${item.id}').attr('data-clipboard-text', '${request.contextPath}/attach/download/$!{item.md5}/' + encodeURIComponent('$!{item.name}'))

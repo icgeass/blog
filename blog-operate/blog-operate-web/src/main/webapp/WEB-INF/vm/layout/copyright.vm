@@ -1,3 +1,3 @@
-            <div id="footer">Copyright © 2017
+            <div id="footer">Copyright © $!{year}
                 <a href="${request.contextPath}/" rel="nofollow">$!{domain}</a> | Theme - <a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo">maupassant-hexo</a>
             </div>
