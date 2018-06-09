@@ -20,20 +20,16 @@ public class IndexController extends BaseController{
     @Autowired
     private PostService postService;
 
-    @ModelAttribute
-    public void loadState(Model model) {
-        model.addAttribute(NAME_MENU, "404");
-        model.addAttribute(NAME_CATEGORY_TITLE, "404");
-        model.addAllAttributes(postService.getSidebarInfo().getBody());
-    }
-
     @RequestMapping(value = "", method = {RequestMethod.GET})
     public String index() throws Exception {
         return "redirect:/post" ;
     }
 
     @RequestMapping(value = "/404", method = {RequestMethod.GET})
-    public String notFound() throws Exception {
+    public String notFound(Model model) throws Exception {
+        model.addAttribute(NAME_MENU, "404");
+        model.addAttribute(NAME_CATEGORY_TITLE, "404");
+        model.addAllAttributes(postService.getSidebarInfo().getBody());
         return "/404" ;
     }
 
