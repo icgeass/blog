@@ -65,10 +65,12 @@ public class PostManager extends BaseManager<PostDomain, Long> {
     public BaseResponse<String> addPost(PostDomain postDomain, RelationDomain category, List<RelationDomain> tagsList) {
         // 文章
         insertFillingId(postDomain);
-        if (null != category && null != tagsList && !tagsList.isEmpty()) {
+        if (null != category) {
             // 分类
             category.setParentId(postDomain.getId() + "");
             relationManager.insert(category);
+        }
+        if (null != tagsList && !tagsList.isEmpty()) {
             // 标签
             for (RelationDomain tag : tagsList) {
                 tag.setParentId(postDomain.getId() + "");

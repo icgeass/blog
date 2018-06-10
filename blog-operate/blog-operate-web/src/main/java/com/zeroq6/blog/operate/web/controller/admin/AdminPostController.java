@@ -72,8 +72,11 @@ public class AdminPostController {
         String category = null;
         if(postDomain.getPostType() != EmPostPostType.LIUYAN.value()){
             tags = new ArrayList<String>();
-            for(String tag : MyStringUtils.toStringArray(postDomain.get("tags"))){
-                tags.add(tag);
+            Object obj = postDomain.get("tags");
+            if(null != obj){
+                for(String tag : MyStringUtils.toStringArray(obj)){
+                    tags.add(tag);
+                }
             }
             category = (String)postDomain.get("category");
         }

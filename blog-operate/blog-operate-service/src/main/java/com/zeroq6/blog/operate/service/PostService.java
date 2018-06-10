@@ -247,7 +247,7 @@ public class PostService extends BaseService<PostDomain, Long> {
         try {
             postDomain.setUsername(LoginContext.getCurrentUsername());
             if (postDomain.getPostType() == EmPostPostType.WENZHANG.value()) {
-                if (null == tags || tags.isEmpty() || StringUtils.isBlank(category)) {
+                if (StringUtils.isBlank(category)) {
                     throw new RuntimeException("新增文章分类和标签不能为空");
                 }
                 postDomain.setStatus(EmPostStatus.YI_FABU.value());
@@ -257,11 +257,13 @@ public class PostService extends BaseService<PostDomain, Long> {
                 relationDomain.setType(EmRelationType.WEN_ZHANG_FENLEI.value());
                 // 标签
                 List<RelationDomain> tagsList = new ArrayList<RelationDomain>();
-                for (String tag : tags) {
-                    RelationDomain newTag = new RelationDomain();
-                    newTag.setType(EmRelationType.WEN_ZHANG_BIAOQIAN.value());
-                    newTag.setChildId(tag);
-                    tagsList.add(newTag);
+                if(null != tags && !tags.isEmpty()){
+                    for (String tag : tags) {
+                        RelationDomain newTag = new RelationDomain();
+                        newTag.setType(EmRelationType.WEN_ZHANG_BIAOQIAN.value());
+                        newTag.setChildId(tag);
+                        tagsList.add(newTag);
+                    }
                 }
                 postManager.addPost(postDomain, relationDomain, tagsList);
             } else {
