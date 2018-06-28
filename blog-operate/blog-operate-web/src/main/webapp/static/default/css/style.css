@@ -1880,7 +1880,7 @@ em.search-keyword {
 /*移动端不显示右侧sidebar
 https://stackoverflow.com/questions/11796297/div-show-hide-media-query
 */
-@media screen and (min-width: 0px) and (max-width: 400px) {
+@media screen and (min-width: 0px) and (max-width: 640px) {
     /* tablet, landscape iPad, lo-res laptops ands desktops */
     #sidebar {
         display: none

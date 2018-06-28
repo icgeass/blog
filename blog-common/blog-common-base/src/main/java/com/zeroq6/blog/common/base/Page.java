@@ -16,7 +16,7 @@ public class Page<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public final static int INIT_PAGE_SIZE = 20;
+    public final static int INIT_PAGE_SIZE = 8;
     public final static int INIT_FIRST_PAGE = 1;
     private int pageSize = INIT_PAGE_SIZE;
     private int totalCount;
