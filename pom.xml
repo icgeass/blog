@@ -73,11 +73,10 @@
             </activation>
             <properties>
                 <env>production</env>
-                <env>test</env>
                 <!--数据库-->
                 <profile.jdbc.driver>com.mysql.jdbc.Driver</profile.jdbc.driver>
-                <profile.jdbc.master.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>
-                <profile.jdbc.slave.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.slave.url>
+                <profile.jdbc.master.url><![CDATA[jdbc:MySql://45.32.91.64:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>
+                <profile.jdbc.slave.url><![CDATA[jdbc:MySql://45.32.91.64:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.slave.url>
                 <profile.jdbc.username>blog</profile.jdbc.username>
                 <profile.jdbc.password>VVvM3HcV</profile.jdbc.password>
 
