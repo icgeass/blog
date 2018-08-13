@@ -51,9 +51,9 @@ CREATE TABLE `comment` (
 
 CREATE TABLE `dict` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `dict_type` tinyint(4) DEFAULT NULL COMMENT '字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息',
+  `dict_type` tinyint(4) DEFAULT NULL COMMENT '字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置',
   `dict_key` varchar(255) DEFAULT NULL COMMENT '字典键',
-  `dict_value` varchar(255) DEFAULT NULL COMMENT '字典值',
+  `dict_value` text DEFAULT NULL COMMENT '字典值',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `created_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

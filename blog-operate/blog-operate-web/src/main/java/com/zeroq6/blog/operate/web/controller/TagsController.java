@@ -46,7 +46,7 @@ public class TagsController extends BaseController {
             }
             BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(null, tag);
             if (result.isSuccess()) {
-                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.BIAOQIAN.value(), tag);
+                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.BIAOQIAN, tag);
                 view.addAttribute(NAME_CATEGORY_TITLE, dictDomain.getDictValue());
                 view.addAttribute("archiveMapList", result.getBody());
                 view.addAttribute("classify", dictDomain.getDictValue());

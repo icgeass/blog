@@ -35,7 +35,7 @@ public class DictService extends BaseService<DictDomain, Long> {
 
     public BaseResponse<List<DictDomain>> getHistory() {
         try {
-            List<DictDomain> list = dictManager.getDictByType(EmDictDictType.LISHI.value());
+            List<DictDomain> list = dictManager.getDictByType(EmDictDictType.LISHI);
             Collections.sort(list, new Comparator<DictDomain>() {
                 @Override
                 public int compare(DictDomain o1, DictDomain o2) {
@@ -52,7 +52,7 @@ public class DictService extends BaseService<DictDomain, Long> {
 
     public BaseResponse<Map<String, String>> getAboutInfo() {
         try {
-            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.SHE_JIAO.value()));
+            List<DictDomain> list = dictManager.getDictByType(EmDictDictType.SHE_JIAO);
             Map<String, String> result = dictManager.transferMap(list);
             return new BaseResponse<Map<String, String>>(true, "成功", result);
         } catch (Exception e) {
@@ -60,6 +60,8 @@ public class DictService extends BaseService<DictDomain, Long> {
             return new BaseResponse<Map<String, String>>(false, e.getMessage(), null);
         }
     }
+
+
 
 
 }

@@ -61,8 +61,8 @@ public class AdminPostController {
                 throw new RuntimeException(response.getMessage());
             }
         }
-        view.addAttribute("tagsAll", dictManager.getDictByType(EmDictDictType.BIAOQIAN.value()));
-        view.addAttribute("categoryAll", dictManager.getDictByType(EmDictDictType.FENLEI.value()));
+        view.addAttribute("tagsAll", dictManager.getDictByType(EmDictDictType.BIAOQIAN));
+        view.addAttribute("categoryAll", dictManager.getDictByType(EmDictDictType.FENLEI));
         return "/admin/post/postEdit";
     }
 

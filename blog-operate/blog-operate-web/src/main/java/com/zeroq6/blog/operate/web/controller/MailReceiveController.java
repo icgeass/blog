@@ -32,7 +32,11 @@ public class MailReceiveController extends BaseController{
     @RequestMapping(value = "/receive")
     public String receive(HttpServletResponse response) throws Exception {
         try{
-            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.YOUXIANG.value(), "receiveConfig");
+            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, "baidu_pan_mail_receive", true);
+            if(null == dictDomain){
+                outJson(response, "no config");
+                return null;
+            }
             JSONObject config = JSON.parseObject(dictDomain.getDictValue());
             String content = ReceiveMail.receiveEmail(config.getString("mailPop3Host"),
                     config.getString("mailStoreType"), config.getString("mailUser"),

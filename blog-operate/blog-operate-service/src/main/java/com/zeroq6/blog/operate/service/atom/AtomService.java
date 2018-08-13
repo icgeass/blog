@@ -48,7 +48,7 @@ public class AtomService implements InitializingBean {
     public void genAtomXml() {
         logger.info("开始生成atom.xml");
         try {
-            List<DictDomain> list = dictManager.getDictByTypeList(Arrays.asList(EmDictDictType.ZHAN_DIAN_XINXI.value()));
+            List<DictDomain> list = dictManager.getDictByType(EmDictDictType.ZHAN_DIAN_XINXI);
             Map<String, String> dataMap = dictManager.transferMap(list);
             //
             VelocityContext vc = new VelocityContext(dataMap);

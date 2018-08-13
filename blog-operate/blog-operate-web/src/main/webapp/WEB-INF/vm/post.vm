@@ -6,7 +6,9 @@
                     <div class="post-meta">$DateUtils.format($!{post.createdTime}, 'MMM dd, yyyy')<span> | </span><span class="category"><a href="${request.contextPath}/categories/$!{category.dictKey}">$!{category.dictValue}</a></span></div>
                     <a href="#comments" class="disqus-comment-count">$!{post.extendMap.commentCount}条评论</a>
                     <div class="post-content">
+                        $!{post.extendMap.postContentPrefix}
                         $!{post.extendMap.content}
+                        $!{post.extendMap.postContentSuffix}
                     </div>
                     <a data-url="$!{protocol}://$!{domain}${request.contextPath}/post/show/$!{post.id}" data-id="$!{post.id}" class="article-share-link">分享到</a>
                     <script type="text/javascript" src="${request.contextPath}/static/default/js/share.js?v=$!{version}" async></script>

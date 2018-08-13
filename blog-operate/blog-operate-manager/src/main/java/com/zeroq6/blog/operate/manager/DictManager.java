@@ -4,6 +4,7 @@ import com.zeroq6.blog.common.dao.DictDao;
 import com.zeroq6.blog.common.base.BaseDao;
 import com.zeroq6.blog.common.base.BaseManager;
 import com.zeroq6.blog.common.domain.DictDomain;
+import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,6 @@ public class DictManager extends BaseManager<DictDomain, Long> implements Initia
 
 
 
-
     public void flushDictList() {
         try {
             dictDomainCacheList = selectList(null);
@@ -48,24 +48,42 @@ public class DictManager extends BaseManager<DictDomain, Long> implements Initia
         }
     }
 
-    public List<DictDomain> getDictByType(int type) {
-        return getDictByTypeAndKeyList(type, null);
-    }
-
-    public List<DictDomain> getDictByTypeList(List<Integer> typeList) {
-        List<DictDomain> list = new ArrayList<DictDomain>();
-        for (Integer type : typeList) {
-            list.addAll(getDictByType(type));
+    public List<DictDomain> getDictByType(EmDictDictType type) {
+        List<DictDomain> result = new ArrayList<DictDomain>();
+        for (DictDomain dictDomain : dictDomainCacheList) {
+            if (dictDomain.getDictType() == type.value()) {
+                result.add(dictDomain);
+            }
         }
-        return list;
+        return result;
     }
 
-    /**
-     * 调用方保证dictKey不重复
-     *
-     * @param dictDomainList
-     * @return
-     */
+
+    public DictDomain getDictByTypeAndKey(EmDictDictType type, String key) {
+        return getDictByTypeAndKey(type, key, false);
+    }
+
+    public DictDomain getDictByTypeAndKey(EmDictDictType type, String key, boolean acceptNull) {
+        List<DictDomain> result = new ArrayList<DictDomain>();
+        for (DictDomain dictDomain : dictDomainCacheList) {
+            if (dictDomain.getDictType() == type.value() && dictDomain.getDictKey().equals(key)) {
+                result.add(dictDomain);
+            }
+        }
+        int size = result.size();
+        if (size == 0) {
+            if(acceptNull){
+                return null;
+            }
+            throw new RuntimeException("字典表, type: " + type + ", key: " + key + "在字典中记录条数为0");
+        } else if (size == 1) {
+            return result.get(0);
+        } else {
+            throw new RuntimeException("字典表, type: " + type + ", key: " + key + "在字典中记录条数大于1");
+        }
+    }
+
+
     public Map<String, String> transferMap(List<DictDomain> dictDomainList) {
         Map<String, String> result = new HashMap<String, String>();
         if (null == dictDomainList || dictDomainList.isEmpty()) {
@@ -75,44 +93,6 @@ public class DictManager extends BaseManager<DictDomain, Long> implements Initia
             result.put(item.getDictKey(), item.getDictValue());
         }
         return result;
-    }
-
-    public List<DictDomain> getDictByTypeAndKeyList(int type, List<String> dictKeyList) {
-        List<DictDomain> result = new ArrayList<DictDomain>();
-        for (DictDomain dictDomain : dictDomainCacheList) {
-            if (dictDomain.getDictType() == type) {
-                if (null == dictKeyList || dictKeyList.isEmpty()) {
-                    result.add(dictDomain);
-                } else {
-                    if (dictKeyList.contains(dictDomain.getDictKey())) {
-                        result.add(dictDomain);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    public DictDomain getDictByTypeAndKey(int type, String key) {
-        List<DictDomain> result = new ArrayList<DictDomain>();
-        for (DictDomain dictDomain : dictDomainCacheList) {
-            if (dictDomain.getDictType() == type && dictDomain.getDictKey().equals(key)) {
-                result.add(dictDomain);
-            }
-        }
-        if (result.size() != 1) {
-            throw new RuntimeException("字典表, type: " + type + ", key: " + key + "在字典中记录条数不为1");
-        }
-        return result.get(0);
-    }
-
-    public List<String> getValueListByType(int type) {
-        List<String> valueList = new ArrayList<String>();
-        List<DictDomain> dictDomainList = getDictByType(type);
-        for (DictDomain dictDomain : dictDomainList) {
-            valueList.add(dictDomain.getDictValue());
-        }
-        return valueList;
     }
 
     @Transactional

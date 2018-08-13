@@ -79,11 +79,11 @@ public class PostService extends BaseService<PostDomain, Long> {
         try {
             Map<String, Object> dataMap = new HashMap<String, Object>();
             //
-            List<DictDomain> sidebarCategories = dictManager.getDictByType(EmDictDictType.FENLEI.value());
-            List<DictDomain> sidebarTags = dictManager.getDictByType(EmDictDictType.BIAOQIAN.value());
-            List<DictDomain> sidebarLinks = dictManager.getDictByType(EmDictDictType.LIANJIE.value());
+            List<DictDomain> sidebarCategories = dictManager.getDictByType(EmDictDictType.FENLEI);
+            List<DictDomain> sidebarTags = dictManager.getDictByType(EmDictDictType.BIAOQIAN);
+            List<DictDomain> sidebarLinks = dictManager.getDictByType(EmDictDictType.LIANJIE);
             // 站点信息
-            List<DictDomain> siteInfo = dictManager.getDictByType(EmDictDictType.ZHAN_DIAN_XINXI.value());
+            List<DictDomain> siteInfo = dictManager.getDictByType(EmDictDictType.ZHAN_DIAN_XINXI);
             dataMap.putAll(dictManager.transferMap(siteInfo));
             // 最近，最新文章
             PostDomain query0 = new PostDomain();
@@ -143,7 +143,17 @@ public class PostService extends BaseService<PostDomain, Long> {
             }
             // 文章
             PostDomain post = this.selectOne(new PostDomain().setId(id));
+
             post.getExtendMap().put("content", PostUtils.parseMarkdownText(post.getContent()));
+
+            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, "post_content_prefix", true);
+            if(null != dictDomain){
+                post.put("postContentPrefix", dictDomain.getDictValue());
+            }
+            dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, "post_content_suffix", true);
+            if(null != dictDomain){
+                post.put("postContentSuffix", dictDomain.getDictValue());
+            }
             Map<String, Object> dataMap = new HashMap<String, Object>();
             // 评论
             List<CommentDomain> commentDomainList = commentService.selectList(new CommentDomain().setPostId(id).setOrderField("id").setOrderFieldType("ASC"));
@@ -204,7 +214,7 @@ public class PostService extends BaseService<PostDomain, Long> {
             List<String> ids = new ArrayList<String>();
             // 标签对应文章id
             if (StringUtils.isNotBlank(tag)) {
-                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.BIAOQIAN.value(), tag);
+                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.BIAOQIAN, tag);
                 RelationDomain query1 = new RelationDomain();
                 query1.setType(EmRelationType.WEN_ZHANG_BIAOQIAN.value());
                 query1.setChildId(dictDomain.getId() + "");
@@ -213,7 +223,7 @@ public class PostService extends BaseService<PostDomain, Long> {
                     ids.add(relationDomain.getParentId() + "");
                 }
             }else if (StringUtils.isNotBlank(category)) {
-                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI.value(), category);
+                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI, category);
                 RelationDomain query2 = new RelationDomain();
                 query2.setType(EmRelationType.WEN_ZHANG_FENLEI.value());
                 query2.setChildId(dictDomain.getId() + "");

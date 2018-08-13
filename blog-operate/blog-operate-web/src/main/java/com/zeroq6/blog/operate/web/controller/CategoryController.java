@@ -47,7 +47,7 @@ public class CategoryController extends BaseController {
             }
             BaseResponse<Map<String, List<PostDomain>>> result = postService.getArchiveList(category, null);
             if (result.isSuccess()) {
-                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI.value(), category);
+                DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI, category);
                 view.addAttribute(NAME_CATEGORY_TITLE, dictDomain.getDictValue());
                 view.addAttribute("classify", dictDomain.getDictValue());
                 view.addAttribute("archiveMapList", result.getBody());
