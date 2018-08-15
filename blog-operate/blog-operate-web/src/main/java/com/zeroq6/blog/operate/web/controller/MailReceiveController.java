@@ -6,7 +6,7 @@ import com.zeroq6.blog.common.base.BaseController;
 import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
 import com.zeroq6.blog.operate.manager.DictManager;
-import com.zeroq6.common.mail.ReceiveMail;
+import com.zeroq6.common.mail.MailReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class MailReceiveController extends BaseController{
                 return null;
             }
             JSONObject config = JSON.parseObject(dictDomain.getDictValue());
-            String content = ReceiveMail.receiveEmail(config.getString("mailPop3Host"),
+            String content = MailReceiver.receiveEmail(config.getString("mailPop3Host"),
                     config.getString("mailStoreType"), config.getString("mailUser"),
                     config.getString("mailPassword"), config.getString("mailTitle"),
                     config.getString("mailFrom"));

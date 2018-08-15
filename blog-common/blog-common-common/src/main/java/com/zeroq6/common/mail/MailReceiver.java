@@ -13,9 +13,9 @@ import java.util.Properties;
  * <p>
  * http://www.avajava.com/tutorials/lessons/how-do-i-receive-email-in-java.html
  */
-public class ReceiveMail {
+public class MailReceiver {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ReceiveMail.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(MailReceiver.class);
 
 
     /**
