@@ -9,16 +9,13 @@ import com.zeroq6.blog.operate.manager.velocity.MailConfigManager;
 import com.zeroq6.common.backup.BackupUtils;
 import com.zeroq6.common.mail.MailSender;
 import com.zeroq6.common.mail.MailSenderConfig;
-import com.zeroq6.common.utils.ExceptionUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -45,7 +42,7 @@ public class BackupService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public void backup() throws Exception {
+    public boolean backup() throws Exception {
 
         String dataString = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
@@ -55,7 +52,7 @@ public class BackupService {
             DictDomain dictDomain = dictManager.selectOne(new DictDomain().setDictType(EmDictDictType.XI_TONG_PEIZHI.value()).setDictKey(sysConfigKeyBackup), true);
             if (null == dictDomain || StringUtils.isBlank(dictDomain.getDictValue())) {
                 logger.info("无备份配置, 执行结束");
-                return;
+                return false;
             }
             BackupConfigDomain backupConfigDomain = JSON.parseObject(dictDomain.getDictValue(), BackupConfigDomain.class);
             logger.info("备份配置: " + JSON.toJSONString(backupConfigDomain));
@@ -79,14 +76,14 @@ public class BackupService {
             }
 
             // 备份文件夹
-            File zipFile = new File(parent.getCanonicalPath() + File.separator + "重要备份_" + dataString + ".zip");
+            File zipFile = new File(parent.getCanonicalPath() + File.separator + "重要备份_" + dataString + ".xml");
             BackupUtils.zipFolders(zipFile, folders);
 
 
             MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
-                    "【站点备份-成功】重要" + dataString, mailSenderConfig.getToAddress(), "备份成功" + dataString,
+                    "【站点备份-成功】" + dataString, mailSenderConfig.getToAddress(), "备份成功" + dataString,
                     new File[]{zipFile}, null, null);
-
+            return true;
         } catch (Exception e) {
             logger.error("备份异常", e);
             MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
@@ -95,6 +92,7 @@ public class BackupService {
         } finally {
             logger.info("备份结束");
         }
+        return false;
     }
 
 
