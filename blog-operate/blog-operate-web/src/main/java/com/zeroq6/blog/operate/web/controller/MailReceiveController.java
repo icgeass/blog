@@ -10,6 +10,7 @@ import com.zeroq6.common.mail.MailReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,12 +28,17 @@ public class MailReceiveController extends BaseController{
     @Autowired
     private DictManager dictManager;
 
+
+    @Value("${sys.config.key.mail_receive}")
+    private String sysConfigKeyMailReceive;
+
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/receive")
     public String receive(HttpServletResponse response) throws Exception {
         try{
-            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, "baidu_pan_mail_receive", true);
+            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, sysConfigKeyMailReceive, true);
             if(null == dictDomain){
                 outJson(response, "no config");
                 return null;

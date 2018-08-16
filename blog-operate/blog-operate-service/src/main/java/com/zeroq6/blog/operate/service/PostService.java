@@ -15,6 +15,7 @@ import com.zeroq6.common.utils.MyDateUtils;
 import com.zeroq6.sso.web.client.context.LoginContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -50,6 +51,13 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     @Autowired
     private DictManager dictManager;
+
+
+    @Value("${sys.config.key.post_content_prefix}")
+    private String sysConfigKeyPostContentPrefix;
+
+    @Value("${sys.config.key.post_content_suffix}")
+    private String sysConfigKeyPostContentSuffix;
 
     private SimpleDateFormat yyyy = new SimpleDateFormat("yyyy");
 
@@ -146,11 +154,11 @@ public class PostService extends BaseService<PostDomain, Long> {
 
             post.getExtendMap().put("content", PostUtils.parseMarkdownText(post.getContent()));
 
-            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, "post_content_prefix", true);
+            DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, sysConfigKeyPostContentPrefix, true);
             if(null != dictDomain){
                 post.put("postContentPrefix", dictDomain.getDictValue());
             }
-            dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, "post_content_suffix", true);
+            dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, sysConfigKeyPostContentSuffix, true);
             if(null != dictDomain){
                 post.put("postContentSuffix", dictDomain.getDictValue());
             }

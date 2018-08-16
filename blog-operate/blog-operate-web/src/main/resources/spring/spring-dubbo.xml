@@ -11,6 +11,6 @@
     <dubbo:registry address="N/A" />
 
     <!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
-    <dubbo:reference id="ssoServiceApi" timeout="5000" interface="com.zeroq6.sso.web.client.api.SsoServiceApi" version="1.0" url="dubbo://127.0.0.1:20880"/>
+    <dubbo:reference id="ssoServiceApi" timeout="5000" interface="com.zeroq6.sso.web.client.api.SsoServiceApi" version="1.0" url="dubbo://45.32.40.121:20880"/>
 
 </beans>

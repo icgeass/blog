@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
@@ -26,26 +27,31 @@ public class MailConfigManager implements InitializingBean {
     @Autowired
     private DictManager dictManager;
 
+    @Value("${sys.config.key.mail_send}")
+    private String sysConfigKeyMailSend;
+
 
     private MailSenderConfig mailSenderConfig;
 
     private Properties properties  = new Properties();
 
     public Properties getProperties() {
+        afterPropertiesSet();
         return properties;
     }
 
     public MailSenderConfig getMailSenderConfig() {
+        afterPropertiesSet();
         return mailSenderConfig;
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet(){
 
         try {
             logger.info("开始获取邮件配置");
 
-            DictDomain dictDomain = dictManager.selectOne(new DictDomain().setDictType(EmDictDictType.XI_TONG_PEIZHI.value()).setDictKey("mail_send"), true);
+            DictDomain dictDomain = dictManager.selectOne(new DictDomain().setDictType(EmDictDictType.XI_TONG_PEIZHI.value()).setDictKey(sysConfigKeyMailSend), true);
 
             if (null == dictDomain) {
                 logger.warn("无法查找邮件发送配置");

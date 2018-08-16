@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -39,6 +40,9 @@ public class BackupService {
     @Autowired
     private MailConfigManager mailConfigManager;
 
+    @Value("${sys.config.key.backup}")
+    private String sysConfigKeyBackup;
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public void backup() throws Exception {
@@ -48,8 +52,7 @@ public class BackupService {
         MailSenderConfig mailSenderConfig = mailConfigManager.getMailSenderConfig();
         try {
             logger.info("开始备份");
-            mailConfigManager.afterPropertiesSet();
-            DictDomain dictDomain = dictManager.selectOne(new DictDomain().setDictType(EmDictDictType.XI_TONG_PEIZHI.value()).setDictKey("backup"), true);
+            DictDomain dictDomain = dictManager.selectOne(new DictDomain().setDictType(EmDictDictType.XI_TONG_PEIZHI.value()).setDictKey(sysConfigKeyBackup), true);
             if (null == dictDomain || StringUtils.isBlank(dictDomain.getDictValue())) {
                 logger.info("无备份配置, 执行结束");
                 return;

@@ -39,7 +39,7 @@ public class MybatisSqlInterceptor implements Interceptor {
     @Value("${sql.maxTimeMills}")
     private int sqlMaxTimeMills;
 
-    @Value("${project.enviroment}")
+    @Value("${appEnv}")
     private String env;
 
     @Override

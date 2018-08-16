@@ -17,6 +17,10 @@
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <maven.compiler.encoding>${encoding}</maven.compiler.encoding>
+        <!--环境-->
+        <project.env.develop>develop</project.env.develop>
+        <project.env.test>test</project.env.test>
+        <project.env.production>production</project.env.production>
         <!---->
         <project.domain>www.6zeroq.com</project.domain>
         <!---->
@@ -31,12 +35,12 @@
 
     <profiles>
         <profile>
-            <id>develop</id>
+            <id>${project.env.develop}</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <env>develop</env>
+                <env>${project.env.develop}</env>
                 <!--数据库-->
                 <profile.jdbc.driver>com.mysql.jdbc.Driver</profile.jdbc.driver>
                 <profile.jdbc.master.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>
@@ -49,12 +53,12 @@
             </properties>
         </profile>
         <profile>
-            <id>test</id>
+            <id>${project.env.test}</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <env>test</env>
+                <env>${project.env.test}</env>
                 <!--数据库-->
                 <profile.jdbc.driver>com.mysql.jdbc.Driver</profile.jdbc.driver>
                 <profile.jdbc.master.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>
@@ -67,12 +71,12 @@
             </properties>
         </profile>
         <profile>
-            <id>production</id>
+            <id>${project.env.production}</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <env>production</env>
+                <env>${project.env.production}</env>
                 <!--数据库-->
                 <profile.jdbc.driver>com.mysql.jdbc.Driver</profile.jdbc.driver>
                 <profile.jdbc.master.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>
