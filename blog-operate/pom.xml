@@ -24,30 +24,30 @@
 
     <profiles>
         <profile>
-            <id>${project.env.develop}</id>
+            <id>develop</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <env>${project.env.develop}</env>
+                <env>develop</env>
             </properties>
         </profile>
         <profile>
-            <id>${project.env.test}</id>
+            <id>test</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <env>${project.env.test}</env>
+                <env>test</env>
             </properties>
         </profile>
         <profile>
-            <id>${project.env.production}</id>
+            <id>production</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <env>${project.env.production}</env>
+                <env>production</env>
             </properties>
         </profile>
     </profiles>

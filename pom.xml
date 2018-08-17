@@ -35,12 +35,12 @@
 
     <profiles>
         <profile>
-            <id>${project.env.develop}</id>
+            <id>develop</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <env>${project.env.develop}</env>
+                <env>develop</env>
                 <!--数据库-->
                 <profile.jdbc.driver>com.mysql.jdbc.Driver</profile.jdbc.driver>
                 <profile.jdbc.master.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>
@@ -53,12 +53,12 @@
             </properties>
         </profile>
         <profile>
-            <id>${project.env.test}</id>
+            <id>test</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <env>${project.env.test}</env>
+                <env>test</env>
                 <!--数据库-->
                 <profile.jdbc.driver>com.mysql.jdbc.Driver</profile.jdbc.driver>
                 <profile.jdbc.master.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>
@@ -71,12 +71,12 @@
             </properties>
         </profile>
         <profile>
-            <id>${project.env.production}</id>
+            <id>production</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <env>${project.env.production}</env>
+                <env>production</env>
                 <!--数据库-->
                 <profile.jdbc.driver>com.mysql.jdbc.Driver</profile.jdbc.driver>
                 <profile.jdbc.master.url><![CDATA[jdbc:MySql://localhost:3306/blog?characterEncoding=UTF-8]]></profile.jdbc.master.url>

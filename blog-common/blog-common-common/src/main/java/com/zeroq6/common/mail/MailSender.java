@@ -74,8 +74,8 @@ public class MailSender {
             //发件人，注意中文的处理
             mail.setFrom(new InternetAddress(String.format("\"%s\"<%s>", MimeUtility.encodeText(trimNull(username)), fromAddress)));
             //设置邮件回复人
-            mail.setReplyTo(new Address[]{new InternetAddress(toAddress),new InternetAddress(fromAddress)});
-            mail.addRecipients(MimeMessage.RecipientType.CC, InternetAddress.parse(fromAddress));
+            mail.setReplyTo(new Address[]{new InternetAddress(toAddress)});
+//            mail.addRecipients(MimeMessage.RecipientType.CC, InternetAddress.parse(fromAddress));
             //整封邮件的MINE消息体
             MimeMultipart mainMimeMultipart = new MimeMultipart("mixed"); //混合的组合关系
             //设置邮件的Multipart

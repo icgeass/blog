@@ -76,7 +76,7 @@ public class BackupService {
             }
 
             // 备份文件夹
-            File zipFile = new File(parent.getCanonicalPath() + File.separator + "重要备份_" + dataString + ".xml");
+            File zipFile = new File(parent.getCanonicalPath() + File.separator + "backup_" + dataString + ".zip");
             BackupUtils.zipFolders(zipFile, folders);
 
 
