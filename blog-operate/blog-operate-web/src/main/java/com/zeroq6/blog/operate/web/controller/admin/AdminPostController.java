@@ -1,5 +1,6 @@
 package com.zeroq6.blog.operate.web.controller.admin;
 
+import com.zeroq6.blog.common.base.BaseController;
 import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
 import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/admin/post")
-public class AdminPostController {
+public class AdminPostController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

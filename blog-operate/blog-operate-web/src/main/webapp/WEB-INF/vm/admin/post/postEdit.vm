@@ -55,6 +55,19 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="status">发布状态：</label>
+                    <select id="status" name="status">
+#set($postStatusArray=$EmUtils.values('EmPostStatus'))
+#foreach($item in $postStatusArray)
+                        <option value="$item.value" #if($item.value == $post.status) selected#end#if(!$post.status and $item.value == 2) selected#end>$item.title</option>
+#end
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
                 <input type="hidden" name="id" value="$!{post.id}">
                 <textarea name="content" id="content">$!{post.content}</textarea>
                 <input class="btn btn-default" type="submit" value="Submit">
@@ -71,6 +84,7 @@
         $('#tags').multiselect();
         $('#category').multiselect();
         $('#postType').multiselect();
+        $('#status').multiselect();
 
         // https://github.com/houfeng/mditor
         var mditor = Mditor.fromTextarea(document.getElementById('content'));
