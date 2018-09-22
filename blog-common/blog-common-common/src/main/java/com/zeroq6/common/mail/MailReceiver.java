@@ -45,7 +45,7 @@ public class MailReceiver {
             emailFolder.open(Folder.READ_ONLY);
 
             int count = emailFolder.getMessageCount();
-            Message[] messages = emailFolder.getMessages(count - 9, count);
+            Message[] messages = emailFolder.getMessages(count >= 10 ? count - 9 : 1, count);
             for (int i = 0; i < messages.length; i++) {
                 Message message = messages[messages.length - 1 - i];
                 if (title.equals(message.getSubject()) && message.getFrom()[0].toString().contains(from)) {
