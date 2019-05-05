@@ -70,7 +70,7 @@ public class AttachController {
         } catch (Exception e) {
             logger.info("下载失败", e);
             try {
-                if (null != outputStream) {
+                if (null == outputStream) {
                     outputStream = response.getOutputStream();
                 }
                 outputStream.write(e.getMessage().getBytes(Charset.forName("UTF-8")));
