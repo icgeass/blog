@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
 @Controller
 @RequestMapping("/auth")
@@ -38,6 +40,11 @@ public class LoginController {
     @Value("${login.cookie.domain}")
     private String loginCookieDomain;
 
+
+    @Value("${login.return.url.name}")
+    private String loginReturnUrlName;
+
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
@@ -58,7 +65,7 @@ public class LoginController {
                     cookie.setMaxAge(6 * 60 * 60);
                     cookie.setHttpOnly(true);
                     CookieUtils.set(response, cookie);
-                    ResponseUtils.doRedirect(request, response, "/admin");
+                    ResponseUtils.doRedirect(request, response, getRedirectUrl(request));
                     return null;
                 } else {
                     addMessage(request, response, false, "用户名或密码错误", view);
@@ -78,7 +85,7 @@ public class LoginController {
         String re = "/login";
         try {
             loginService.logout(CookieUtils.get(request, loginCookieName));
-            ResponseUtils.doRedirect(request, response, "/auth/login");
+            ResponseUtils.doRedirect(request, response, "/");
             return null;
         } catch (Exception e) {
             view.addAttribute("message", "系统繁忙, 请稍后再试!");
@@ -102,6 +109,15 @@ public class LoginController {
         } catch (Exception e) {
             logger.error("addMessage异常", e);
         }
+    }
+
+    private String getRedirectUrl(HttpServletRequest request) throws UnsupportedEncodingException {
+        String redirectUrl = request.getParameter(loginReturnUrlName);
+        if(StringUtils.isBlank(redirectUrl)){
+            return "/admin";
+        }
+        redirectUrl = new String(Base64.getUrlDecoder().decode(redirectUrl), "UTF-8");
+        return redirectUrl;
     }
 
 

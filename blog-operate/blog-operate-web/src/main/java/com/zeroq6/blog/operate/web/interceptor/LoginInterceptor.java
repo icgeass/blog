@@ -3,6 +3,7 @@ package com.zeroq6.blog.operate.web.interceptor;
 import com.zeroq6.blog.operate.service.login.LoginService;
 import com.zeroq6.common.web.CookieUtils;
 import com.zeroq6.common.web.IpUtils;
+import com.zeroq6.common.web.RequestUtils;
 import com.zeroq6.common.web.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Base64;
 
 
 @Service
@@ -41,6 +43,10 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Value("${login.cookie.domain}")
     private String loginCookieDomain;
 
+
+    @Value("${login.return.url.name}")
+    private String loginReturnUrlName;
+
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         try {
@@ -48,13 +54,13 @@ public class LoginInterceptor implements HandlerInterceptor {
             if (uri.startsWith(loginUriPrefix)) {
                 Cookie cookie = CookieUtils.getCookie(httpServletRequest, loginCookieName);
                 if (null == cookie) {
-                    ResponseUtils.doRedirect(httpServletRequest, httpServletResponse, "/auth/login");
+                    ResponseUtils.doRedirect(httpServletRequest, httpServletResponse, getReturnUrl(httpServletRequest));
                     return false;
                 }
                 boolean success = loginService.validateAndSetCurrUserLoginInfo(cookie.getValue(), IpUtils.getClientIp(httpServletRequest));
                 if (!success) {
                     CookieUtils.delete(httpServletRequest, httpServletResponse, loginCookieName, loginCookieDomain, loginCookiePath);
-                    ResponseUtils.doRedirect(httpServletRequest, httpServletResponse, "/auth/login");
+                    ResponseUtils.doRedirect(httpServletRequest, httpServletResponse, getReturnUrl(httpServletRequest));
                     return false;
                 }
 
@@ -80,6 +86,21 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
     }
 
+    private String getReturnUrl(HttpServletRequest request) throws Exception {
+        //
+        String redirectUrl = "/auth/login/";
+        if ("GET".equals(request.getMethod())) {
+            //
+            String queryString = RequestUtils.getQueryString(request, loginReturnUrlName);
+            String returnUrl = request.getRequestURL() + (null != queryString ? queryString : "");
+            returnUrl = Base64.getUrlEncoder().encodeToString(returnUrl.getBytes("UTF-8"));
+            redirectUrl = redirectUrl + "?" + loginReturnUrlName + "=" + returnUrl;
+
+        }
+        return redirectUrl;
+
+
+    }
 
 
 }
