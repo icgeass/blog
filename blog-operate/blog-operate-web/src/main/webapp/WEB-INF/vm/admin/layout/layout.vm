@@ -64,7 +64,7 @@
                         <li><a href="${request.contextPath}/" target="_blank"><i class="fa fa-user fa-fw"></i> 站点首页</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="${request.contextPath}/admin/logout"><i class="fa fa-sign-out fa-fw"></i> 退出</a>
+                        <li><a href="${request.contextPath}/auth/logout"><i class="fa fa-sign-out fa-fw"></i> 退出</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->

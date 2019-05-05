@@ -7,5 +7,4 @@
 
     <import resource="spring-config-databases.xml"/>
     <import resource="spring-config-task.xml"/>
-    <import resource="spring-dubbo.xml"/>
 </beans>

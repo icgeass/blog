@@ -10,9 +10,9 @@ import com.zeroq6.blog.common.domain.enums.field.*;
 import com.zeroq6.blog.common.utils.PostUtils;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.PostManager;
+import com.zeroq6.blog.operate.service.login.LoginService;
 import com.zeroq6.common.utils.GravatarUtils;
 import com.zeroq6.common.utils.MyDateUtils;
-import com.zeroq6.sso.web.client.context.LoginContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,8 +33,6 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     @Autowired
     private PostManager postManager;
-
-
 
     private SimpleDateFormat commentFmt = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy", Locale.US);
 
@@ -263,7 +261,7 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     public BaseResponse<String> addPost(PostDomain postDomain, List<String> tags, String category) {
         try {
-            postDomain.setUsername(LoginContext.getCurrentUsername());
+            postDomain.setUsername(LoginService.getCurrentUsername());
             if (postDomain.getPostType() == EmPostPostType.WENZHANG.value()) {
                 if (StringUtils.isBlank(category)) {
                     throw new RuntimeException("新增文章分类和标签不能为空");

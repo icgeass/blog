@@ -64,15 +64,18 @@
         </property>
     </bean>
 
+    <bean id ="loginService" class="com.zeroq6.blog.operate.service.login.LoginService">
+        <property name="usernamePasswordMap">
+            <map>
+                <entry key="admin" value="e9b24a98fc3646ba28aa295f19ca339b73a9b08d"></entry>
+            </map>
+        </property>
+    </bean>
+
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean id="springSsoInterceptor" class="com.zeroq6.sso.web.client.interceptor.LoginInterceptor">
-                <property name="ssoServiceApi" ref="ssoServiceApi"/>
-                <property name="groupId" value="blog"/>
-                <property name="disallowUriPrefix" value="/admin"/>
-                <!--如果配置/,则代表忽略所有,可加入disallow-->
-                <property name="ignoreUriPrefix" value="/"/>
+            <bean id="springSsoInterceptor" class="com.zeroq6.blog.operate.web.interceptor.LoginInterceptor">
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>
