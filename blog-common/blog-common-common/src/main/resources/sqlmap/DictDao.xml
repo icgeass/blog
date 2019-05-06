@@ -9,70 +9,70 @@
 
     <sql id="SELECT_COLUMN_LIST">
         <![CDATA[
-            t.id AS id, /*主键*/
-            t.dict_type AS dictType, /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
-            t.dict_key AS dictKey, /*字典键*/
-            t.dict_value AS dictValue, /*字典值*/
-            t.remark AS remark, /*备注*/
-            t.modified_time AS modifiedTime, /*修改时间*/
-            t.created_time AS createdTime, /*创建时间*/
-            t.yn AS yn /*是否有效，1，有效，0，无效*/
+            id AS id, /*主键*/
+            dict_type AS dictType, /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
+            dict_key AS dictKey, /*字典键*/
+            dict_value AS dictValue, /*字典值*/
+            remark AS remark, /*备注*/
+            modified_time AS modifiedTime, /*修改时间*/
+            created_time AS createdTime, /*创建时间*/
+            yn AS yn /*是否有效，1，有效，0，无效*/
         ]]>
     </sql>
 
     <sql id="WHERE_CLAUSE_SELECT">
-        WHERE t.yn = 1
+        WHERE yn = 1
         <if test="id != null">
-            <![CDATA[AND t.id = #{id}]]> /*主键*/
+            <![CDATA[AND id = #{id}]]> /*主键*/
         </if>
         <if test="dictType != null">
-            <![CDATA[AND t.dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
+            <![CDATA[AND dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
         </if>
         <if test="dictKey != null">
-            <![CDATA[AND t.dict_key = #{dictKey}]]> /*字典键*/
+            <![CDATA[AND dict_key = #{dictKey}]]> /*字典键*/
         </if>
         <if test="dictValue != null">
-            <![CDATA[AND t.dict_value = #{dictValue}]]> /*字典值*/
+            <![CDATA[AND dict_value = #{dictValue}]]> /*字典值*/
         </if>
         <if test="remark != null">
-            <![CDATA[AND t.remark = #{remark}]]> /*备注*/
+            <![CDATA[AND remark = #{remark}]]> /*备注*/
         </if>
         <if test="modifiedTime != null">
-            <![CDATA[AND t.modified_time = #{modifiedTime}]]> /*修改时间*/
+            <![CDATA[AND modified_time = #{modifiedTime}]]> /*修改时间*/
         </if>
         <if test="createdTime != null">
-            <![CDATA[AND t.created_time = #{createdTime}]]> /*创建时间*/
+            <![CDATA[AND created_time = #{createdTime}]]> /*创建时间*/
         </if>
         <if test="extendMap!=null">
             <if test="extendMap.dictKeyLike!= null and extendMap.dictKeyLike.trim() != ''">
-                <![CDATA[AND t.dict_key like concat('%',#{extendMap.dictKeyLike},'%' )]]> /*字典键*/
+                <![CDATA[AND dict_key like '%' || #{extendMap.dictKeyLike} || '%']]> /*字典键*/
             </if>
             <if test="extendMap.dictValueLike!= null and extendMap.dictValueLike.trim() != ''">
-                <![CDATA[AND t.dict_value like concat('%',#{extendMap.dictValueLike},'%' )]]> /*字典值*/
+                <![CDATA[AND dict_value like '%' || #{extendMap.dictValueLike} || '%']]> /*字典值*/
             </if>
             <if test="extendMap.remarkLike!= null and extendMap.remarkLike.trim() != ''">
-                <![CDATA[AND t.remark like concat('%',#{extendMap.remarkLike},'%' )]]> /*备注*/
+                <![CDATA[AND remark like '%' || #{extendMap.remarkLike} || '%']]> /*备注*/
             </if>
             <if test="extendMap.modifiedTimeBegin!= null and extendMap.modifiedTimeBegin != ''">
-                <![CDATA[AND t.modified_time >= STR_TO_DATE(#{extendMap.modifiedTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*修改时间开始*/
+                <![CDATA[AND modified_time >= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.modifiedTimeBegin})]]> /*修改时间开始*/
             </if>
             <if test="extendMap.modifiedTimeEnd!= null and extendMap.modifiedTimeEnd != ''">
-                <![CDATA[AND t.modified_time <= STR_TO_DATE(#{extendMap.modifiedTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*修改时间结束*/
+                <![CDATA[AND modified_time <= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.modifiedTimeEnd})]]> /*修改时间结束*/
             </if>
             <if test="extendMap.createdTimeBegin!= null and extendMap.createdTimeBegin != ''">
-                <![CDATA[AND t.created_time >= STR_TO_DATE(#{extendMap.createdTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*创建时间开始*/
+                <![CDATA[AND created_time >= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.createdTimeBegin})]]> /*创建时间开始*/
             </if>
             <if test="extendMap.createdTimeEnd!= null and extendMap.createdTimeEnd != ''">
-                <![CDATA[AND t.created_time <= STR_TO_DATE(#{extendMap.createdTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*创建时间结束*/
+                <![CDATA[AND created_time <= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.createdTimeEnd})]]> /*创建时间结束*/
             </if>
             <if test="extendMap.idIn!= null">
-                <![CDATA[AND t.id in ]]>
+                <![CDATA[AND id in ]]>
                 <foreach item="item" index="index" collection="extendMap.idIn" open="(" separator="," close=")">
                   #{item}
                 </foreach>
             </if>
             <if test="extendMap.dictTypeIn!= null">
-                <![CDATA[AND t.dict_type in ]]>
+                <![CDATA[AND dict_type in ]]>
                 <foreach item="item" index="index" collection="extendMap.dictTypeIn" open="(" separator="," close=")">
                   #{item}
                 </foreach>
@@ -85,27 +85,27 @@
 
     <sql id="WHERE_CLAUSE_UPDATE">
         <!--如果extendMap或where为空，则mybatis解析表达式空指针，执行不了-->
-        WHERE t.yn = 1
+        WHERE yn = 1
         <if test="extendMap.where.id!= null">
-            <![CDATA[AND t.id = #{extendMap.where.id}]]> /*主键*/
+            <![CDATA[AND id = #{extendMap.where.id}]]> /*主键*/
         </if>
         <if test="extendMap.where.dictType!= null">
-            <![CDATA[AND t.dict_type = #{extendMap.where.dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
+            <![CDATA[AND dict_type = #{extendMap.where.dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
         </if>
         <if test="extendMap.where.dictKey!= null">
-            <![CDATA[AND t.dict_key = #{extendMap.where.dictKey}]]> /*字典键*/
+            <![CDATA[AND dict_key = #{extendMap.where.dictKey}]]> /*字典键*/
         </if>
         <if test="extendMap.where.dictValue!= null">
-            <![CDATA[AND t.dict_value = #{extendMap.where.dictValue}]]> /*字典值*/
+            <![CDATA[AND dict_value = #{extendMap.where.dictValue}]]> /*字典值*/
         </if>
         <if test="extendMap.where.remark!= null">
-            <![CDATA[AND t.remark = #{extendMap.where.remark}]]> /*备注*/
+            <![CDATA[AND remark = #{extendMap.where.remark}]]> /*备注*/
         </if>
         <if test="extendMap.where.modifiedTime!= null">
-            <![CDATA[AND t.modified_time = #{extendMap.where.modifiedTime}]]> /*修改时间*/
+            <![CDATA[AND modified_time = #{extendMap.where.modifiedTime}]]> /*修改时间*/
         </if>
         <if test="extendMap.where.createdTime!= null">
-            <![CDATA[AND t.created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
+            <![CDATA[AND created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
         </if>
         <!--自定义开始 -->
 
@@ -116,18 +116,18 @@
     <sql id="UPDATE_COLUMN_SET">
         <set>
             <if test="dictType!= null">
-                <![CDATA[ t.dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/,
+                <![CDATA[ dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/,
             </if>
             <if test="dictKey!= null">
-                <![CDATA[ t.dict_key = #{dictKey}]]> /*字典键*/,
+                <![CDATA[ dict_key = #{dictKey}]]> /*字典键*/,
             </if>
             <if test="dictValue!= null">
-                <![CDATA[ t.dict_value = #{dictValue}]]> /*字典值*/,
+                <![CDATA[ dict_value = #{dictValue}]]> /*字典值*/,
             </if>
             <if test="remark!= null">
-                <![CDATA[ t.remark = #{remark}]]> /*备注*/,
+                <![CDATA[ remark = #{remark}]]> /*备注*/,
             </if>
-                <![CDATA[ t.modified_time = NOW()]]> /*修改时间*/,
+                <![CDATA[ modified_time = datetime(CURRENT_TIMESTAMP,'localtime')]]> /*修改时间*/,
             <!--自定义开始 -->
 
             <!--自定义结束 -->
@@ -152,7 +152,7 @@
 
     <sql id="INSERT_COLUMN"><if test="dictType != null">dict_type,</if><if test="dictKey != null">dict_key,</if><if test="dictValue != null">dict_value,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="dictType != null">#{dictType},</if><if test="dictKey != null">#{dictKey},</if><if test="dictValue != null">#{dictValue},</if><if test="remark != null">#{remark},</if>NOW(),NOW(),1</sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="dictType != null">#{dictType},</if><if test="dictKey != null">#{dictKey},</if><if test="dictValue != null">#{dictValue},</if><if test="remark != null">#{remark},</if>datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.DictDomain">
         INSERT INTO <include refid="TABLE"/>
@@ -183,7 +183,7 @@
         )
         VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.dictType},#{item.dictKey},#{item.dictValue},#{item.remark},NOW(),NOW(),1)
+            (#{item.dictType},#{item.dictKey},#{item.dictValue},#{item.remark},datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1)
         </foreach>
 
     </insert>
@@ -192,15 +192,15 @@
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
-        WHERE t.yn = 1 AND t.id = #{id}
+        <include refid="TABLE"/>
+        WHERE yn = 1 AND id = #{id}
     </select>
 
     <select id="selectList" parameterType="com.zeroq6.blog.common.domain.DictDomain" resultType="com.zeroq6.blog.common.domain.DictDomain">
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <include refid="WHERE_CLAUSE_SELECT"/>
         <include refid="QUERY_ORDER_LIMIT_CONDITION"/>
     </select>
@@ -209,31 +209,31 @@
         SELECT
         count(1)
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <include refid="WHERE_CLAUSE_SELECT"/>
     </select>
 
     <update id="updateByKey" parameterType="com.zeroq6.blog.common.domain.DictDomain" >
-        UPDATE <include refid="TABLE_T"/>
+        UPDATE <include refid="TABLE"/>
         <include refid="UPDATE_COLUMN_SET"/>
-        WHERE t.yn = 1 AND t.id = #{id}
+        WHERE yn = 1 AND id = #{id}
     </update>
 
     <update id="updateByCondition" parameterType="com.zeroq6.blog.common.domain.DictDomain">
-        UPDATE <include refid="TABLE_T"/>
+        UPDATE <include refid="TABLE"/>
         <include refid="UPDATE_COLUMN_SET"/>
         <include refid="WHERE_CLAUSE_UPDATE"/>
     </update>
 
     <update id="disableByKey" parameterType="long">
-        UPDATE <include refid="TABLE_T"/>
-        SET t.yn = 0
-        WHERE t.yn = 1 AND t.id = #{_parameter}
+        UPDATE <include refid="TABLE"/>
+        SET yn = 0
+        WHERE yn = 1 AND id = #{_parameter}
     </update>
 
     <update id="disableByCondition" parameterType="com.zeroq6.blog.common.domain.DictDomain">
-        UPDATE <include refid="TABLE_T"/>
-        SET t.yn = 0
+        UPDATE <include refid="TABLE"/>
+        SET yn = 0
         <include refid="WHERE_CLAUSE_SELECT"/>
     </update>
 

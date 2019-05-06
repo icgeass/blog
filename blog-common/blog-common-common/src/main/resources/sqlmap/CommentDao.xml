@@ -9,106 +9,106 @@
 
     <sql id="SELECT_COLUMN_LIST">
         <![CDATA[
-            t.id AS id, /*主键*/
-            t.username AS username, /*用户名*/
-            t.email AS email, /*邮箱*/
-            t.url AS url, /*链接*/
-            t.content AS content, /*内容*/
-            t.post_id AS postId, /*文章id*/
-            t.parent_id AS parentId, /*父id*/
-            t.parent_type AS parentType, /*父类型，1，文章，2，评论*/
-            t.ip AS ip, /*ip地址*/
-            t.user_agent AS userAgent, /*用户代理*/
-            t.remark AS remark, /*备注*/
-            t.modified_time AS modifiedTime, /*修改时间*/
-            t.created_time AS createdTime, /*创建时间*/
-            t.yn AS yn /*是否有效，1，有效，0，无效*/
+            id AS id, /*主键*/
+            username AS username, /*用户名*/
+            email AS email, /*邮箱*/
+            url AS url, /*链接*/
+            content AS content, /*内容*/
+            post_id AS postId, /*文章id*/
+            parent_id AS parentId, /*父id*/
+            parent_type AS parentType, /*父类型，1，文章，2，评论*/
+            ip AS ip, /*ip地址*/
+            user_agent AS userAgent, /*用户代理*/
+            remark AS remark, /*备注*/
+            modified_time AS modifiedTime, /*修改时间*/
+            created_time AS createdTime, /*创建时间*/
+            yn AS yn /*是否有效，1，有效，0，无效*/
         ]]>
     </sql>
 
     <sql id="WHERE_CLAUSE_SELECT">
-        WHERE t.yn = 1
+        WHERE yn = 1
         <if test="id != null">
-            <![CDATA[AND t.id = #{id}]]> /*主键*/
+            <![CDATA[AND id = #{id}]]> /*主键*/
         </if>
         <if test="username != null">
-            <![CDATA[AND t.username = #{username}]]> /*用户名*/
+            <![CDATA[AND username = #{username}]]> /*用户名*/
         </if>
         <if test="email != null">
-            <![CDATA[AND t.email = #{email}]]> /*邮箱*/
+            <![CDATA[AND email = #{email}]]> /*邮箱*/
         </if>
         <if test="url != null">
-            <![CDATA[AND t.url = #{url}]]> /*链接*/
+            <![CDATA[AND url = #{url}]]> /*链接*/
         </if>
         <if test="content != null">
-            <![CDATA[AND t.content = #{content}]]> /*内容*/
+            <![CDATA[AND content = #{content}]]> /*内容*/
         </if>
         <if test="postId != null">
-            <![CDATA[AND t.post_id = #{postId}]]> /*文章id*/
+            <![CDATA[AND post_id = #{postId}]]> /*文章id*/
         </if>
         <if test="parentId != null">
-            <![CDATA[AND t.parent_id = #{parentId}]]> /*父id*/
+            <![CDATA[AND parent_id = #{parentId}]]> /*父id*/
         </if>
         <if test="parentType != null">
-            <![CDATA[AND t.parent_type = #{parentType}]]> /*父类型，1，文章，2，评论*/
+            <![CDATA[AND parent_type = #{parentType}]]> /*父类型，1，文章，2，评论*/
         </if>
         <if test="ip != null">
-            <![CDATA[AND t.ip = #{ip}]]> /*ip地址*/
+            <![CDATA[AND ip = #{ip}]]> /*ip地址*/
         </if>
         <if test="userAgent != null">
-            <![CDATA[AND t.user_agent = #{userAgent}]]> /*用户代理*/
+            <![CDATA[AND user_agent = #{userAgent}]]> /*用户代理*/
         </if>
         <if test="remark != null">
-            <![CDATA[AND t.remark = #{remark}]]> /*备注*/
+            <![CDATA[AND remark = #{remark}]]> /*备注*/
         </if>
         <if test="modifiedTime != null">
-            <![CDATA[AND t.modified_time = #{modifiedTime}]]> /*修改时间*/
+            <![CDATA[AND modified_time = #{modifiedTime}]]> /*修改时间*/
         </if>
         <if test="createdTime != null">
-            <![CDATA[AND t.created_time = #{createdTime}]]> /*创建时间*/
+            <![CDATA[AND created_time = #{createdTime}]]> /*创建时间*/
         </if>
         <if test="extendMap!=null">
             <if test="extendMap.usernameLike!= null and extendMap.usernameLike.trim() != ''">
-                <![CDATA[AND t.username like concat('%',#{extendMap.usernameLike},'%' )]]> /*用户名*/
+                <![CDATA[AND username like '%' || #{extendMap.usernameLike} || '%']]> /*用户名*/
             </if>
             <if test="extendMap.emailLike!= null and extendMap.emailLike.trim() != ''">
-                <![CDATA[AND t.email like concat('%',#{extendMap.emailLike},'%' )]]> /*邮箱*/
+                <![CDATA[AND email like '%' || #{extendMap.emailLike} || '%']]> /*邮箱*/
             </if>
             <if test="extendMap.urlLike!= null and extendMap.urlLike.trim() != ''">
-                <![CDATA[AND t.url like concat('%',#{extendMap.urlLike},'%' )]]> /*链接*/
+                <![CDATA[AND url like '%' || #{extendMap.urlLike} || '%']]> /*链接*/
             </if>
             <if test="extendMap.contentLike!= null and extendMap.contentLike.trim() != ''">
-                <![CDATA[AND t.content like concat('%',#{extendMap.contentLike},'%' )]]> /*内容*/
+                <![CDATA[AND content like '%' || #{extendMap.contentLike} || '%']]> /*内容*/
             </if>
             <if test="extendMap.ipLike!= null and extendMap.ipLike.trim() != ''">
-                <![CDATA[AND t.ip like concat('%',#{extendMap.ipLike},'%' )]]> /*ip地址*/
+                <![CDATA[AND ip like '%' || #{extendMap.ipLike} || '%']]> /*ip地址*/
             </if>
             <if test="extendMap.userAgentLike!= null and extendMap.userAgentLike.trim() != ''">
-                <![CDATA[AND t.user_agent like concat('%',#{extendMap.userAgentLike},'%' )]]> /*用户代理*/
+                <![CDATA[AND user_agent like '%' || #{extendMap.userAgentLike} || '%']]> /*用户代理*/
             </if>
             <if test="extendMap.remarkLike!= null and extendMap.remarkLike.trim() != ''">
-                <![CDATA[AND t.remark like concat('%',#{extendMap.remarkLike},'%' )]]> /*备注*/
+                <![CDATA[AND remark like '%' || #{extendMap.remarkLike} || '%']]> /*备注*/
             </if>
             <if test="extendMap.modifiedTimeBegin!= null and extendMap.modifiedTimeBegin != ''">
-                <![CDATA[AND t.modified_time >= STR_TO_DATE(#{extendMap.modifiedTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*修改时间开始*/
+                <![CDATA[AND modified_time >= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.modifiedTimeBegin})]]> /*修改时间开始*/
             </if>
             <if test="extendMap.modifiedTimeEnd!= null and extendMap.modifiedTimeEnd != ''">
-                <![CDATA[AND t.modified_time <= STR_TO_DATE(#{extendMap.modifiedTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*修改时间结束*/
+                <![CDATA[AND modified_time <= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.modifiedTimeEnd})]]> /*修改时间结束*/
             </if>
             <if test="extendMap.createdTimeBegin!= null and extendMap.createdTimeBegin != ''">
-                <![CDATA[AND t.created_time >= STR_TO_DATE(#{extendMap.createdTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*创建时间开始*/
+                <![CDATA[AND created_time >= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.createdTimeBegin})]]> /*创建时间开始*/
             </if>
             <if test="extendMap.createdTimeEnd!= null and extendMap.createdTimeEnd != ''">
-                <![CDATA[AND t.created_time <= STR_TO_DATE(#{extendMap.createdTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*创建时间结束*/
+                <![CDATA[AND created_time <= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.createdTimeEnd})]]> /*创建时间结束*/
             </if>
             <if test="extendMap.idIn!= null">
-                <![CDATA[AND t.id in ]]>
+                <![CDATA[AND id in ]]>
                 <foreach item="item" index="index" collection="extendMap.idIn" open="(" separator="," close=")">
                   #{item}
                 </foreach>
             </if>
             <if test="extendMap.parentTypeIn!= null">
-                <![CDATA[AND t.parent_type in ]]>
+                <![CDATA[AND parent_type in ]]>
                 <foreach item="item" index="index" collection="extendMap.parentTypeIn" open="(" separator="," close=")">
                   #{item}
                 </foreach>
@@ -121,45 +121,45 @@
 
     <sql id="WHERE_CLAUSE_UPDATE">
         <!--如果extendMap或where为空，则mybatis解析表达式空指针，执行不了-->
-        WHERE t.yn = 1
+        WHERE yn = 1
         <if test="extendMap.where.id!= null">
-            <![CDATA[AND t.id = #{extendMap.where.id}]]> /*主键*/
+            <![CDATA[AND id = #{extendMap.where.id}]]> /*主键*/
         </if>
         <if test="extendMap.where.username!= null">
-            <![CDATA[AND t.username = #{extendMap.where.username}]]> /*用户名*/
+            <![CDATA[AND username = #{extendMap.where.username}]]> /*用户名*/
         </if>
         <if test="extendMap.where.email!= null">
-            <![CDATA[AND t.email = #{extendMap.where.email}]]> /*邮箱*/
+            <![CDATA[AND email = #{extendMap.where.email}]]> /*邮箱*/
         </if>
         <if test="extendMap.where.url!= null">
-            <![CDATA[AND t.url = #{extendMap.where.url}]]> /*链接*/
+            <![CDATA[AND url = #{extendMap.where.url}]]> /*链接*/
         </if>
         <if test="extendMap.where.content!= null">
-            <![CDATA[AND t.content = #{extendMap.where.content}]]> /*内容*/
+            <![CDATA[AND content = #{extendMap.where.content}]]> /*内容*/
         </if>
         <if test="extendMap.where.postId!= null">
-            <![CDATA[AND t.post_id = #{extendMap.where.postId}]]> /*文章id*/
+            <![CDATA[AND post_id = #{extendMap.where.postId}]]> /*文章id*/
         </if>
         <if test="extendMap.where.parentId!= null">
-            <![CDATA[AND t.parent_id = #{extendMap.where.parentId}]]> /*父id*/
+            <![CDATA[AND parent_id = #{extendMap.where.parentId}]]> /*父id*/
         </if>
         <if test="extendMap.where.parentType!= null">
-            <![CDATA[AND t.parent_type = #{extendMap.where.parentType}]]> /*父类型，1，文章，2，评论*/
+            <![CDATA[AND parent_type = #{extendMap.where.parentType}]]> /*父类型，1，文章，2，评论*/
         </if>
         <if test="extendMap.where.ip!= null">
-            <![CDATA[AND t.ip = #{extendMap.where.ip}]]> /*ip地址*/
+            <![CDATA[AND ip = #{extendMap.where.ip}]]> /*ip地址*/
         </if>
         <if test="extendMap.where.userAgent!= null">
-            <![CDATA[AND t.user_agent = #{extendMap.where.userAgent}]]> /*用户代理*/
+            <![CDATA[AND user_agent = #{extendMap.where.userAgent}]]> /*用户代理*/
         </if>
         <if test="extendMap.where.remark!= null">
-            <![CDATA[AND t.remark = #{extendMap.where.remark}]]> /*备注*/
+            <![CDATA[AND remark = #{extendMap.where.remark}]]> /*备注*/
         </if>
         <if test="extendMap.where.modifiedTime!= null">
-            <![CDATA[AND t.modified_time = #{extendMap.where.modifiedTime}]]> /*修改时间*/
+            <![CDATA[AND modified_time = #{extendMap.where.modifiedTime}]]> /*修改时间*/
         </if>
         <if test="extendMap.where.createdTime!= null">
-            <![CDATA[AND t.created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
+            <![CDATA[AND created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
         </if>
         <!--自定义开始 -->
 
@@ -170,36 +170,36 @@
     <sql id="UPDATE_COLUMN_SET">
         <set>
             <if test="username!= null">
-                <![CDATA[ t.username = #{username}]]> /*用户名*/,
+                <![CDATA[ username = #{username}]]> /*用户名*/,
             </if>
             <if test="email!= null">
-                <![CDATA[ t.email = #{email}]]> /*邮箱*/,
+                <![CDATA[ email = #{email}]]> /*邮箱*/,
             </if>
             <if test="url!= null">
-                <![CDATA[ t.url = #{url}]]> /*链接*/,
+                <![CDATA[ url = #{url}]]> /*链接*/,
             </if>
             <if test="content!= null">
-                <![CDATA[ t.content = #{content}]]> /*内容*/,
+                <![CDATA[ content = #{content}]]> /*内容*/,
             </if>
             <if test="postId!= null">
-                <![CDATA[ t.post_id = #{postId}]]> /*文章id*/,
+                <![CDATA[ post_id = #{postId}]]> /*文章id*/,
             </if>
             <if test="parentId!= null">
-                <![CDATA[ t.parent_id = #{parentId}]]> /*父id*/,
+                <![CDATA[ parent_id = #{parentId}]]> /*父id*/,
             </if>
             <if test="parentType!= null">
-                <![CDATA[ t.parent_type = #{parentType}]]> /*父类型，1，文章，2，评论*/,
+                <![CDATA[ parent_type = #{parentType}]]> /*父类型，1，文章，2，评论*/,
             </if>
             <if test="ip!= null">
-                <![CDATA[ t.ip = #{ip}]]> /*ip地址*/,
+                <![CDATA[ ip = #{ip}]]> /*ip地址*/,
             </if>
             <if test="userAgent!= null">
-                <![CDATA[ t.user_agent = #{userAgent}]]> /*用户代理*/,
+                <![CDATA[ user_agent = #{userAgent}]]> /*用户代理*/,
             </if>
             <if test="remark!= null">
-                <![CDATA[ t.remark = #{remark}]]> /*备注*/,
+                <![CDATA[ remark = #{remark}]]> /*备注*/,
             </if>
-                <![CDATA[ t.modified_time = NOW()]]> /*修改时间*/,
+                <![CDATA[ modified_time = datetime(CURRENT_TIMESTAMP,'localtime')]]> /*修改时间*/,
             <!--自定义开始 -->
 
             <!--自定义结束 -->
@@ -224,7 +224,7 @@
 
     <sql id="INSERT_COLUMN"><if test="username != null">username,</if><if test="email != null">email,</if><if test="url != null">url,</if><if test="content != null">content,</if><if test="postId != null">post_id,</if><if test="parentId != null">parent_id,</if><if test="parentType != null">parent_type,</if><if test="ip != null">ip,</if><if test="userAgent != null">user_agent,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="username != null">#{username},</if><if test="email != null">#{email},</if><if test="url != null">#{url},</if><if test="content != null">#{content},</if><if test="postId != null">#{postId},</if><if test="parentId != null">#{parentId},</if><if test="parentType != null">#{parentType},</if><if test="ip != null">#{ip},</if><if test="userAgent != null">#{userAgent},</if><if test="remark != null">#{remark},</if>NOW(),NOW(),1</sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="username != null">#{username},</if><if test="email != null">#{email},</if><if test="url != null">#{url},</if><if test="content != null">#{content},</if><if test="postId != null">#{postId},</if><if test="parentId != null">#{parentId},</if><if test="parentType != null">#{parentType},</if><if test="ip != null">#{ip},</if><if test="userAgent != null">#{userAgent},</if><if test="remark != null">#{remark},</if>datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.CommentDomain">
         INSERT INTO <include refid="TABLE"/>
@@ -255,7 +255,7 @@
         )
         VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.username},#{item.email},#{item.url},#{item.content},#{item.postId},#{item.parentId},#{item.parentType},#{item.ip},#{item.userAgent},#{item.remark},NOW(),NOW(),1)
+            (#{item.username},#{item.email},#{item.url},#{item.content},#{item.postId},#{item.parentId},#{item.parentType},#{item.ip},#{item.userAgent},#{item.remark},datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1)
         </foreach>
 
     </insert>
@@ -264,15 +264,15 @@
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
-        WHERE t.yn = 1 AND t.id = #{id}
+        <include refid="TABLE"/>
+        WHERE yn = 1 AND id = #{id}
     </select>
 
     <select id="selectList" parameterType="com.zeroq6.blog.common.domain.CommentDomain" resultType="com.zeroq6.blog.common.domain.CommentDomain">
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <include refid="WHERE_CLAUSE_SELECT"/>
         <include refid="QUERY_ORDER_LIMIT_CONDITION"/>
     </select>
@@ -281,31 +281,31 @@
         SELECT
         count(1)
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <include refid="WHERE_CLAUSE_SELECT"/>
     </select>
 
     <update id="updateByKey" parameterType="com.zeroq6.blog.common.domain.CommentDomain" >
-        UPDATE <include refid="TABLE_T"/>
+        UPDATE <include refid="TABLE"/>
         <include refid="UPDATE_COLUMN_SET"/>
-        WHERE t.yn = 1 AND t.id = #{id}
+        WHERE yn = 1 AND id = #{id}
     </update>
 
     <update id="updateByCondition" parameterType="com.zeroq6.blog.common.domain.CommentDomain">
-        UPDATE <include refid="TABLE_T"/>
+        UPDATE <include refid="TABLE"/>
         <include refid="UPDATE_COLUMN_SET"/>
         <include refid="WHERE_CLAUSE_UPDATE"/>
     </update>
 
     <update id="disableByKey" parameterType="long">
-        UPDATE <include refid="TABLE_T"/>
-        SET t.yn = 0
-        WHERE t.yn = 1 AND t.id = #{_parameter}
+        UPDATE <include refid="TABLE"/>
+        SET yn = 0
+        WHERE yn = 1 AND id = #{_parameter}
     </update>
 
     <update id="disableByCondition" parameterType="com.zeroq6.blog.common.domain.CommentDomain">
-        UPDATE <include refid="TABLE_T"/>
-        SET t.yn = 0
+        UPDATE <include refid="TABLE"/>
+        SET yn = 0
         <include refid="WHERE_CLAUSE_SELECT"/>
     </update>
 

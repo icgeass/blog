@@ -9,87 +9,87 @@
 
     <sql id="SELECT_COLUMN_LIST">
         <![CDATA[
-            t.id AS id, /*主键*/
-            t.title AS title, /*标题*/
-            t.username AS username, /*用户名*/
-            t.content AS content, /*内容*/
-            t.post_type AS postType, /*文章类型，1，文章，2，留言*/
-            t.status AS status, /*状态，1，未发布，2，已发布*/
-            t.remark AS remark, /*备注*/
-            t.modified_time AS modifiedTime, /*修改时间*/
-            t.created_time AS createdTime, /*创建时间*/
-            t.yn AS yn /*是否有效，1，有效，0，无效*/
+            id AS id, /*主键*/
+            title AS title, /*标题*/
+            username AS username, /*用户名*/
+            content AS content, /*内容*/
+            post_type AS postType, /*文章类型，1，文章，2，留言*/
+            status AS status, /*状态，1，未发布，2，已发布*/
+            remark AS remark, /*备注*/
+            modified_time AS modifiedTime, /*修改时间*/
+            created_time AS createdTime, /*创建时间*/
+            yn AS yn /*是否有效，1，有效，0，无效*/
         ]]>
     </sql>
 
     <sql id="WHERE_CLAUSE_SELECT">
-        WHERE t.yn = 1
+        WHERE yn = 1
         <if test="id != null">
-            <![CDATA[AND t.id = #{id}]]> /*主键*/
+            <![CDATA[AND id = #{id}]]> /*主键*/
         </if>
         <if test="title != null">
-            <![CDATA[AND t.title = #{title}]]> /*标题*/
+            <![CDATA[AND title = #{title}]]> /*标题*/
         </if>
         <if test="username != null">
-            <![CDATA[AND t.username = #{username}]]> /*用户名*/
+            <![CDATA[AND username = #{username}]]> /*用户名*/
         </if>
         <if test="content != null">
-            <![CDATA[AND t.content = #{content}]]> /*内容*/
+            <![CDATA[AND content = #{content}]]> /*内容*/
         </if>
         <if test="postType != null">
-            <![CDATA[AND t.post_type = #{postType}]]> /*文章类型，1，文章，2，留言*/
+            <![CDATA[AND post_type = #{postType}]]> /*文章类型，1，文章，2，留言*/
         </if>
         <if test="status != null">
-            <![CDATA[AND t.status = #{status}]]> /*状态，1，未发布，2，已发布*/
+            <![CDATA[AND status = #{status}]]> /*状态，1，未发布，2，已发布*/
         </if>
         <if test="remark != null">
-            <![CDATA[AND t.remark = #{remark}]]> /*备注*/
+            <![CDATA[AND remark = #{remark}]]> /*备注*/
         </if>
         <if test="modifiedTime != null">
-            <![CDATA[AND t.modified_time = #{modifiedTime}]]> /*修改时间*/
+            <![CDATA[AND modified_time = #{modifiedTime}]]> /*修改时间*/
         </if>
         <if test="createdTime != null">
-            <![CDATA[AND t.created_time = #{createdTime}]]> /*创建时间*/
+            <![CDATA[AND created_time = #{createdTime}]]> /*创建时间*/
         </if>
         <if test="extendMap!=null">
             <if test="extendMap.titleLike!= null and extendMap.titleLike.trim() != ''">
-                <![CDATA[AND t.title like concat('%',#{extendMap.titleLike},'%' )]]> /*标题*/
+                <![CDATA[AND title like '%' || #{extendMap.titleLike} || '%']]> /*标题*/
             </if>
             <if test="extendMap.usernameLike!= null and extendMap.usernameLike.trim() != ''">
-                <![CDATA[AND t.username like concat('%',#{extendMap.usernameLike},'%' )]]> /*用户名*/
+                <![CDATA[AND username like '%' || #{extendMap.usernameLike} || '%']]> /*用户名*/
             </if>
             <if test="extendMap.contentLike!= null and extendMap.contentLike.trim() != ''">
-                <![CDATA[AND t.content like concat('%',#{extendMap.contentLike},'%' )]]> /*内容*/
+                <![CDATA[AND content like '%' || #{extendMap.contentLike} || '%']]> /*内容*/
             </if>
             <if test="extendMap.remarkLike!= null and extendMap.remarkLike.trim() != ''">
-                <![CDATA[AND t.remark like concat('%',#{extendMap.remarkLike},'%' )]]> /*备注*/
+                <![CDATA[AND remark like '%' || #{extendMap.remarkLike} || '%']]> /*备注*/
             </if>
             <if test="extendMap.modifiedTimeBegin!= null and extendMap.modifiedTimeBegin != ''">
-                <![CDATA[AND t.modified_time >= STR_TO_DATE(#{extendMap.modifiedTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*修改时间开始*/
+                <![CDATA[AND modified_time >= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.modifiedTimeBegin})]]> /*修改时间开始*/
             </if>
             <if test="extendMap.modifiedTimeEnd!= null and extendMap.modifiedTimeEnd != ''">
-                <![CDATA[AND t.modified_time <= STR_TO_DATE(#{extendMap.modifiedTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*修改时间结束*/
+                <![CDATA[AND modified_time <= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.modifiedTimeEnd})]]> /*修改时间结束*/
             </if>
             <if test="extendMap.createdTimeBegin!= null and extendMap.createdTimeBegin != ''">
-                <![CDATA[AND t.created_time >= STR_TO_DATE(#{extendMap.createdTimeBegin},'%Y-%m-%d %H:%i:%s')]]> /*创建时间开始*/
+                <![CDATA[AND created_time >= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.createdTimeBegin})]]> /*创建时间开始*/
             </if>
             <if test="extendMap.createdTimeEnd!= null and extendMap.createdTimeEnd != ''">
-                <![CDATA[AND t.created_time <= STR_TO_DATE(#{extendMap.createdTimeEnd},'%Y-%m-%d %H:%i:%s')]]> /*创建时间结束*/
+                <![CDATA[AND created_time <= strftime('%Y-%m-%d %H:%M:%S',#{extendMap.createdTimeEnd})]]> /*创建时间结束*/
             </if>
             <if test="extendMap.idIn!= null">
-                <![CDATA[AND t.id in ]]>
+                <![CDATA[AND id in ]]>
                 <foreach item="item" index="index" collection="extendMap.idIn" open="(" separator="," close=")">
                   #{item}
                 </foreach>
             </if>
             <if test="extendMap.postTypeIn!= null">
-                <![CDATA[AND t.post_type in ]]>
+                <![CDATA[AND post_type in ]]>
                 <foreach item="item" index="index" collection="extendMap.postTypeIn" open="(" separator="," close=")">
                   #{item}
                 </foreach>
             </if>
             <if test="extendMap.statusIn!= null">
-                <![CDATA[AND t.status in ]]>
+                <![CDATA[AND status in ]]>
                 <foreach item="item" index="index" collection="extendMap.statusIn" open="(" separator="," close=")">
                   #{item}
                 </foreach>
@@ -102,33 +102,33 @@
 
     <sql id="WHERE_CLAUSE_UPDATE">
         <!--如果extendMap或where为空，则mybatis解析表达式空指针，执行不了-->
-        WHERE t.yn = 1
+        WHERE yn = 1
         <if test="extendMap.where.id!= null">
-            <![CDATA[AND t.id = #{extendMap.where.id}]]> /*主键*/
+            <![CDATA[AND id = #{extendMap.where.id}]]> /*主键*/
         </if>
         <if test="extendMap.where.title!= null">
-            <![CDATA[AND t.title = #{extendMap.where.title}]]> /*标题*/
+            <![CDATA[AND title = #{extendMap.where.title}]]> /*标题*/
         </if>
         <if test="extendMap.where.username!= null">
-            <![CDATA[AND t.username = #{extendMap.where.username}]]> /*用户名*/
+            <![CDATA[AND username = #{extendMap.where.username}]]> /*用户名*/
         </if>
         <if test="extendMap.where.content!= null">
-            <![CDATA[AND t.content = #{extendMap.where.content}]]> /*内容*/
+            <![CDATA[AND content = #{extendMap.where.content}]]> /*内容*/
         </if>
         <if test="extendMap.where.postType!= null">
-            <![CDATA[AND t.post_type = #{extendMap.where.postType}]]> /*文章类型，1，文章，2，留言*/
+            <![CDATA[AND post_type = #{extendMap.where.postType}]]> /*文章类型，1，文章，2，留言*/
         </if>
         <if test="extendMap.where.status!= null">
-            <![CDATA[AND t.status = #{extendMap.where.status}]]> /*状态，1，未发布，2，已发布*/
+            <![CDATA[AND status = #{extendMap.where.status}]]> /*状态，1，未发布，2，已发布*/
         </if>
         <if test="extendMap.where.remark!= null">
-            <![CDATA[AND t.remark = #{extendMap.where.remark}]]> /*备注*/
+            <![CDATA[AND remark = #{extendMap.where.remark}]]> /*备注*/
         </if>
         <if test="extendMap.where.modifiedTime!= null">
-            <![CDATA[AND t.modified_time = #{extendMap.where.modifiedTime}]]> /*修改时间*/
+            <![CDATA[AND modified_time = #{extendMap.where.modifiedTime}]]> /*修改时间*/
         </if>
         <if test="extendMap.where.createdTime!= null">
-            <![CDATA[AND t.created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
+            <![CDATA[AND created_time = #{extendMap.where.createdTime}]]> /*创建时间*/
         </if>
         <!--自定义开始 -->
 
@@ -139,24 +139,24 @@
     <sql id="UPDATE_COLUMN_SET">
         <set>
             <if test="title!= null">
-                <![CDATA[ t.title = #{title}]]> /*标题*/,
+                <![CDATA[ title = #{title}]]> /*标题*/,
             </if>
             <if test="username!= null">
-                <![CDATA[ t.username = #{username}]]> /*用户名*/,
+                <![CDATA[ username = #{username}]]> /*用户名*/,
             </if>
             <if test="content!= null">
-                <![CDATA[ t.content = #{content}]]> /*内容*/,
+                <![CDATA[ content = #{content}]]> /*内容*/,
             </if>
             <if test="postType!= null">
-                <![CDATA[ t.post_type = #{postType}]]> /*文章类型，1，文章，2，留言*/,
+                <![CDATA[ post_type = #{postType}]]> /*文章类型，1，文章，2，留言*/,
             </if>
             <if test="status!= null">
-                <![CDATA[ t.status = #{status}]]> /*状态，1，未发布，2，已发布*/,
+                <![CDATA[ status = #{status}]]> /*状态，1，未发布，2，已发布*/,
             </if>
             <if test="remark!= null">
-                <![CDATA[ t.remark = #{remark}]]> /*备注*/,
+                <![CDATA[ remark = #{remark}]]> /*备注*/,
             </if>
-                <![CDATA[ t.modified_time = NOW()]]> /*修改时间*/,
+                <![CDATA[ modified_time = datetime(CURRENT_TIMESTAMP,'localtime')]]> /*修改时间*/,
             <!--自定义开始 -->
 
             <!--自定义结束 -->
@@ -181,7 +181,7 @@
 
     <sql id="INSERT_COLUMN"><if test="title != null">title,</if><if test="username != null">username,</if><if test="content != null">content,</if><if test="postType != null">post_type,</if><if test="status != null">status,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="title != null">#{title},</if><if test="username != null">#{username},</if><if test="content != null">#{content},</if><if test="postType != null">#{postType},</if><if test="status != null">#{status},</if><if test="remark != null">#{remark},</if>NOW(),NOW(),1</sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="title != null">#{title},</if><if test="username != null">#{username},</if><if test="content != null">#{content},</if><if test="postType != null">#{postType},</if><if test="status != null">#{status},</if><if test="remark != null">#{remark},</if>datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.PostDomain">
         INSERT INTO <include refid="TABLE"/>
@@ -212,7 +212,7 @@
         )
         VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.title},#{item.username},#{item.content},#{item.postType},#{item.status},#{item.remark},NOW(),NOW(),1)
+            (#{item.title},#{item.username},#{item.content},#{item.postType},#{item.status},#{item.remark},datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1)
         </foreach>
 
     </insert>
@@ -221,15 +221,15 @@
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
-        WHERE t.yn = 1 AND t.id = #{id}
+        <include refid="TABLE"/>
+        WHERE yn = 1 AND id = #{id}
     </select>
 
     <select id="selectList" parameterType="com.zeroq6.blog.common.domain.PostDomain" resultType="com.zeroq6.blog.common.domain.PostDomain">
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <include refid="WHERE_CLAUSE_SELECT"/>
         <include refid="QUERY_ORDER_LIMIT_CONDITION"/>
     </select>
@@ -238,31 +238,31 @@
         SELECT
         count(1)
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <include refid="WHERE_CLAUSE_SELECT"/>
     </select>
 
     <update id="updateByKey" parameterType="com.zeroq6.blog.common.domain.PostDomain" >
-        UPDATE <include refid="TABLE_T"/>
+        UPDATE <include refid="TABLE"/>
         <include refid="UPDATE_COLUMN_SET"/>
-        WHERE t.yn = 1 AND t.id = #{id}
+        WHERE yn = 1 AND id = #{id}
     </update>
 
     <update id="updateByCondition" parameterType="com.zeroq6.blog.common.domain.PostDomain">
-        UPDATE <include refid="TABLE_T"/>
+        UPDATE <include refid="TABLE"/>
         <include refid="UPDATE_COLUMN_SET"/>
         <include refid="WHERE_CLAUSE_UPDATE"/>
     </update>
 
     <update id="disableByKey" parameterType="long">
-        UPDATE <include refid="TABLE_T"/>
-        SET t.yn = 0
-        WHERE t.yn = 1 AND t.id = #{_parameter}
+        UPDATE <include refid="TABLE"/>
+        SET yn = 0
+        WHERE yn = 1 AND id = #{_parameter}
     </update>
 
     <update id="disableByCondition" parameterType="com.zeroq6.blog.common.domain.PostDomain">
-        UPDATE <include refid="TABLE_T"/>
-        SET t.yn = 0
+        UPDATE <include refid="TABLE"/>
+        SET yn = 0
         <include refid="WHERE_CLAUSE_SELECT"/>
     </update>
 
@@ -275,12 +275,12 @@
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <![CDATA[
-            WHERE t.yn = 1
+            WHERE yn = 1
             AND post_type = 1
             AND status = 2
-            AND t.id < #{id}
+            AND id < #{id}
             ORDER BY id DESC
             LIMIT 0, 1
         ]]>
@@ -290,12 +290,12 @@
         SELECT
         <include refid="SELECT_COLUMN_LIST"/>
         FROM
-        <include refid="TABLE_T"/>
+        <include refid="TABLE"/>
         <![CDATA[
-            WHERE t.yn = 1
+            WHERE yn = 1
             AND post_type = 1
             AND status = 2
-            AND t.id > #{id}
+            AND id > #{id}
             ORDER BY id ASC
             LIMIT 0, 1
         ]]>
