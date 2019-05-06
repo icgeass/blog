@@ -45,7 +45,7 @@ public class AdminPostController extends BaseController {
     public String list(PostDomain postDomain, Page<PostDomain> page, Model view) {
         postService.selectPage(postDomain, page);
         for(PostDomain item : page.getData()){
-            item.put("summary", PostUtils.getHtmlTextSubstring(item, 50));
+            item.put("summary", PostUtils.getHtmlTextSubstring(item, 40));
         }
         view.addAttribute("page", page);
         view.addAttribute("postDomain", postDomain);

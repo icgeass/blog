@@ -68,7 +68,7 @@
                         #foreach($!{item} in $!{page.data})
                         <tr>
                             <td>$!{item.id}</td>
-                            <td>$!{item.name}</td>
+                            <td>$PostUtils.substring($!{item.name},30)</td>
                             <td>$!{item.md5}</td>
                             <td>$FileUtils.getReadableSize($!{item.size})</td>
                             <td>$DateUtils.format($!{item.createdTime})</td>

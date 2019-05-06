@@ -75,7 +75,7 @@
                             <td>$!{item.id}</td>
                             <td>#emTitle('EmDictDictType', $!{item.dictType})</td>
                             <td>$!{item.dictKey}</td>
-                            <td>$!{item.dictValue}</td>
+                            <td>$PostUtils.substring($!{item.dictValue}, 20)</td>
                             <td>$!{item.remark}</td>
                             <td>$DateUtils.format($!{item.createdTime})</td>
                             <td>$DateUtils.format($!{item.modifiedTime})</td>

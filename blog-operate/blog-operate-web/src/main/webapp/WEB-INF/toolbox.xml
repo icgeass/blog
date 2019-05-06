@@ -26,6 +26,11 @@
         <scope>application</scope>
     </tool>
     <tool>
+        <key>PostUtils</key>
+        <class>com.zeroq6.blog.common.utils.PostUtils</class>
+        <scope>application</scope>
+    </tool>
+    <tool>
         <key>FileUtils</key>
         <class>com.zeroq6.blog.common.utils.FileUtils</class>
         <scope>application</scope>

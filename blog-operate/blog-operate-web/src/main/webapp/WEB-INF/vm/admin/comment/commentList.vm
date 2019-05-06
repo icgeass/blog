@@ -88,11 +88,11 @@
                     <td>$!{item.id}</td>
                     <td>$!{item.username}</td>
                     <td>$!{item.email}</td>
-                    <td>#if($!{item.content})$StringUtils.substring($!{item.content}, 0, 50)#end</td>
+                    <td>$PostUtils.substring($!{item.content}, 50)</td>
                     <td>$!{item.postId}</td>
                     <td>#emTitle('EmCommentParentType', $!{item.parentType})</td>
                     <td>$!{item.ip}</td>
-                    <td>$!{item.userAgent}</td>
+                    <td>$PostUtils.substring($!{item.userAgent}, 30)</td>
                     <td>$DateUtils.format($!{item.createdTime})</td>
                     <td>
                         <a href="${request.contextPath}/post/show/$!{item.postId}#c$!{item.id}" target="_blank" class="btn btn-info">查看</a>

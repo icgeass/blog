@@ -85,7 +85,7 @@
                 <tr>
                     <td>$!{item.id}</td>
                     <td>$!{item.username}</td>
-                    <td>$!{item.title}</td>
+                    <td>$PostUtils.substring($!{item.title}, 10)</td>
                     <td>$!{item.extendMap.summary}</td>
                     <td>#emTitle('EmPostPostType',$!{item.postType})</td>
                     <td>#emTitle('EmPostStatus', $!{item.status})</td>
