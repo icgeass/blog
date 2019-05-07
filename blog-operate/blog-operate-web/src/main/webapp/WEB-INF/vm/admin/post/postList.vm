@@ -62,6 +62,12 @@
                             <button type="button" id="create" name="create" class="btn btn-info">
                                 新增
                             </button>
+                            <button type="button" id="backup_download" name="backup_download" class="btn btn-info" onclick="javascript:window.open('/admin/backup/download')">
+                                下载备份数据
+                            </button>
+                            <button type="button" id="backup_mail" name="backup_mail" class="btn btn-info" onclick="javascript:window.open('/admin/backup/mail')">
+                                备份数据到邮箱
+                            </button>
                         </div>
                     </div>
                 </div>
