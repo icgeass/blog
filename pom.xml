@@ -152,14 +152,9 @@
             </dependency>
             <!--数据库连接池-->
             <dependency>
-                <groupId>com.jolbox</groupId>
-                <artifactId>bonecp</artifactId>
-                <version>0.8.0.RELEASE</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jolbox</groupId>
-                <artifactId>bonecp-spring</artifactId>
-                <version>0.8.0.RELEASE</version>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.1.16</version>
             </dependency>
             <!--Spring Spring MVC-->
             <dependency>

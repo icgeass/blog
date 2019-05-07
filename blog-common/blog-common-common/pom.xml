@@ -44,12 +44,8 @@
         </dependency>
         <!--数据库连接池-->
         <dependency>
-            <groupId>com.jolbox</groupId>
-            <artifactId>bonecp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jolbox</groupId>
-            <artifactId>bonecp-spring</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
         </dependency>
         <!--Spring Spring MVC-->
         <dependency>
