@@ -24,7 +24,7 @@ public class BackupUtils {
 
 
     public static void main(String[] args) {
-        exec(new HashMap<String, String>(){
+        exec(new HashMap<String, String>() {
             {
                 put("cmd.txt", "ipconfig");
             }
@@ -37,7 +37,8 @@ public class BackupUtils {
             if (null == folders || folders.isEmpty()) {
                 throw new RuntimeException("folders不能为空");
             }
-            // 获取文件
+            // 获取文件，去重
+            List<String> absPathList = new ArrayList<String>();
             Collection<File> files = new LinkedList<File>();
             for (String folder : folders) {
                 File f = new File(folder);
@@ -45,9 +46,18 @@ public class BackupUtils {
                     throw new IllegalArgumentException("文件（夹）不存在: " + f.getAbsolutePath());
                 }
                 if (f.isFile()) {
-                    files.add(f);
+                    if (!absPathList.contains(f.getCanonicalPath())) {
+                        files.add(f);
+                        absPathList.add(f.getCanonicalPath());
+                    }
                 } else if (f.isDirectory()) {
-                    files.addAll(FileUtils.listFiles(f, null, true));
+                    for (File fileInFolder : FileUtils.listFiles(f, null, true)) {
+                        if (!absPathList.contains(f.getCanonicalPath())) {
+                            files.add(fileInFolder);
+                            absPathList.add(f.getCanonicalPath());
+                        }
+                    }
+
                 } else {
                     throw new RuntimeException("非法路径: " + f.getAbsolutePath());
                 }

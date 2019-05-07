@@ -10,6 +10,7 @@ import java.util.Map;
 public class BackupConfigDomain {
 
 
+    // 执行命令的存储目录
     private String baseDir;
 
     private Map<String, String> cmdMap;

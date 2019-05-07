@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author
@@ -40,9 +38,25 @@ public class BackupService {
     @Value("${sys.config.key.backup}")
     private String sysConfigKeyBackup;
 
+    private long zipFileSize = -1;
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public boolean backup() throws Exception {
+
+    private final String tmpDir = System.getProperty("java.io.tmpdir");
+
+    public void backup() throws Exception {
+        backup(true);
+    }
+
+
+    /**
+     * 返回zip 文件
+     *
+     * @return
+     * @throws Exception
+     */
+    public File backup(boolean sendMail) throws Exception {
 
         String dataString = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
@@ -52,7 +66,7 @@ public class BackupService {
             DictDomain dictDomain = dictManager.selectOne(new DictDomain().setDictType(EmDictDictType.XI_TONG_PEIZHI.value()).setDictKey(sysConfigKeyBackup), true);
             if (null == dictDomain || StringUtils.isBlank(dictDomain.getDictValue())) {
                 logger.info("无备份配置, 执行结束");
-                return false;
+                return null;
             }
             BackupConfigDomain backupConfigDomain = JSON.parseObject(dictDomain.getDictValue(), BackupConfigDomain.class);
             logger.info("备份配置: " + JSON.toJSONString(backupConfigDomain));
@@ -65,9 +79,10 @@ public class BackupService {
             Map<String, String> execResultMap = BackupUtils.exec(backupConfigDomain.getCmdMap());
 
             File parent = new File(backupConfigDomain.getBaseDir() + File.separator + dataString);
-
+            boolean dir_created = false;
             if (!parent.exists()) {
                 parent.mkdirs();
+                dir_created = true;
             }
             for (Map.Entry<String, String> item : execResultMap.entrySet()) {
                 File file = new File(parent, item.getKey());
@@ -76,23 +91,42 @@ public class BackupService {
             }
 
             // 备份文件夹
-            File zipFile = new File(parent.getCanonicalPath() + File.separator + "backup_" + dataString + ".zip");
+            File zipFile = new File(tmpDir + File.separator + UUID.randomUUID() + File.separator + "backup_" + dataString + ".zip");
             BackupUtils.zipFolders(zipFile, folders);
 
 
-            MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
-                    "【站点备份-成功】" + dataString, mailSenderConfig.getToAddress(), "备份成功" + dataString,
-                    new File[]{zipFile}, null, null);
-            return true;
+            if (sendMail) {
+                if (zipFileSize != zipFile.length()) {
+                    MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
+                            "【站点备份-成功】" + dataString, mailSenderConfig.getToAddress(), "备份成功" + dataString,
+                            new File[]{zipFile}, null, null);
+                    zipFileSize = zipFile.length();
+                } else {
+                    logger.warn("原备份文件大小和现备份文件大小一致，跳过备份，size={}", zipFileSize);
+                    if (dir_created) {
+                        FileUtils.deleteDirectory(parent);
+                    }
+                }
+
+            }
+            return zipFile;
         } catch (Exception e) {
             logger.error("备份异常", e);
-            MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
-                    "【站点备份-异常】" + dataString, mailSenderConfig.getToAddress(), e.getMessage(),
-                    null, null, null);
+            if (sendMail) {
+                try {
+                    MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
+                            "【站点备份-异常】" + dataString, mailSenderConfig.getToAddress(), e.getMessage(),
+                            null, null, null);
+
+                } catch (Exception ee) {
+                    logger.error("发送备份异常提醒邮件-异常", e);
+                }
+
+            }
         } finally {
             logger.info("备份结束");
         }
-        return false;
+        return null;
     }
 
 
