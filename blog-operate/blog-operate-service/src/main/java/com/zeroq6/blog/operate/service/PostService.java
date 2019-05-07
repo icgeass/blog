@@ -71,11 +71,15 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     public BaseResponse<Map<String, Object>> getGuestBook() {
         try {
-            PostDomain postDomain = selectOne(new PostDomain().setPostType(EmPostPostType.LIUYAN.value()));
-            return show(postDomain.getId());
+            PostDomain postDomain = selectOne(new PostDomain().setPostType(EmPostPostType.LIUYAN.value()), true);
+            if(null != postDomain){
+                return show(postDomain.getId());
+            }else{
+                return new BaseResponse<Map<String, Object>>(true, "", new HashMap<String, Object>());
+            }
         } catch (Exception e) {
             logger.error("查询留言异常", e);
-            return new BaseResponse<Map<String, Object>>(false, e.getMessage(), null);
+            return new BaseResponse<>(false, e.getMessage(), null);
         }
 
     }

@@ -2,6 +2,8 @@
                     <div class="post-content">
                         $!{post.extendMap.content}
                     </div>
+#if($!{post})
 #parse('layout/comment.vm')
+#end
                 </div>
 

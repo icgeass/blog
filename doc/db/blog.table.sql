@@ -2,7 +2,8 @@
 SQLyog Ultimate v12.08 (64 bit)
 MySQL - 5.7.16 : Database - blog
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -54,7 +55,7 @@ CREATE TABLE `comment` (
 
 CREATE TABLE `dict` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `dict_type` tinyint(4) DEFAULT NULL COMMENT '字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息',
+  `dict_type` tinyint(4) DEFAULT NULL COMMENT '字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置',
   `dict_key` varchar(255) DEFAULT NULL COMMENT '字典键',
   `dict_value` text COMMENT '字典值',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
