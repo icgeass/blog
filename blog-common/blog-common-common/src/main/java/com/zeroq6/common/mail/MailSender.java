@@ -57,6 +57,10 @@ public class MailSender {
         MimeMessage mail = null;
         OutputStream os = null;
         try {
+            if(null == properties){
+                LOGGER.error("properties为null，邮件发送终止");
+                return;
+            }
             String username = fromAddress.substring(0, fromAddress.indexOf("@"));
             // 环境信息
             Session session = Session.getInstance(properties, new Authenticator() {

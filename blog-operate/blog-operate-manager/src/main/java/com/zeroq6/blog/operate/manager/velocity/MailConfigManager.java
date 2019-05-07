@@ -33,7 +33,7 @@ public class MailConfigManager implements InitializingBean {
 
     private MailSenderConfig mailSenderConfig;
 
-    private Properties properties  = new Properties();
+    private Properties properties  = null;
 
     public Properties getProperties() {
         afterPropertiesSet();
@@ -55,11 +55,14 @@ public class MailConfigManager implements InitializingBean {
 
             if (null == dictDomain) {
                 logger.warn("无法查找邮件发送配置");
+                properties = null;
+                mailSenderConfig = null;
+                return;
             }
             //
             mailSenderConfig = JSON.parseObject(dictDomain.getDictValue(), MailSenderConfig.class);
 
-
+            properties = new Properties();
             // 开启debug调试 ，打印信息
             properties.setProperty("mail.debug", mailSenderConfig.getDubug());
             // 发送服务器需要身份验证

@@ -61,8 +61,15 @@ public class BackupService {
         String dataString = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         MailSenderConfig mailSenderConfig = mailConfigManager.getMailSenderConfig();
+        Properties mailSendProperties = mailConfigManager.getProperties();
         try {
             logger.info("开始备份");
+            if (null == mailSenderConfig || null == mailSendProperties) {
+                sendMail = false;
+                logger.warn("mailSenderConfig或mailSendProperties为null");
+            }
+
+
             DictDomain dictDomain = dictManager.selectOne(new DictDomain().setDictType(EmDictDictType.XI_TONG_PEIZHI.value()).setDictKey(sysConfigKeyBackup), true);
             if (null == dictDomain || StringUtils.isBlank(dictDomain.getDictValue())) {
                 logger.info("无备份配置, 执行结束");
@@ -97,7 +104,7 @@ public class BackupService {
 
             if (sendMail) {
                 if (zipFileSize != zipFile.length()) {
-                    MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
+                    MailSender.sendMail(mailSendProperties, mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
                             "【站点备份-成功】" + dataString, mailSenderConfig.getToAddress(), "备份成功" + dataString,
                             new File[]{zipFile}, null, null);
                     zipFileSize = zipFile.length();
@@ -114,7 +121,7 @@ public class BackupService {
             logger.error("备份异常", e);
             if (sendMail) {
                 try {
-                    MailSender.sendMail(mailConfigManager.getProperties(), mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
+                    MailSender.sendMail(mailSendProperties, mailSenderConfig.getFromAddress(), mailSenderConfig.getPassword(),
                             "【站点备份-异常】" + dataString, mailSenderConfig.getToAddress(), e.getMessage(),
                             null, null, null);
 
