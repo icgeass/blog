@@ -48,7 +48,7 @@ public class DownloadUtils {
                 if (null == outputStream) {
                     outputStream = response.getOutputStream();
                 }
-                outputStream.write(e.getMessage().getBytes(Charset.forName("UTF-8")));
+                outputStream.write((e.getMessage()+"").getBytes(Charset.forName("UTF-8")));
             } catch (Exception ee) {
                 LOGGER.error("输出错误信息到前端异常", ee);
             }
