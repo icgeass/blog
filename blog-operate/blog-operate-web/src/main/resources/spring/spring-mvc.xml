@@ -67,7 +67,7 @@
     <bean id ="loginService" class="com.zeroq6.blog.operate.service.login.LoginService">
         <property name="usernamePasswordMap">
             <map>
-                <entry key="admin" value="e9b24a98fc3646ba28aa295f19ca339b73a9b08d"></entry>
+                <entry key="admin" value="changeit"></entry>
             </map>
         </property>
     </bean>

@@ -109,7 +109,7 @@ public class BackupService {
                             new File[]{zipFile}, null, null);
                     zipFileSize = zipFile.length();
                 } else {
-                    logger.warn("原备份文件大小和现备份文件大小一致，跳过备份，size={}", zipFileSize);
+                    logger.warn("原备份文件大小和现备份文件大小一致，跳过备份，sizeInBytes={}({})", zipFileSize, com.zeroq6.blog.common.utils.FileUtils.getReadableSize(zipFileSize));
                     if (dir_created) {
                         FileUtils.deleteDirectory(parent);
                     }

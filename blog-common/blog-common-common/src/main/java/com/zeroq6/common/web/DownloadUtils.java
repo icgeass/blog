@@ -12,16 +12,17 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 public class DownloadUtils {
-    
-    
+
+
     private final static Logger LOGGER = LoggerFactory.getLogger(DownloadUtils.class);
 
     /**
      * http://websystique.com/springmvc/spring-mvc-4-file-download-example/
+     *
      * @param response
      * @param file
      */
-    public static void download(HttpServletResponse response, File file, String downloadFileName){
+    public static void download(HttpServletResponse response, File file, String downloadFileName) {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
@@ -48,7 +49,7 @@ public class DownloadUtils {
                 if (null == outputStream) {
                     outputStream = response.getOutputStream();
                 }
-                outputStream.write(e.getMessage().getBytes(Charset.forName("UTF-8")));
+                outputStream.write(("Exception: " + e.getMessage()).getBytes(Charset.forName("UTF-8")));
             } catch (Exception ee) {
                 LOGGER.error("输出错误信息到前端异常", ee);
             }
