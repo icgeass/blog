@@ -18,7 +18,7 @@ public class DictDomain extends BaseDomain<DictDomain> {
     }
 
     /**
-     * "字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置
+     * 字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置
      */
     private Integer dictType;
     /**
@@ -31,17 +31,17 @@ public class DictDomain extends BaseDomain<DictDomain> {
     private String dictValue;
 
     /**
-     * 获取"字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置 dictType
+     * 获取字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置 dictType
      *
-     * @return "字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置
+     * @return 字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置
      */
     public Integer getDictType() {
         return dictType;
     }
     /**
-     * 设置"字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置 dictType
+     * 设置字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置 dictType
      *
-     * @param dictType "字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置
+     * @param dictType 字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置
      */
     public DictDomain setDictType(Integer dictType) {
         this.dictType = dictType;
