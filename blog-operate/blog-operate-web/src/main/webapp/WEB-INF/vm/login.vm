@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>登录</title>
     <style type="text/css">
-        input::-ms-clear{display:none;}
-        input[type="password"]::-ms-reveal{display:none;}
+        input::-ms-clear {
+            display: none;
+        }
+
+        input[type="password"]::-ms-reveal {
+            display: none;
+        }
     </style>
     <style>
         * {
@@ -191,6 +196,7 @@
 <script>
     $(function () {
         $('#submit').on('click', function () {
+            var submit = $('#submit');
             var username = $('#username').val()
             var password = $('#password').val()
             if ($.trim(username).length == 0 || $.trim(password).length == 0) {
@@ -198,7 +204,7 @@
                 return
             }
 
-
+            enableButton(submit, false)
             $.post("",
                     {
                         username: username,
@@ -214,11 +220,19 @@
                         }
                     }).fail(function () {
                 showMessage('系统繁忙, 请稍后再试', true)
+            }).always(function () {
+                enableButton(submit, true)
             })
 
         })
         $('input').on('focus', function () {
             showMessage('', false)
+        })
+        $(document).on('keydown', function (e) {
+            var key = e.keyCode || e.charCode;
+            if (key == "13") {
+                $('#submit').click();
+            }
         })
         //
         var message = '$!{message}'
@@ -235,6 +249,16 @@
             msg.hide()
         }
 
+    }
+
+    function enableButton(button, enable) {
+        if (enable === true) {
+            button.attr('disabled', false);
+            button.html('登 录');
+        } else {
+            button.attr('disabled', true);
+            button.html('登 录 中...');
+        }
     }
 </script>
 </body>

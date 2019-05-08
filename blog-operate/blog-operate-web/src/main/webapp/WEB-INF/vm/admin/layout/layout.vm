@@ -67,7 +67,7 @@
                         </li>
                         <li><a href="${request.contextPath}/admin/backup/mail" target="_blank"><i class="fa fa-reply fa-fw"></i> 备份到邮箱</a>
                         </li>
-                        <li><a href="${request.contextPath}/mail/receive" target="_blank"><i class="fa fa-mail-forward fa-fw"></i> 收取邮箱</a>
+                        <li><a href="${request.contextPath}/mail/receive" target="_blank"><i class="fa fa-mail-forward fa-fw"></i> 收取邮件</a>
                         </li>
                         <li class="divider"></li>
                         <li><a href="${request.contextPath}/auth/logout"><i class="fa fa-sign-out fa-fw"></i> 退出</a>

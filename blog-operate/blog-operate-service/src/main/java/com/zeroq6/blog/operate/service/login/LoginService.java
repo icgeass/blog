@@ -13,7 +13,7 @@ public class LoginService {
 
     private final static ThreadLocal<UserLoginInfo> CURRENT_LOGIN_USER = new ThreadLocal<UserLoginInfo>();
 
-    private final static String PASS_SLAT = "_PASS_SLAT_";
+    public final static String PASS_SLAT = "_PASS_SLAT_";
 
     private final Integer MAX_SIZE = 10000;
 
