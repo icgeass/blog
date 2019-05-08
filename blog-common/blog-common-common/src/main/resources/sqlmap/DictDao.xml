@@ -10,7 +10,7 @@
     <sql id="SELECT_COLUMN_LIST">
         <![CDATA[
             id AS id, /*主键*/
-            dict_type AS dictType, /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
+            dict_type AS dictType, /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置*/
             dict_key AS dictKey, /*字典键*/
             dict_value AS dictValue, /*字典值*/
             remark AS remark, /*备注*/
@@ -26,7 +26,7 @@
             <![CDATA[AND id = #{id}]]> /*主键*/
         </if>
         <if test="dictType != null">
-            <![CDATA[AND dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
+            <![CDATA[AND dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置*/
         </if>
         <if test="dictKey != null">
             <![CDATA[AND dict_key = #{dictKey}]]> /*字典键*/
@@ -90,7 +90,7 @@
             <![CDATA[AND id = #{extendMap.where.id}]]> /*主键*/
         </if>
         <if test="extendMap.where.dictType!= null">
-            <![CDATA[AND dict_type = #{extendMap.where.dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/
+            <![CDATA[AND dict_type = #{extendMap.where.dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置*/
         </if>
         <if test="extendMap.where.dictKey!= null">
             <![CDATA[AND dict_key = #{extendMap.where.dictKey}]]> /*字典键*/
@@ -116,7 +116,7 @@
     <sql id="UPDATE_COLUMN_SET">
         <set>
             <if test="dictType!= null">
-                <![CDATA[ dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息*/,
+                <![CDATA[ dict_type = #{dictType}]]> /*字典类型，1，分类，2，标签，3，链接，4，历史，5，社交，6，站点信息，7，系统配置*/,
             </if>
             <if test="dictKey!= null">
                 <![CDATA[ dict_key = #{dictKey}]]> /*字典键*/,
