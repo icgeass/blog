@@ -1,5 +1,6 @@
 package com.zeroq6.common.backup;
 
+import com.alibaba.fastjson.JSON;
 import com.zeroq6.common.utils.CloseUtils;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -62,6 +63,7 @@ public class BackupUtils {
                     throw new RuntimeException("非法路径: " + f.getAbsolutePath());
                 }
             }
+            LOGGER.info("当前备份文件列表：{}", JSON.toJSONString(absPathList));
             OutputStream out = null;
             ArchiveOutputStream os = null;
             InputStream is = null;
