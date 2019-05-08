@@ -52,9 +52,9 @@ public class BackupUtils {
                     }
                 } else if (f.isDirectory()) {
                     for (File fileInFolder : FileUtils.listFiles(f, null, true)) {
-                        if (!absPathList.contains(f.getCanonicalPath())) {
+                        if (!absPathList.contains(fileInFolder.getCanonicalPath())) {
                             files.add(fileInFolder);
-                            absPathList.add(f.getCanonicalPath());
+                            absPathList.add(fileInFolder.getCanonicalPath());
                         }
                     }
 

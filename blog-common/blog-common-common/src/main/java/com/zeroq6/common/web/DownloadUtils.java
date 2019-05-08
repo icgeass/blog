@@ -26,6 +26,9 @@ public class DownloadUtils {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
+            if (null == file) {
+                throw new RuntimeException("The file to download not exist");
+            }
             if (!file.exists()) {
                 throw new RuntimeException("Not Found");
             }
