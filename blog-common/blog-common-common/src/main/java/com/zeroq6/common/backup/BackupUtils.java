@@ -86,9 +86,10 @@ public class BackupUtils {
                     ///
                     os.putArchiveEntry(new ZipArchiveEntry(path));
                     is = new FileInputStream(f);
-                    IOUtils.copy(new FileInputStream(f), os);
+                    IOUtils.copy(is, os);
                     os.closeArchiveEntry();
-
+                    //
+                    CloseUtils.closeSilent(is);
                 }
                 out.flush();
             } finally {
