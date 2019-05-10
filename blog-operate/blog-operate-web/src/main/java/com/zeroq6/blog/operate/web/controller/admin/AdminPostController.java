@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/admin/post")
-public class AdminPostController extends BaseController {
+public class AdminPostController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

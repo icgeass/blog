@@ -38,11 +38,7 @@ public abstract class BaseQuery<T extends BaseQuery> implements Serializable {
         return orderField;
     }
     public T setOrderField(String orderField) {
-        if (null == orderField) {
-            this.orderField = orderField;
-            return (T) this;
-        }
-        if(orderField.replace("_", "").trim().length() == 0){
+        if(null == orderField || orderField.replace("_", "").trim().length() == 0){
             return (T)this;
         }
         for (int i = 0; i < orderField.length(); i++) {
@@ -59,10 +55,6 @@ public abstract class BaseQuery<T extends BaseQuery> implements Serializable {
     }
 
     public T setOrderFieldType(String orderFieldType) {
-        if (null == orderFieldType) {
-            this.orderFieldType = orderFieldType;
-            return (T) this;
-        }
         if(!"ASC".equalsIgnoreCase(orderFieldType) && !"DESC".equalsIgnoreCase(orderFieldType)){
             return (T)this;
         }
@@ -79,5 +71,12 @@ public abstract class BaseQuery<T extends BaseQuery> implements Serializable {
             return endIndex - startIndex;
         }
         return null;
+    }
+
+    // Dao.xml中，自定义排序需要这两个字段为空
+    public T clearSort(){
+        this.orderField = null;
+        this.orderFieldType = null;
+        return (T)this;
     }
 }
