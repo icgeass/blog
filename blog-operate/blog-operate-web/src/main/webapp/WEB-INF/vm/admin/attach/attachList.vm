@@ -95,5 +95,5 @@
     </form>
 </div>
 
-#initList('attach')
+#initList('attach', $!{attachDomain})
 

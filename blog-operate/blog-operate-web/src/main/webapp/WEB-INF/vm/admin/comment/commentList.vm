@@ -107,5 +107,5 @@
     </form>
 </div>
 
-#initList('comment')
+#initList('comment', $!{commentDomain})
 

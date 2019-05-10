@@ -106,5 +106,5 @@
     </form>
 </div>
 
-#initList('post')
+#initList('post', $!{postDomain})
 

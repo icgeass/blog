@@ -93,5 +93,5 @@
     </form>
 </div>
 
-#initList('dict')
+#initList('dict', $!{dictDomain})
 

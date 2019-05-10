@@ -143,7 +143,7 @@
 * 表格初始化
 * postDomain => post
 * *#
-#macro(initList $domainName)
+#macro(initList $domainName $domain)
 <script type="text/javascript">
     $(function () {
         var form = $("#pageform");
@@ -152,6 +152,15 @@
         }
         if ($("#orderFieldType").val() == null) {
             form.append('<input type="hidden" id="orderFieldType" name="orderFieldType">');
+        }
+        var orderField = '$!{domain.orderField}'
+        var orderFieldType = '$!{domain.orderFieldType}'
+        if (orderField == '' || orderFieldType == ''){
+            orderField = "id"
+            orderFieldType = "DESC"
+        } else {
+            $('#orderField').val(orderField)
+            $('#orderFieldType').val(orderFieldType)
         }
         sortingTable();//列表排序
         onEnterPageSizeClick();
@@ -169,6 +178,5 @@
     }
 </script>
 #end
-
 
 
