@@ -8,6 +8,7 @@ import java.util.Map;
  * @author icgeass@hotmail.com
  * @date 2017-11-10
  */
+@SuppressWarnings("unchecked")
 public abstract class BaseDomain<T extends BaseDomain> extends BaseQuery<T> {
     private static final long serialVersionUID = 1L;
     private Long id;

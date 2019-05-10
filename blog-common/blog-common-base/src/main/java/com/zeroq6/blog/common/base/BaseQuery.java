@@ -6,6 +6,7 @@ import java.io.Serializable;
  * @author icgeass@hotmail.com
  * @date 2017-11-10
  */
+@SuppressWarnings("unchecked")
 public abstract class BaseQuery<T extends BaseQuery> implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer startIndex;// 开始索引（前台分页查询用到）
