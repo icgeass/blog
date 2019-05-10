@@ -1,6 +1,7 @@
 package com.zeroq6.blog.common.base;
 
 import com.alibaba.fastjson.JSON;
+import com.zeroq6.common.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +106,7 @@ public abstract class BaseManager<T extends BaseDomain, KEY extends Serializable
             // 判断影响行数是否符合预期
             if (null != expectedRows) {
                 if (re != expectedRows) {
-                    throw new RuntimeException(String.format("%s, 实际影响行数: %s与预期影响行数: %s不一致, update: %s", t.getClass().getSimpleName(), String.valueOf(re), String.valueOf(expectedRows), JSON.toJSONString(t)));
+                    throw new RuntimeException(String.format("%s, 实际影响行数: %s与预期影响行数: %s不一致, update: %s", t.getClass().getSimpleName(), String.valueOf(re), String.valueOf(expectedRows), JsonUtils.toJSONString(t)));
                 }
             }
         } catch (Exception e) {
@@ -139,7 +140,7 @@ public abstract class BaseManager<T extends BaseDomain, KEY extends Serializable
         List<T> list = selectList(t);
         if (null == list || list.isEmpty()) {
             if (!acceptNull) {
-                throw new RuntimeException(t.getClass().getSimpleName() + ": selectLimitOne没有查询到数据, where: " + JSON.toJSONString(t));
+                throw new RuntimeException(t.getClass().getSimpleName() + ": selectLimitOne没有查询到数据, where: " + JsonUtils.toJSONString(t));
             }
             return null;
         } else {
@@ -156,13 +157,13 @@ public abstract class BaseManager<T extends BaseDomain, KEY extends Serializable
         List<T> list = selectList(t);
         if (null == list || list.isEmpty()) {
             if(!acceptNull){
-                throw new RuntimeException(t.getClass().getSimpleName() + ": selectOne没有查询到数据, where: " + JSON.toJSONString(t));
+                throw new RuntimeException(t.getClass().getSimpleName() + ": selectOne没有查询到数据, where: " + JsonUtils.toJSONString(t));
             }
             return null;
         } else if (list.size() == 1) {
             return list.get(0);
         } else {
-            throw new RuntimeException(String.format("%s: selectOne查询到多条数据, where: %s", t.getClass().getSimpleName(), JSON.toJSONString(t)));
+            throw new RuntimeException(String.format("%s: selectOne查询到多条数据, where: %s", t.getClass().getSimpleName(), JsonUtils.toJSONString(t)));
         }
     }
 
@@ -218,7 +219,7 @@ public abstract class BaseManager<T extends BaseDomain, KEY extends Serializable
         int re = getDao().disableByCondition(t);
         if (null != expectedRows) {
             if (re != expectedRows) {
-                throw new RuntimeException(String.format("%s, 实际影响行数: %s与预期影响行数: %s不一致, where: ", t.getClass().getSimpleName(), String.valueOf(re), String.valueOf(expectedRows), JSON.toJSONString(t)));
+                throw new RuntimeException(String.format("%s, 实际影响行数: %s与预期影响行数: %s不一致, where: ", t.getClass().getSimpleName(), String.valueOf(re), String.valueOf(expectedRows), JsonUtils.toJSONString(t)));
             }
         }
         return re;

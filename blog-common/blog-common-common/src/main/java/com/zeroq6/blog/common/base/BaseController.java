@@ -1,6 +1,7 @@
 package com.zeroq6.blog.common.base;
 
 import com.alibaba.fastjson.JSON;
+import com.zeroq6.common.utils.JsonUtils;
 import com.zeroq6.common.web.CustomDateEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public abstract class BaseController {
         response.setHeader("Cache-Control", "no-store, max-age=0, no-cache, must-revalidate");
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
         response.setHeader("Pragma", "no-cache");
-        String json = object instanceof String ? String.valueOf(object) : JSON.toJSONString(object);
+        String json = object instanceof String ? String.valueOf(object) : JsonUtils.toJSONString(object);
         try {
             PrintWriter out = response.getWriter();
             out.print(json);

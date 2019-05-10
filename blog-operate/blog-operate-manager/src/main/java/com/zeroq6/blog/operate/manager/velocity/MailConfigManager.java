@@ -5,6 +5,7 @@ import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.common.mail.MailSenderConfig;
+import com.zeroq6.common.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -77,7 +78,7 @@ public class MailConfigManager implements InitializingBean {
 
 
 
-            logger.info("获取邮件配置成功，" + JSON.toJSONString(mailSenderConfig));
+            logger.info("获取邮件配置成功，" + JsonUtils.toJSONString(mailSenderConfig));
         } catch (Exception e) {
             logger.error("获取邮件配置异常", e);
         }

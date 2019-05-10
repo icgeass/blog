@@ -9,6 +9,7 @@ import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
 import com.zeroq6.blog.operate.service.CommentService;
 import com.zeroq6.blog.operate.service.PostService;
 import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.common.utils.JsonUtils;
 import com.zeroq6.common.utils.MyWebUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class CommentController extends BaseController {
                 return redirect(commentDomain) + "#c" + commentDomain.getId();
             }
         } catch (Exception e) {
-            logger.error("发表评论异常: " + JSON.toJSONString(commentDomain), e);
+            logger.error("发表评论异常: " + JsonUtils.toJSONString(commentDomain), e);
         }
         return redirect(commentDomain);
     }

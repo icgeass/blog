@@ -10,6 +10,7 @@ import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
 import com.zeroq6.blog.common.domain.enums.field.EmPostStatus;
 import com.zeroq6.blog.operate.manager.CommentManager;
 import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.common.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -86,7 +87,7 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             }
             return commentManager.post(commentDomain, post);
         } catch (Exception e) {
-            logger.error("提交评论异常, " + JSON.toJSONString(commentDomain), e);
+            logger.error("提交评论异常, " + JsonUtils.toJSONString(commentDomain), e);
             return new BaseResponse<String>(false, e.getMessage(), null);
         }
     }

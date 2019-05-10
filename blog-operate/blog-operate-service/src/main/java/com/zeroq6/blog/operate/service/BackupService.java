@@ -9,6 +9,7 @@ import com.zeroq6.blog.operate.manager.velocity.MailConfigManager;
 import com.zeroq6.common.backup.BackupUtils;
 import com.zeroq6.common.mail.MailSender;
 import com.zeroq6.common.mail.MailSenderConfig;
+import com.zeroq6.common.utils.JsonUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -76,7 +77,7 @@ public class BackupService {
                 return null;
             }
             BackupConfigDomain backupConfigDomain = JSON.parseObject(dictDomain.getDictValue(), BackupConfigDomain.class);
-            logger.info("备份配置: " + JSON.toJSONString(backupConfigDomain));
+            logger.info("备份配置: " + JsonUtils.toJSONString(backupConfigDomain));
 
 
             List<String> folders = backupConfigDomain.getBackupFolders();
