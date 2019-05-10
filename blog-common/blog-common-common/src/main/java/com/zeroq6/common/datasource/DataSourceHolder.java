@@ -1,7 +1,7 @@
 package com.zeroq6.common.datasource;
 
 
-class DataSourceHolder {
+public class DataSourceHolder {
 
     private static final ThreadLocal<EmDataSourceType> holder = new ThreadLocal<EmDataSourceType>();
 

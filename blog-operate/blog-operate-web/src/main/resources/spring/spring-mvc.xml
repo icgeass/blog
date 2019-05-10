@@ -76,7 +76,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <bean id="springSsoInterceptor" class="com.zeroq6.blog.operate.web.interceptor.LoginInterceptor">
-                <!--<property name="disallowUriPrefix" value="/admin"/>-->
+                <property name="disallowUriPrefix" value="/admin"/>
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>

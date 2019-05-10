@@ -1,6 +1,7 @@
 package com.zeroq6.blog.operate.web.interceptor;
 
 import com.zeroq6.blog.operate.service.login.LoginService;
+import com.zeroq6.common.datasource.DataSourceHolder;
 import com.zeroq6.common.web.CookieUtils;
 import com.zeroq6.common.web.IpUtils;
 import com.zeroq6.common.web.RequestUtils;
@@ -100,6 +101,8 @@ public class LoginInterceptor implements HandlerInterceptor, InitializingBean {
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
         try {
+            // https://blog.csdn.net/u010619243/article/details/62899033
+            DataSourceHolder.removeDataSource();
             loginService.removeCurrUserLoginInfo();
         } catch (Exception e1) {
             logger.error("拦截器afterCompletion异常", e1);
