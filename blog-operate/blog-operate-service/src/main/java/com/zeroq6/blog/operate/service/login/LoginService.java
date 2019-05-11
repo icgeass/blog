@@ -88,7 +88,7 @@ public class LoginService {
 
     }
 
-    public boolean validateAndSetCurrUserLoginInfo(String cookieValue, String ip) {
+    public boolean validateLogin(String cookieValue, String ip, boolean setCurrUserLoginInfo) {
         if (StringUtils.isBlank(cookieValue) || StringUtils.isBlank(ip)) {
             return false;
         }
@@ -97,7 +97,9 @@ public class LoginService {
             return false;
         }
         if (ip.equals(userLoginInfo.getIp()) && usernameKeyMap.get(userLoginInfo.getUsername()).contains(cookieValue)) {
-            CURRENT_LOGIN_USER.set(userLoginInfo);
+            if (setCurrUserLoginInfo) {
+                CURRENT_LOGIN_USER.set(userLoginInfo);
+            }
             return true;
         }
         return false;

@@ -77,7 +77,7 @@ public class LoginInterceptor implements HandlerInterceptor, InitializingBean {
                     ResponseUtils.doRedirect(httpServletRequest, httpServletResponse, getReturnUrl(httpServletRequest));
                     return false;
                 }
-                boolean success = loginService.validateAndSetCurrUserLoginInfo(cookie.getValue(), IpUtils.getClientIp(httpServletRequest));
+                boolean success = loginService.validateLogin(cookie.getValue(), IpUtils.getClientIp(httpServletRequest), true);
                 if (!success) {
                     CookieUtils.delete(httpServletRequest, httpServletResponse, loginCookieName, loginCookieDomain, loginCookiePath);
                     ResponseUtils.doRedirect(httpServletRequest, httpServletResponse, getReturnUrl(httpServletRequest));

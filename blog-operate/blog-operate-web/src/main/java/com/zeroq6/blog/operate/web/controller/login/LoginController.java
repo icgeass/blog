@@ -54,7 +54,7 @@ public class LoginController {
         view.addAttribute("success", false);
         try {
             String clientCookieValue = CookieUtils.get(request, loginCookieName);
-            if (loginService.validateAndSetCurrUserLoginInfo(clientCookieValue, IpUtils.getClientIp(request))) {
+            if (loginService.validateLogin(clientCookieValue, IpUtils.getClientIp(request), false)) {
                 ResponseUtils.doRedirect(request, response, "/admin");
             } else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
                 String genCookieValue = loginService.login(username, password, IpUtils.getClientIp(request));
