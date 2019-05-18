@@ -1,4 +1,5 @@
 #!/bin/bash
+set -exuo pipefail
 
 cd /export/git/blog
 git pull
