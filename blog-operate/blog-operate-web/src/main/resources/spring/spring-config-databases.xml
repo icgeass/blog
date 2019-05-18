@@ -15,6 +15,7 @@
         <property name="logSlowSql" value="true" />
     </bean>
 
+    <!-- http://www.cnblogs.com/lmaplet/p/6170105.html -->
     <bean id="abstractDruidDataSource" class="com.alibaba.druid.pool.DruidDataSource" abstract="true" init-method="init" destroy-method="close">
         <property name="username" value="${jdbc.username}" />
         <property name="password" value="${jdbc.password}" />
@@ -36,6 +37,8 @@
         <property name="testWhileIdle" value="true" />
         <property name="testOnBorrow" value="false" />
         <property name="testOnReturn" value="false" />
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="validationQueryTimeout" value="5"/>
 
         <property name="maxOpenPreparedStatements" value="20" />
 
