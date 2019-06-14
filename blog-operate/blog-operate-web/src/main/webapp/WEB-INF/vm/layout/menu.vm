@@ -14,9 +14,9 @@
             <a href="${request.contextPath}/about" #if($!{menu} == 'about') class="current"#end>
                 <i class="fa fa-user"> 关于</i>
             </a>
-#*            <a href="${request.contextPath}/history" #if($!{menu} == 'history') class="current"#end>
+            <a href="${request.contextPath}/history" #if($!{menu} == 'history') class="current"#end>
                 <i class="fa fa-book"> 历史</i>
-            </a>*#
+            </a>
             <a href="${request.contextPath}/guestbook" #if($!{menu} == 'guestbook') class="current"#end>
                 <i class="fa fa-comments"> 留言</i>
             </a>

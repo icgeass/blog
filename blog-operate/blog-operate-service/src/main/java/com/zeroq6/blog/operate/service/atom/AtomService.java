@@ -45,6 +45,15 @@ public class AtomService implements InitializingBean {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
 
+    public void genAtomXmlWithoutException() {
+        try {
+            genAtomXml();
+        } catch (Exception e) {
+            logger.error("生成atom.xml异常", e);
+        }
+    }
+
+
     public void genAtomXml() {
         logger.info("开始生成atom.xml");
         try {

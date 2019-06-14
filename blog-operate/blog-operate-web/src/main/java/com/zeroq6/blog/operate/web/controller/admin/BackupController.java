@@ -3,6 +3,7 @@ package com.zeroq6.blog.operate.web.controller.admin;
 import com.zeroq6.blog.common.base.BaseController;
 import com.zeroq6.blog.operate.service.BackupService;
 import com.zeroq6.common.web.DownloadUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -19,7 +20,7 @@ import java.net.URLEncoder;
  */
 @Controller()
 @RequestMapping("/admin/backup")
-public class BackupController extends BaseController{
+public class BackupController extends BaseController {
 
 
     @Autowired
@@ -28,10 +29,10 @@ public class BackupController extends BaseController{
 
     @RequestMapping(value = "/mail")
     public String receive(HttpServletResponse response) throws Exception {
-        try{
-            File zipFile = backupService.backup(true);
+        try {
+            File zipFile = backupService.backup(true, true);
             outJson(response, (zipFile != null) + "");
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("备份到邮件异常", e);
             outJson(response, "error: " + e.getMessage());
         }
@@ -39,13 +40,19 @@ public class BackupController extends BaseController{
     }
 
     @RequestMapping(value = "/download")
-    public String download(HttpServletResponse response) throws Exception{
-        try{
-            File zipFile = backupService.backup(false);
+    public String download(HttpServletResponse response) throws Exception {
+        File zipFile = null;
+        try {
+            zipFile = backupService.backup(false, false);
             DownloadUtils.download(response, zipFile, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("备份下载异常", e);
             outJson(response, "error: " + e.getMessage());
+        } finally {
+            if (null != zipFile) {
+                FileUtils.deleteQuietly(zipFile);
+                zipFile = null;
+            }
         }
         return null;
     }

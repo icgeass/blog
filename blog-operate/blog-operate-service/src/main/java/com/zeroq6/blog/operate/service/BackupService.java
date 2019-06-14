@@ -39,6 +39,10 @@ public class BackupService {
     @Value("${sys.config.key.backup}")
     private String sysConfigKeyBackup;
 
+    @Value("${project.domain}")
+    private String projectDoamin;
+
+
     private long zipFileSize = -1;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -47,7 +51,11 @@ public class BackupService {
     private final String tmpDir = System.getProperty("java.io.tmpdir");
 
     public void backup() throws Exception {
-        backup(true);
+        try {
+            backup(true, true);
+        } catch (Exception e) {
+            logger.error("备份异常", e);
+        }
     }
 
 
@@ -57,12 +65,15 @@ public class BackupService {
      * @return
      * @throws Exception
      */
-    public File backup(boolean sendMail) throws Exception {
+    public File backup(boolean sendMail, boolean deleteZipFile) throws Exception {
 
         String dataString = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         MailSenderConfig mailSenderConfig = mailConfigManager.getMailSenderConfig();
         Properties mailSendProperties = mailConfigManager.getProperties();
+
+
+        File zipFile = null;
         try {
             logger.info("开始备份");
             if (null == mailSenderConfig || null == mailSendProperties) {
@@ -87,10 +98,8 @@ public class BackupService {
             Map<String, String> execResultMap = BackupUtils.exec(backupConfigDomain.getCmdMap());
 
             File parent = new File(backupConfigDomain.getBaseDir() + File.separator + dataString);
-            boolean dir_created = false;
             if (!parent.exists()) {
                 parent.mkdirs();
-                dir_created = true;
             }
             for (Map.Entry<String, String> item : execResultMap.entrySet()) {
                 File file = new File(parent, item.getKey());
@@ -99,7 +108,7 @@ public class BackupService {
             }
 
             // 备份文件夹
-            File zipFile = new File(tmpDir + File.separator + UUID.randomUUID() + File.separator + "backup_" + dataString + ".zip");
+            zipFile = new File(tmpDir + File.separator + "backup_" + projectDoamin + "_" + dataString + ".zip");
             BackupUtils.zipFolders(zipFile, folders);
 
 
@@ -111,9 +120,7 @@ public class BackupService {
                     zipFileSize = zipFile.length();
                 } else {
                     logger.warn("原备份文件大小和现备份文件大小一致，跳过备份，sizeInBytes={}({})", zipFileSize, com.zeroq6.blog.common.utils.FileUtils.getReadableSize(zipFileSize));
-                    if (dir_created) {
-                        FileUtils.deleteDirectory(parent);
-                    }
+                    FileUtils.deleteDirectory(parent);
                 }
 
             }
@@ -132,6 +139,10 @@ public class BackupService {
 
             }
         } finally {
+            if (null != zipFile && deleteZipFile) {
+                FileUtils.deleteQuietly(zipFile);
+                zipFile = null;
+            }
             logger.info("备份结束");
         }
         return null;
