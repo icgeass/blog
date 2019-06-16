@@ -4,7 +4,6 @@ package com.zeroq6.blog.operate.service.login;
 import com.zeroq6.blog.common.base.BaseResponse;
 import com.zeroq6.common.security.RsaCrypt;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,13 @@ public class LoginService {
 
     public final static String PASS_SLAT = "_PASS_SLAT_";
 
-    private final Integer MAX_SIZE = 10000;
+    private final Integer maxLoginUser = 10000;
 
     // 大于等于1
-    private final Integer MAX_ONLINE_PER_USER = 1;
+    private final Integer maxOnlinePerUser = 1;
+
+    // 登陆超时秒数
+    private final int loginExpireSeconds = 10;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -39,20 +41,24 @@ public class LoginService {
         this.usernamePasswordMap = usernamePasswordMap;
     }
 
-    private final Map<String, UserLoginInfo> keyUserLoginInfoMap = new LinkedHashMap(5, 0.75F, true) {
+    // 用户cookieValue---->userLoginInfo
+    // size=最大在线数，等于最大用户数*每个用户最大在线数
+    private final Map<String, UserLoginInfo> keyUserLoginInfoMap = Collections.synchronizedMap(new LinkedHashMap(5, 0.75F, true) {
         protected boolean removeEldestEntry(Map.Entry eldest) {
-            return this.size() > MAX_SIZE;
+            return this.size() > maxLoginUser * maxOnlinePerUser;
         }
-    };
+    });
 
-    private final Map<String, LinkedList<String>> usernameKeyMap = new LinkedHashMap(5, 0.75F, true) {
+    // username---->cookieValueList
+    // size=最大用户数
+    private final Map<String, LinkedList<String>> usernameKeyMap = Collections.synchronizedMap(new LinkedHashMap(5, 0.75F, true) {
         protected boolean removeEldestEntry(Map.Entry eldest) {
-            return this.size() > MAX_SIZE;
+            return this.size() > maxLoginUser;
         }
-    };
+    });
 
 
-    public synchronized BaseResponse<String> login(String username, String password, String ip) {
+    public BaseResponse<String> login(String username, String password, String ip) {
         try {
             String cookieValue = null;
             if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
@@ -60,8 +66,8 @@ public class LoginService {
             }
 
             password = rsaCrypt.decryptFromBase64String(password);
-            Date loginTime = new Date(Long.valueOf(password.substring(0, password.indexOf(","))));
-            if (DateUtils.addSeconds(loginTime, 10).compareTo(Calendar.getInstance(TimeZone.getTimeZone("GMT +0000")).getTime()) > 0) {
+            // new Date().getTime()在java和js中都是国际标准时间戳（格林威治标准时间）
+            if (new Date().getTime() - Long.valueOf(password.substring(0, password.indexOf(","))) > loginExpireSeconds) {
                 return new BaseResponse<String>(false, "登陆过期，请重试", null);
             }
 
@@ -73,8 +79,8 @@ public class LoginService {
                     usernameKeyMap.put(username, cookieValueList);
                 } else {
                     // 超过用户最大登录数，移除队列头部
-                    if (cookieValueList.size() + 1 > MAX_ONLINE_PER_USER) {
-                        for (int i = 0; i < cookieValueList.size() + 1 - MAX_ONLINE_PER_USER; i++) {
+                    if (cookieValueList.size() + 1 > maxOnlinePerUser) {
+                        for (int i = 0; i < cookieValueList.size() + 1 - maxOnlinePerUser; i++) {
                             keyUserLoginInfoMap.remove(cookieValueList.getFirst());
                             cookieValueList.removeFirst();
                         }
@@ -95,7 +101,7 @@ public class LoginService {
     }
 
 
-    public synchronized boolean logout(String cookieValue) {
+    public boolean logout(String cookieValue) {
         if (StringUtils.isBlank(cookieValue)) {
             return false;
         }

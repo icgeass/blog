@@ -243,8 +243,8 @@
                         }
                     }).fail(function () {
                 showMessage('系统繁忙, 请稍后再试', true)
-                enableButton(submit, true)
             }).always(function () {
+                enableButton(submit, true)
             })
 
         })
