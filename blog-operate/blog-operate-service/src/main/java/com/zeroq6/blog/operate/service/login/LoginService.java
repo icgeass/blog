@@ -4,7 +4,7 @@ package com.zeroq6.blog.operate.service.login;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.blog.common.base.BaseResponseCode;
 import com.zeroq6.common.security.RsaCrypt;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -75,16 +75,16 @@ public class LoginService {
                     });
 
 
-    public BaseResponse<String> login(String username, String password, String ip) {
+    public BaseResponseCode<String> login(String username, String password, String ip) {
         try {
             String cookieValue = null;
             if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-                return new BaseResponse<String>(false, "用户名或密码不能为空", null);
+                return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "用户名或密码不能为空", null);
             }
 
             // 说明loginKey已经请求过，非法请求
             if(StringUtils.isNotBlank(loginKeyCache.get(password))){
-                return new BaseResponse<String>(false, "非法请求，重复请求", null);
+                return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "非法请求，重复请求", null);
             }
             // 解密
             password = rsaCrypt.decryptFromBase64String(password);
@@ -92,7 +92,7 @@ public class LoginService {
             // 验证登陆时间
             // new Date().getTime()在java和js中都是国际标准时间戳（格林威治标准时间）
             if (new Date().getTime() - Long.valueOf(password.substring(0, password.indexOf(","))) > loginExpireSeconds) {
-                return new BaseResponse<String>(false, "登陆过期，请重试", null);
+                return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "登陆过期，请重试", null);
             }
 
             // 记录该次loginKey
@@ -118,12 +118,12 @@ public class LoginService {
                 keyUserLoginInfoMap.put(cookieValue, new UserLoginInfo(username, ip, new Date()));
                 cookieValueList.add(cookieValue);
 
-                return new BaseResponse<String>(true, "登录成功", null);
+                return new BaseResponseCode<String>(BaseResponseCode.CODE_SUCCESS, "登录成功", null);
             }
-            return new BaseResponse<String>(false, "用户名或密码错误", null);
+            return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "用户名或密码错误", null);
         } catch (Exception e) {
             logger.error("登录异常", e);
-            return new BaseResponse<String>(false, "登录服务异常，请稍后重试", null);
+            return new BaseResponseCode<String>(BaseResponseCode.CODE_EXCEPTION, "登录服务异常，请稍后重试", null);
         }
 
 

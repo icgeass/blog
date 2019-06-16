@@ -7,15 +7,18 @@ import java.util.regex.Pattern;
  * @author icgeass@hotmail.com
  * @date 2017-11-10
  */
-public class BaseResponseCode<T> implements Serializable{
+public class BaseResponseCode<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public final static String MESSAGE_SUCCESS = "成功";
+    public final static String MESSAGE_EXCEPTION = "异常";
     public final static String MESSAGE_HANDING = "处理中";
     public final static String MESSAGE_FAILED = "失败";
 
+
     public final static String CODE_SUCCESS = "000000";
+    public final static String CODE_EXCEPTION = "777777";
     public final static String CODE_HANDING = "888888";
     public final static String CODE_FAILED = "999999";
 
@@ -26,17 +29,20 @@ public class BaseResponseCode<T> implements Serializable{
 
     private T body;
 
-    public BaseResponseCode(){}
+    public BaseResponseCode() {
+    }
 
     public BaseResponseCode(String code, T body) {
         this(code, null, body);
         String message = null;
-        if(CODE_SUCCESS.equals(code)){
+        if (CODE_SUCCESS.equals(code)) {
             message = MESSAGE_SUCCESS;
-        }else if(CODE_HANDING.equals(code)){
+        } else if (CODE_HANDING.equals(code)) {
             message = MESSAGE_HANDING;
-        }else if(CODE_FAILED.equals(code)){
+        } else if (CODE_FAILED.equals(code)) {
             message = MESSAGE_FAILED;
+        } else if (CODE_EXCEPTION.equals(code)) {
+            message = MESSAGE_EXCEPTION;
         }
         this.message = String.valueOf(message);
     }

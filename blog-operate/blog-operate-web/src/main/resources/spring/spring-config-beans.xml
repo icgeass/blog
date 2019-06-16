@@ -25,4 +25,6 @@
         <property name="encryptDecryptType" value="1"/>
     </bean>
 
+    <bean id="cacheServiceApi" class="com.zeroq6.common.cache.GuavaCacheService"/>
+
 </beans>

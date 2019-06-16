@@ -1,9 +1,12 @@
 package com.zeroq6.blog.operate.web.controller.login;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.blog.common.base.BaseResponseCode;
 import com.zeroq6.blog.operate.service.login.LoginService;
+import com.zeroq6.common.counter.Counter;
+import com.zeroq6.common.counter.CounterService;
 import com.zeroq6.common.security.RsaCrypt;
+import com.zeroq6.common.utils.MyWebUtils;
 import com.zeroq6.common.web.CookieUtils;
 import com.zeroq6.common.web.IpUtils;
 import com.zeroq6.common.web.ResponseUtils;
@@ -21,6 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/auth")
@@ -50,6 +56,17 @@ public class LoginController {
     private RsaCrypt rsaCrypt;
 
 
+    @Value("${counter.type.login.ip}")
+    private String counterTypeLoginIp;
+
+    @Value("${counter.type.login.username}")
+    private String counterTypeLoginUsername;
+
+
+    @Autowired
+    private CounterService counterService;
+
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
@@ -62,9 +79,23 @@ public class LoginController {
             String clientCookieValue = CookieUtils.get(request, loginCookieName);
             if (loginService.validateLogin(clientCookieValue, IpUtils.getClientIp(request), false)) {
                 ResponseUtils.doRedirect(request, response, "/admin");
+                return null;
             } else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-                BaseResponse<String> result = loginService.login(username, password, IpUtils.getClientIp(request));
-                if (result.isSuccess()) {
+                // 登录错误次数验证
+                Map<String, String> query = new HashMap<String, String>();
+                query.put(counterTypeLoginIp, MyWebUtils.getClientIp(request));
+                query.put(counterTypeLoginUsername, username);
+                List<Counter> counterList = counterService.get(query);
+                for (Counter counter : counterList) {
+                    if (counter.isLock()) {
+                        addMessage(request, response, false, counter.getMessage(), view);
+                        return re;
+                    }
+                }
+
+
+                BaseResponseCode<String> result = loginService.login(username, password, IpUtils.getClientIp(request));
+                if (BaseResponseCode.CODE_SUCCESS.equals(result.getCode())) {
                     Cookie cookie = new Cookie(loginCookieName, result.getBody());
                     cookie.setDomain(loginCookieDomain);
                     cookie.setPath(loginCookiePath);
@@ -72,9 +103,12 @@ public class LoginController {
                     cookie.setHttpOnly(true);
                     CookieUtils.set(response, cookie);
                     ResponseUtils.doRedirect(request, response, getRedirectUrl(request));
-                } else {
-                    addMessage(request, response, false, result.getMessage(), view);
+                    counterService.updateSuccess(counterList);
+                    return null;
+                }else if (BaseResponseCode.CODE_FAILED.equals(result.getCode())) {
+                    counterService.updateFailed(counterList);
                 }
+                addMessage(request, response, false, result.getMessage(), view);
             }
         } catch (Exception e) {
             addMessage(request, response, false, "系统繁忙，请稍后再试", view);
