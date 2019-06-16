@@ -83,7 +83,8 @@ public class LoginService {
             }
 
             // 说明loginKey已经请求过，非法请求
-            if(StringUtils.isNotBlank(loginKeyCache.get(password))){
+            if (StringUtils.isNotBlank(loginKeyCache.get(password))) {
+                logger.info("loginKey重复请求，username={}", username);
                 return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "非法请求，重复请求", null);
             }
             // 解密
@@ -91,7 +92,10 @@ public class LoginService {
 
             // 验证登陆时间
             // new Date().getTime()在java和js中都是国际标准时间戳（格林威治标准时间）
-            if (new Date().getTime() - Long.valueOf(text.substring(0, text.indexOf(","))) > loginExpireInMillis) {
+            Long now = new Date().getTime();
+            Long loginTime = Long.valueOf(text.substring(0, text.indexOf(",")));
+            if (now - loginTime > loginExpireInMillis) {
+                logger.info("登陆过期，username={}，seconds={}", username, (now - loginTime) / 1000);
                 return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "登陆过期，请重试", null);
             }
 

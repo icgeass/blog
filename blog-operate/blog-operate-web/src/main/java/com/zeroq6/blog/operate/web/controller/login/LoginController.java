@@ -1,11 +1,13 @@
 package com.zeroq6.blog.operate.web.controller.login;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.zeroq6.blog.common.base.BaseResponseCode;
 import com.zeroq6.blog.operate.service.login.LoginService;
 import com.zeroq6.common.counter.Counter;
 import com.zeroq6.common.counter.CounterService;
 import com.zeroq6.common.security.RsaCrypt;
+import com.zeroq6.common.utils.JsonUtils;
 import com.zeroq6.common.utils.MyWebUtils;
 import com.zeroq6.common.web.CookieUtils;
 import com.zeroq6.common.web.IpUtils;
@@ -89,6 +91,7 @@ public class LoginController {
                 for (Counter counter : counterList) {
                     if (counter.isLock()) {
                         addMessage(request, response, false, counter.getMessage(), view);
+                        logger.info("用户被锁定，counter={}", JsonUtils.toJSONString(counter, SerializerFeature.WriteDateUseDateFormat));
                         return re;
                     }
                 }
@@ -105,7 +108,7 @@ public class LoginController {
                     ResponseUtils.doRedirect(request, response, getRedirectUrl(request));
                     counterService.updateSuccess(counterList);
                     return null;
-                }else if (BaseResponseCode.CODE_FAILED.equals(result.getCode())) {
+                } else if (BaseResponseCode.CODE_FAILED.equals(result.getCode())) {
                     counterService.updateFailed(counterList);
                 }
                 addMessage(request, response, false, result.getMessage(), view);
