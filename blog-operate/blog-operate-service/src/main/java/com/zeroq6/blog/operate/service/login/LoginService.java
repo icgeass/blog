@@ -1,6 +1,9 @@
 package com.zeroq6.blog.operate.service.login;
 
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.zeroq6.blog.common.base.BaseResponse;
 import com.zeroq6.common.security.RsaCrypt;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class LoginService {
 
@@ -24,7 +28,7 @@ public class LoginService {
     private final Integer maxOnlinePerUser = 1;
 
     // 登陆超时秒数
-    private final int loginExpireSeconds = 10;
+    private final int loginExpireSeconds = 30;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -58,6 +62,19 @@ public class LoginService {
     });
 
 
+    // 缓存登陆的一次验证
+    private final LoadingCache<String, String> loginKeyCache =
+            CacheBuilder.newBuilder()
+                    .maximumSize(maxLoginUser * maxOnlinePerUser * 5 + 10) // 最大在线数的5倍 + 10
+                    .expireAfterWrite(loginExpireSeconds * 2 + 10, TimeUnit.MINUTES) // 需要比登陆过期时间长 + 10
+                    .build(new CacheLoader<String, String>() {
+                        @Override
+                        public String load(String key) {
+                            return "";
+                        }
+                    });
+
+
     public BaseResponse<String> login(String username, String password, String ip) {
         try {
             String cookieValue = null;
@@ -65,13 +82,25 @@ public class LoginService {
                 return new BaseResponse<String>(false, "用户名或密码不能为空", null);
             }
 
+            // 说明loginKey已经请求过，非法请求
+            if(StringUtils.isNotBlank(loginKeyCache.get(password))){
+                return new BaseResponse<String>(false, "非法请求，重复请求", null);
+            }
+            // 解密
             password = rsaCrypt.decryptFromBase64String(password);
+
+            // 验证登陆时间
             // new Date().getTime()在java和js中都是国际标准时间戳（格林威治标准时间）
             if (new Date().getTime() - Long.valueOf(password.substring(0, password.indexOf(","))) > loginExpireSeconds) {
                 return new BaseResponse<String>(false, "登陆过期，请重试", null);
             }
 
-            if (password.equals(usernamePasswordMap.get(username))) {
+            // 记录该次loginKey
+            loginKeyCache.put(password, password);
+
+            String passwordSha1 = password.substring(password.indexOf(",") + 1);
+
+            if (passwordSha1.equals(usernamePasswordMap.get(username))) {
                 cookieValue = UUID.randomUUID().toString().replace("-", "");
                 LinkedList<String> cookieValueList = usernameKeyMap.get(username);
                 if (cookieValueList == null) {
