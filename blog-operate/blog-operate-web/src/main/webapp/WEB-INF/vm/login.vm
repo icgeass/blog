@@ -176,6 +176,7 @@
 <body>
 <div class="dowebok">
     <div class="logo"></div>
+    <input id="pubKey" type="hidden" value="${pubKey}">
     <div class="form-item">
         <input id="username" type="text" autocomplete="off" placeholder="用户名">
     </div>
@@ -193,9 +194,17 @@
 </div>
 <script src="${request.contextPath}/static/default/js/jquery.min.js"></script>
 <script src="${request.contextPath}/static/default/js/sha1.js"></script>
+<script src="${request.contextPath}/static/default/js/jsencrypt.min.js"></script>
+
 <script>
     $(function () {
         $('#submit').on('click', function () {
+
+
+            var jsencrypt = null;
+            var passwordMaxLength = 16;
+
+
             var submit = $('#submit');
             var username = $('#username').val()
             var password = $('#password').val()
@@ -204,11 +213,25 @@
                 return
             }
 
+            if (password.length > passwordMaxLength) {
+                alert("密码长度不能超过" + passwordMaxLength + "个字符");
+                return;
+            }
+
+            var now = new Date();
+            jsencrypt = new JSEncrypt();
+            jsencrypt.setPublicKey($("#pubKey").val());
+            password = jsencrypt.encrypt(now.valueOf() + "," + sha1('_PASS_SLAT_' + password));
+            if ("false" == password) {
+                alert("加密失败")
+                return;
+            }
+
             enableButton(submit, false)
             $.post("",
                     {
                         username: username,
-                        password: sha1('_PASS_SLAT_' + password)
+                        password: password
                     },
                     function (data, status) {
                         var resp = JSON.parse(data);
@@ -220,8 +243,8 @@
                         }
                     }).fail(function () {
                 showMessage('系统繁忙, 请稍后再试', true)
-            }).always(function () {
                 enableButton(submit, true)
+            }).always(function () {
             })
 
         })

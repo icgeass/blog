@@ -1,7 +1,9 @@
 package com.zeroq6.blog.operate.web.controller.login;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zeroq6.blog.common.base.BaseResponse;
 import com.zeroq6.blog.operate.service.login.LoginService;
+import com.zeroq6.common.security.RsaCrypt;
 import com.zeroq6.common.web.CookieUtils;
 import com.zeroq6.common.web.IpUtils;
 import com.zeroq6.common.web.ResponseUtils;
@@ -44,6 +46,9 @@ public class LoginController {
     @Value("${login.return.url.name}")
     private String loginReturnUrlName;
 
+    @Autowired
+    private RsaCrypt rsaCrypt;
+
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -52,28 +57,27 @@ public class LoginController {
     public String login(String username, String password, HttpServletRequest request, HttpServletResponse response, Model view) {
         String re = "/login";
         view.addAttribute("success", false);
+        view.addAttribute("pubKey", rsaCrypt.getPublicKeyBase64());
         try {
             String clientCookieValue = CookieUtils.get(request, loginCookieName);
             if (loginService.validateLogin(clientCookieValue, IpUtils.getClientIp(request), false)) {
                 ResponseUtils.doRedirect(request, response, "/admin");
             } else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-                String genCookieValue = loginService.login(username, password, IpUtils.getClientIp(request));
-                if (StringUtils.isNotBlank(genCookieValue)) {
-                    Cookie cookie = new Cookie(loginCookieName, genCookieValue);
+                BaseResponse<String> result = loginService.login(username, password, IpUtils.getClientIp(request));
+                if (result.isSuccess()) {
+                    Cookie cookie = new Cookie(loginCookieName, result.getBody());
                     cookie.setDomain(loginCookieDomain);
                     cookie.setPath(loginCookiePath);
                     cookie.setMaxAge(6 * 60 * 60);
                     cookie.setHttpOnly(true);
                     CookieUtils.set(response, cookie);
                     ResponseUtils.doRedirect(request, response, getRedirectUrl(request));
-                    return null;
                 } else {
-                    addMessage(request, response, false, "用户名或密码错误", view);
+                    addMessage(request, response, false, result.getMessage(), view);
                 }
             }
-
         } catch (Exception e) {
-            addMessage(request, response, false, "系统繁忙, 请稍后再试", view);
+            addMessage(request, response, false, "系统繁忙，请稍后再试", view);
             logger.error("登录异常", e);
         }
         return re;
@@ -113,7 +117,7 @@ public class LoginController {
 
     private String getRedirectUrl(HttpServletRequest request) throws UnsupportedEncodingException {
         String redirectUrl = request.getParameter(loginReturnUrlName);
-        if(StringUtils.isBlank(redirectUrl)){
+        if (StringUtils.isBlank(redirectUrl)) {
             return "/admin";
         }
         redirectUrl = new String(Base64.getUrlDecoder().decode(redirectUrl), "UTF-8");

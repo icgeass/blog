@@ -5,6 +5,7 @@
        		http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="byName">
 
+    <import resource="spring-config-beans.xml"/>
     <import resource="spring-config-databases.xml"/>
     <import resource="spring-config-task.xml"/>
 </beans>

@@ -1,9 +1,13 @@
 package com.zeroq6.blog.operate.service.login;
 
 
+import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.common.security.RsaCrypt;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
@@ -25,6 +29,9 @@ public class LoginService {
     @Value("${login.cookie.name}")
     private String loginCookieName = "";
 
+    @Autowired
+    private RsaCrypt rsaCrypt;
+
 
     private Map<String, String> usernamePasswordMap = new ConcurrentHashMap<String, String>();
 
@@ -45,33 +52,45 @@ public class LoginService {
     };
 
 
-    public synchronized String login(String username, String password, String ip) {
-        String cookieValue = null;
-        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-            return null;
-        }
+    public synchronized BaseResponse<String> login(String username, String password, String ip) {
+        try {
+            String cookieValue = null;
+            if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+                return new BaseResponse<String>(false, "用户名或密码不能为空", null);
+            }
 
-        if (password.equals(usernamePasswordMap.get(username))) {
-            cookieValue = UUID.randomUUID().toString().replace("-", "");
-            LinkedList<String> cookieValueList = usernameKeyMap.get(username);
-            if (cookieValueList == null) {
-                cookieValueList = new LinkedList<String>();
-                usernameKeyMap.put(username, cookieValueList);
-            } else {
-                if (cookieValueList.size() + 1 > MAX_ONLINE_PER_USER) {
-                    for (int i = 0; i < cookieValueList.size() + 1 - MAX_ONLINE_PER_USER; i++) {
-                        keyUserLoginInfoMap.remove(cookieValueList.getFirst());
-                        cookieValueList.removeFirst();
+            password = rsaCrypt.decryptFromBase64String(password);
+            Date loginTime = new Date(Long.valueOf(password.substring(0, password.indexOf(","))));
+            if (DateUtils.addSeconds(loginTime, 10).compareTo(Calendar.getInstance(TimeZone.getTimeZone("GMT +0000")).getTime()) > 0) {
+                return new BaseResponse<String>(false, "登陆过期，请重试", null);
+            }
+
+            if (password.equals(usernamePasswordMap.get(username))) {
+                cookieValue = UUID.randomUUID().toString().replace("-", "");
+                LinkedList<String> cookieValueList = usernameKeyMap.get(username);
+                if (cookieValueList == null) {
+                    cookieValueList = new LinkedList<String>();
+                    usernameKeyMap.put(username, cookieValueList);
+                } else {
+                    // 超过用户最大登录数，移除队列头部
+                    if (cookieValueList.size() + 1 > MAX_ONLINE_PER_USER) {
+                        for (int i = 0; i < cookieValueList.size() + 1 - MAX_ONLINE_PER_USER; i++) {
+                            keyUserLoginInfoMap.remove(cookieValueList.getFirst());
+                            cookieValueList.removeFirst();
+                        }
                     }
                 }
+                keyUserLoginInfoMap.put(cookieValue, new UserLoginInfo(username, ip, new Date()));
+                cookieValueList.add(cookieValue);
+
+                return new BaseResponse<String>(true, "登录成功", null);
             }
-            keyUserLoginInfoMap.put(cookieValue, new UserLoginInfo(username, ip, new Date()));
-            cookieValueList.add(cookieValue);
-
-
-            return cookieValue;
+            return new BaseResponse<String>(false, "用户名或密码错误", null);
+        } catch (Exception e) {
+            logger.error("登录异常", e);
+            return new BaseResponse<String>(false, "登录服务异常，请稍后重试", null);
         }
-        return null;
+
 
     }
 
