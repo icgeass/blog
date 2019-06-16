@@ -36,7 +36,7 @@
     <bean id="ipCounterConfig" class="com.zeroq6.common.counter.CounterConfig" parent="AbstractCounterConfig">
         <property name="priority" value="1"/>
         <property name="lockSeconds" value="86400"/> <!--60*60*24-->
-        <property name="maxTimes" value="100"/>
+        <property name="maxTimes" value="20"/>
         <!--以下必填-->
         <!--counter类型key，区分不同counter-->
         <property name="type" value="${counter.type.login.ip}"/>
