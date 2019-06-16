@@ -28,7 +28,7 @@ public class LoginService {
     private final Integer maxOnlinePerUser = 1;
 
     // 登陆超时秒数
-    private final int loginExpireSeconds = 30;
+    private final int loginExpireInMillis = 10000;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -66,7 +66,7 @@ public class LoginService {
     private final LoadingCache<String, String> loginKeyCache =
             CacheBuilder.newBuilder()
                     .maximumSize(maxLoginUser * maxOnlinePerUser * 5 + 10) // 最大在线数的5倍 + 10
-                    .expireAfterWrite(loginExpireSeconds * 2 + 10, TimeUnit.MINUTES) // 需要比登陆过期时间长 + 10
+                    .expireAfterWrite(loginExpireInMillis * 2 + 1000, TimeUnit.MILLISECONDS) // 需要比登陆过期时间长 + 10
                     .build(new CacheLoader<String, String>() {
                         @Override
                         public String load(String key) {
@@ -87,18 +87,18 @@ public class LoginService {
                 return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "非法请求，重复请求", null);
             }
             // 解密
-            password = rsaCrypt.decryptFromBase64String(password);
+            String text = rsaCrypt.decryptFromBase64String(password);
 
             // 验证登陆时间
             // new Date().getTime()在java和js中都是国际标准时间戳（格林威治标准时间）
-            if (new Date().getTime() - Long.valueOf(password.substring(0, password.indexOf(","))) > loginExpireSeconds) {
+            if (new Date().getTime() - Long.valueOf(text.substring(0, text.indexOf(","))) > loginExpireInMillis) {
                 return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "登陆过期，请重试", null);
             }
 
             // 记录该次loginKey
             loginKeyCache.put(password, password);
 
-            String passwordSha1 = password.substring(password.indexOf(",") + 1);
+            String passwordSha1 = text.substring(text.indexOf(",") + 1);
 
             if (passwordSha1.equals(usernamePasswordMap.get(username))) {
                 cookieValue = UUID.randomUUID().toString().replace("-", "");
@@ -118,7 +118,7 @@ public class LoginService {
                 keyUserLoginInfoMap.put(cookieValue, new UserLoginInfo(username, ip, new Date()));
                 cookieValueList.add(cookieValue);
 
-                return new BaseResponseCode<String>(BaseResponseCode.CODE_SUCCESS, "登录成功", null);
+                return new BaseResponseCode<String>(BaseResponseCode.CODE_SUCCESS, "登录成功", cookieValue);
             }
             return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "用户名或密码错误", null);
         } catch (Exception e) {
