@@ -41,9 +41,9 @@
         <!--counter类型key，区分不同counter-->
         <property name="type" value="${counter.type.login.ip}"/>
         <!--传入key 剩余时间-->
-        <property name="msgLock" value="Ip：{0}被锁定，将在{1}后解锁"/>
+        <property name="msgLock" value="IP: {0}被锁定"/>
         <!--传入key 剩余次数-->
-        <property name="msgTryFailed" value="Ip：{0}剩余重试次数{1}"/>
+        <property name="msgTryFailed" value="IP: {0}剩余重试次数{1}"/>
     </bean>
 
 

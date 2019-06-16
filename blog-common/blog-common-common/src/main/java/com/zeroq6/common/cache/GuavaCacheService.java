@@ -1,8 +1,8 @@
 package com.zeroq6.common.cache;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.google.common.cache.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -11,14 +11,22 @@ public class GuavaCacheService implements CacheServiceApi {
 
     private final int maxSize = 100000;
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private final String nullValue = GuavaCacheService.class.getCanonicalName() + "_null_value_with_key";
 
     // 最大支持30天
     // 不支持每次put设置过期时间
     private final LoadingCache<String, String> guavaCache =
             CacheBuilder.newBuilder()
-                    .maximumSize(maxSize) // 最大在线数的5倍 + 10
+                    .maximumSize(maxSize)
                     .expireAfterAccess(DEFAULT_EXPIRED_IN_SECONDS, TimeUnit.SECONDS)
+                    .removalListener(new RemovalListener<String, String>() {
+                        @Override
+                        public void onRemoval(RemovalNotification<String, String> removalNotification) {
+                            logger.info("缓存被移除：key={}，value={}，cause={}", removalNotification.getKey(), removalNotification.getValue(), removalNotification.getCause());
+                        }
+                    })
                     .build(new CacheLoader<String, String>() {
                         @Override
                         public String load(String key) {

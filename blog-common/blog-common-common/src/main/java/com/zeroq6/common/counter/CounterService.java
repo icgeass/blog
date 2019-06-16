@@ -54,7 +54,7 @@ public class CounterService {
         counter = JSON.parseObject(value, Counter.class);
 
         // 说明counter已经不应该在缓存中了，但是缓存返回了值，说明缓存不支持每次put设置过期时间
-        // 手动移除并设置新counter
+        // 手动设置新counter
         if (new Date().compareTo(DateUtils.addSeconds(counter.getLastUpdateTime(), counterConfigMap.getLockSeconds(type))) > 0) {
             return new Counter(type, key, counterConfigMap.getMaxTimes(type), false, new Date(), null);
         }

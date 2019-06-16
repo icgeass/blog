@@ -208,13 +208,16 @@
             var submit = $('#submit');
             var username = $('#username').val()
             var password = $('#password').val()
+
+            showMessage('', false)
+
             if ($.trim(username).length == 0 || $.trim(password).length == 0) {
                 showMessage('用户名或密码不能为空', true)
                 return
             }
 
             if (password.length > passwordMaxLength) {
-                alert("密码长度不能超过" + passwordMaxLength + "个字符");
+                showMessage("密码长度不能超过" + passwordMaxLength + "个字符", false);
                 return;
             }
 
