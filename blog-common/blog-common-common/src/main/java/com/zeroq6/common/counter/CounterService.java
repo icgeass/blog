@@ -71,7 +71,7 @@ public class CounterService {
                 // updateSuccess(counter); // 解锁则重置计数器
             } else {
                 counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type),
-                        new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(counter.getUnlockTime()), toDescBySeconds((counter.getUnlockTime().getTime() - now.getTime()) / 1000)}));
+                        new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(counter.getUnlockTime()), DateFormat.toDescBySeconds((counter.getUnlockTime().getTime() - now.getTime()) / 1000)}));
             }
         }
         return counter;
@@ -134,7 +134,7 @@ public class CounterService {
             Date d = DateUtils.addSeconds(new Date(), counterConfigMap.getLockSeconds(type));
             counter.setLock(true);
             counter.setUnlockTime(d);
-            counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type), new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(d), toDescBySeconds(counterConfigMap.getLockSeconds(type))}));
+            counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type), new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(d), DateFormat.toDescBySeconds(counterConfigMap.getLockSeconds(type))}));
         } else {
             counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgTryFailed(type), new Object[]{counter.getKey(), counter.getLeftTimes()}));
         }
@@ -194,27 +194,31 @@ public class CounterService {
 
     //
 
-    private static String[] desc = new String[]{"天", "小时", "分钟"};
-    private static long[] toSeconds = new long[]{TimeUnit.DAYS.toSeconds(1), TimeUnit.HOURS.toSeconds(1), TimeUnit.MINUTES.toSeconds(1)};
+    static class DateFormat {
 
 
-    private static String toDescBySeconds(long seconds) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < desc.length; i++) {
-            if (seconds <= 0L) {
-                break;
+        private static String[] desc = new String[]{"天", "小时", "分钟"};
+        private static long[] toSeconds = new long[]{TimeUnit.DAYS.toSeconds(1), TimeUnit.HOURS.toSeconds(1), TimeUnit.MINUTES.toSeconds(1)};
+
+
+        private static String toDescBySeconds(long seconds) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < desc.length; i++) {
+                if (seconds <= 0L) {
+                    break;
+                }
+                long num = seconds / toSeconds[i];
+                if (num != 0 || stringBuilder.length() != 0) {
+                    stringBuilder.append(num + desc[i]);
+                }
+                seconds = seconds % toSeconds[i];
             }
-            long num = seconds / toSeconds[i];
-            if (num != 0) {
-                stringBuilder.append(num + desc[i]);
+            if (stringBuilder.length() == 0) {
+                return "0分钟";
             }
-            seconds = seconds % toSeconds[i];
+            return stringBuilder.toString();
         }
-        if (stringBuilder.length() == 0) {
-            return "0分钟";
-        }
-        return stringBuilder.toString();
+
     }
-
 
 }
