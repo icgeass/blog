@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 public class CounterService {
@@ -60,13 +61,17 @@ public class CounterService {
         }
 
         if (counter.isLock()) {
-            if (new Date().compareTo(counter.getUnlockTime()) > 0) {
+            Date now = new Date();
+            if (now.compareTo(counter.getUnlockTime()) > 0) {
                 counter.setUnlockTime(new Date());
                 counter.setLock(false);
                 counter.setLeftTimes(counterConfigMap.getMaxTimes(type));
                 counter.setMessage(null);
                 // 返回一个解锁后的counter即可，手动更新成功或失败时才写缓存，减小系统开销
                 // updateSuccess(counter); // 解锁则重置计数器
+            } else {
+                counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type),
+                        new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(counter.getUnlockTime()), toDescBySeconds((counter.getUnlockTime().getTime() - now.getTime()) / 1000)}));
             }
         }
         return counter;
@@ -129,7 +134,7 @@ public class CounterService {
             Date d = DateUtils.addSeconds(new Date(), counterConfigMap.getLockSeconds(type));
             counter.setLock(true);
             counter.setUnlockTime(d);
-            counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type), new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(d)}));
+            counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type), new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(d), toDescBySeconds(counterConfigMap.getLockSeconds(type))}));
         } else {
             counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgTryFailed(type), new Object[]{counter.getKey(), counter.getLeftTimes()}));
         }
@@ -185,5 +190,31 @@ public class CounterService {
     private String genCacheKey(String type, String key) {
         return counterConfigMap.getCacheKeyPrefix(type) + type + "_" + key;
     }
+
+
+    //
+
+    private static String[] desc = new String[]{"天", "小时", "分钟"};
+    private static long[] toSeconds = new long[]{TimeUnit.DAYS.toSeconds(1), TimeUnit.HOURS.toSeconds(1), TimeUnit.MINUTES.toSeconds(1)};
+
+
+    private static String toDescBySeconds(long seconds) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < desc.length; i++) {
+            if (seconds <= 0L) {
+                break;
+            }
+            long num = seconds / toSeconds[i];
+            if (num != 0) {
+                stringBuilder.append(num + desc[i]);
+            }
+            seconds = seconds % toSeconds[i];
+        }
+        if (stringBuilder.length() == 0) {
+            return "0分钟";
+        }
+        return stringBuilder.toString();
+    }
+
 
 }

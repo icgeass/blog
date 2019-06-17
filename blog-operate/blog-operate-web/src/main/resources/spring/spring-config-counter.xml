@@ -40,8 +40,8 @@
         <!--以下必填-->
         <!--counter类型key，区分不同counter-->
         <property name="type" value="${counter.type.login.ip}"/>
-        <!--传入key 剩余时间-->
-        <property name="msgLock" value="IP: {0}被锁定"/>
+        <!--传入key, 格式化后解锁时间, 剩余时间描述-->
+        <property name="msgLock" value="IP: {0}被锁定，将在{2}后解锁"/>
         <!--传入key 剩余次数-->
         <property name="msgTryFailed" value="IP: {0}剩余重试次数{1}"/>
     </bean>
@@ -55,8 +55,8 @@
         <!--以下必填-->
         <!--counter类型key，区分不同counter-->
         <property name="type" value="${counter.type.login.username}"/>
-        <!--传入key 剩余时间-->
-        <property name="msgLock" value="用户被锁定，将在{1}后解锁"/>
+        <!--传入key, 格式化后解锁时间, 剩余时间描述-->
+        <property name="msgLock" value="用户被锁定，将在{2}后解锁"/>
         <!--传入key 剩余次数-->
         <property name="msgTryFailed" value="用户名或密码错误，剩余重试次数{1}"/>
     </bean>
