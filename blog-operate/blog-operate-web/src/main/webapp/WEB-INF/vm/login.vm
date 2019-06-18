@@ -217,7 +217,7 @@
             }
 
             if (password.length > passwordMaxLength) {
-                showMessage("密码长度不能超过" + passwordMaxLength + "个字符", false);
+                showMessage("密码长度不能超过" + passwordMaxLength + "个字符", true);
                 return;
             }
 
