@@ -203,6 +203,9 @@ public class CounterService {
 
         private static String toDescBySeconds(long seconds) {
             StringBuilder stringBuilder = new StringBuilder();
+            if (seconds % 60 != 0) {
+                seconds += 60;
+            }
             for (int i = 0; i < desc.length; i++) {
                 if (seconds <= 0L) {
                     break;
