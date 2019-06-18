@@ -197,8 +197,8 @@ public class CounterService {
     public static class DateFormat {
 
 
-        private static String[] desc = new String[]{"天", "小时", "分钟"};
-        private static long[] toSeconds = new long[]{TimeUnit.DAYS.toSeconds(1), TimeUnit.HOURS.toSeconds(1), TimeUnit.MINUTES.toSeconds(1)};
+        private static String[] desc = new String[]{"天", "小时", "分钟", "秒"};
+        private static long[] toSeconds = new long[]{TimeUnit.DAYS.toSeconds(1), TimeUnit.HOURS.toSeconds(1), TimeUnit.MINUTES.toSeconds(1), TimeUnit.SECONDS.toSeconds(1)};
 
 
         public static String toDescBySeconds(long seconds) {
@@ -206,9 +206,6 @@ public class CounterService {
             for (int i = 0; i < desc.length; i++) {
                 if (seconds < 0L) { // 如果不需要后面的0,添加=
                     break;
-                }
-                if (i == 2 && seconds % 60 != 0) {
-                    seconds += 60;
                 }
                 long num = seconds / toSeconds[i];
                 if (num != 0 || stringBuilder.length() != 0) {
