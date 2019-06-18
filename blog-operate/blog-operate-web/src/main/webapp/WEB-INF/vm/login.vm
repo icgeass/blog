@@ -226,7 +226,7 @@
             jsencrypt.setPublicKey($("#pubKey").val());
             password = jsencrypt.encrypt(now.valueOf() + "," + sha1('_PASS_SLAT_' + password));
             if ("false" == password) {
-                alert("加密失败")
+                showMessage("加密失败", true)
                 return;
             }
 
