@@ -194,21 +194,21 @@ public class CounterService {
 
     //
 
-    static class DateFormat {
+    public static class DateFormat {
 
 
         private static String[] desc = new String[]{"天", "小时", "分钟"};
         private static long[] toSeconds = new long[]{TimeUnit.DAYS.toSeconds(1), TimeUnit.HOURS.toSeconds(1), TimeUnit.MINUTES.toSeconds(1)};
 
 
-        private static String toDescBySeconds(long seconds) {
+        public static String toDescBySeconds(long seconds) {
             StringBuilder stringBuilder = new StringBuilder();
-            if (seconds % 60 != 0) {
-                seconds += 60;
-            }
             for (int i = 0; i < desc.length; i++) {
-                if (seconds <= 0L) {
+                if (seconds < 0L) { // 如果不需要后面的0,添加=
                     break;
+                }
+                if (i == 2 && seconds % 60 != 0) {
+                    seconds += 60;
                 }
                 long num = seconds / toSeconds[i];
                 if (num != 0 || stringBuilder.length() != 0) {
@@ -217,11 +217,12 @@ public class CounterService {
                 seconds = seconds % toSeconds[i];
             }
             if (stringBuilder.length() == 0) {
-                return "0分钟";
+                return "0" + desc[desc.length - 1];
             }
             return stringBuilder.toString();
         }
 
     }
+
 
 }
