@@ -98,7 +98,8 @@ public class LoginController {
 
 
                 BaseResponseCode<String> result = loginService.login(username, password, IpUtils.getClientIp(request));
-                if (BaseResponseCode.CODE_SUCCESS.equals(result.getCode())) {
+                String resultCode = result.getCode();
+                if (BaseResponseCode.CODE_SUCCESS.equals(resultCode)) {
                     Cookie cookie = new Cookie(loginCookieName, result.getBody());
                     cookie.setDomain(loginCookieDomain);
                     cookie.setPath(loginCookiePath);
@@ -108,10 +109,24 @@ public class LoginController {
                     ResponseUtils.doRedirect(request, response, getRedirectUrl(request));
                     counterService.updateSuccess(counterList);
                     return null;
-                } else if (BaseResponseCode.CODE_FAILED.equals(result.getCode())) {
+                } else if (BaseResponseCode.CODE_EXCEPTION.equals(resultCode)) {
+                    addMessage(request, response, false, "登录服务异常,请稍后重试", view);
+                } else {
                     counterService.updateFailed(counterList);
+                    String message = "未知错误";
+                    if (LoginService.CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_BLANK.equals(resultCode)) {
+                        message = "用户名和密码不能为空";
+                    } else if (LoginService.CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_ERROR.equals(resultCode)) {
+                        message = counterService.getMessage(counterList);
+                    } else if (LoginService.CODE_FAILED_LOGIN_REPEAT.equals(resultCode)) {
+                        message = "非法请求，重复登录";
+                    } else if (LoginService.CODE_FAILED_LOGIN_EXPIRE.equals(resultCode)) {
+                        message = "登录过期，请重试";
+                    }
+                    addMessage(request, response, false, message, view);
                 }
-                addMessage(request, response, false, result.getMessage(), view);
+
+
             }
         } catch (Exception e) {
             addMessage(request, response, false, "系统繁忙，请稍后再试", view);

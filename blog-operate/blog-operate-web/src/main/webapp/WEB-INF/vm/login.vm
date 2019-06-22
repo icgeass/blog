@@ -182,7 +182,7 @@
     </div>
     <div class="form-item">
         <input id="password" type="password" autocomplete="off" placeholder="登录密码">
-        <p class="tip">邮箱或密码不正确</p>
+        <p class="tip"></p>
     </div>
     <div class="form-item">
         <button id="submit">登 录</button>
@@ -245,7 +245,7 @@
                             showMessage(resp.message, true);
                         }
                     }).fail(function () {
-                showMessage('系统繁忙, 请稍后再试', true)
+                showMessage('请求失败, 请稍后重试', true)
             }).always(function () {
                 enableButton(submit, true)
             })

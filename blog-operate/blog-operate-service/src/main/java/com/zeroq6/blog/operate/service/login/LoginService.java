@@ -20,6 +20,16 @@ public class LoginService {
 
     private final static ThreadLocal<UserLoginInfo> CURRENT_LOGIN_USER = new ThreadLocal<UserLoginInfo>();
 
+
+    public final static String CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_BLANK = "000001";
+
+    public final static String CODE_FAILED_LOGIN_REPEAT = "000002";
+
+    public final static String CODE_FAILED_LOGIN_EXPIRE = "000003";
+
+    public final static String CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_ERROR = "000004";
+
+
     public final static String PASS_SLAT = "_PASS_SLAT_";
 
     private final Integer maxLoginUser = 10000;
@@ -27,7 +37,7 @@ public class LoginService {
     // 大于等于1
     private final Integer maxOnlinePerUser = 1;
 
-    // 登陆超时秒数
+    // 登陆超时毫秒数
     private final int loginExpireInMillis = 10000;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -65,8 +75,8 @@ public class LoginService {
     // 缓存登陆的一次验证
     private final LoadingCache<String, String> loginKeyCache =
             CacheBuilder.newBuilder()
-                    .maximumSize(maxLoginUser * maxOnlinePerUser * 5 + 10) // 最大在线数的5倍 + 10
-                    .expireAfterWrite(loginExpireInMillis * 2 + 1000, TimeUnit.MILLISECONDS) // 需要比登陆过期时间长 + 10
+                    .maximumSize(maxLoginUser * maxOnlinePerUser * 2 + 10) // 最大在线数的2倍 + 10
+                    .expireAfterWrite(loginExpireInMillis * 2 + 10000, TimeUnit.MILLISECONDS) // 需要比登陆过期时间长
                     .build(new CacheLoader<String, String>() {
                         @Override
                         public String load(String key) {
@@ -79,13 +89,13 @@ public class LoginService {
         try {
             String cookieValue = null;
             if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-                return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "用户名或密码不能为空", null);
+                return new BaseResponseCode<String>(CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_BLANK, null, null);
             }
 
             // 说明loginKey已经请求过，非法请求
             if (StringUtils.isNotBlank(loginKeyCache.get(password))) {
                 logger.info("loginKey重复请求，username={}", username);
-                return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "非法请求，重复请求", null);
+                return new BaseResponseCode<String>(CODE_FAILED_LOGIN_REPEAT, null, null);
             }
             // 解密
             String text = rsaCrypt.decryptFromBase64String(password);
@@ -96,7 +106,7 @@ public class LoginService {
             Long loginTime = Long.valueOf(text.substring(0, text.indexOf(",")));
             if (now - loginTime > loginExpireInMillis) {
                 logger.info("登陆过期，username={}，seconds={}", username, (now - loginTime) / 1000);
-                return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "登陆过期，请重试", null);
+                return new BaseResponseCode<String>(CODE_FAILED_LOGIN_EXPIRE, null, null);
             }
 
             // 记录该次loginKey
@@ -124,10 +134,10 @@ public class LoginService {
 
                 return new BaseResponseCode<String>(BaseResponseCode.CODE_SUCCESS, "登录成功", cookieValue);
             }
-            return new BaseResponseCode<String>(BaseResponseCode.CODE_FAILED, "用户名或密码错误", null);
+            return new BaseResponseCode<String>(CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_ERROR, null, null);
         } catch (Exception e) {
             logger.error("登录异常", e);
-            return new BaseResponseCode<String>(BaseResponseCode.CODE_EXCEPTION, "登录服务异常，请稍后重试", null);
+            return new BaseResponseCode<String>(BaseResponseCode.CODE_EXCEPTION, e.getMessage(), null);
         }
 
 
