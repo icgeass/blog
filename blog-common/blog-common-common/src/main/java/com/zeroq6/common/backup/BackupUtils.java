@@ -1,6 +1,5 @@
 package com.zeroq6.common.backup;
 
-import com.alibaba.fastjson.JSON;
 import com.zeroq6.common.utils.CloseUtils;
 import com.zeroq6.common.utils.JsonUtils;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
@@ -90,13 +89,13 @@ public class BackupUtils {
                     IOUtils.copy(is, os);
                     os.closeArchiveEntry();
                     //
-                    CloseUtils.closeSilent(is);
+                    CloseUtils.closeNoException(is);
                 }
                 out.flush();
             } finally {
-                CloseUtils.closeSilent(os);
-                CloseUtils.closeSilent(out);
-                CloseUtils.closeSilent(is);
+                CloseUtils.closeNoException(os);
+                CloseUtils.closeNoException(out);
+                CloseUtils.closeNoException(is);
             }
 
 
@@ -132,9 +131,9 @@ public class BackupUtils {
                         stringBuilder.append(line).append("\r\n");
                     }
                 } finally {
-                    CloseUtils.closeSilent(input);
-                    CloseUtils.closeSilent(isr);
-                    CloseUtils.closeSilent(is);
+                    CloseUtils.closeNoException(input);
+                    CloseUtils.closeNoException(isr);
+                    CloseUtils.closeNoException(is);
                 }
                 int exitValue = process.waitFor();
                 if (0 != exitValue) {

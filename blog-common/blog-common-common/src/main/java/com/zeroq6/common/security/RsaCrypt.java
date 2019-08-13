@@ -334,9 +334,9 @@ public class RsaCrypt {
             LOGGER.error("读取key异常", e);
             throw new RuntimeException(e);
         }finally {
-            CloseUtils.closeSilent(br);
-            CloseUtils.closeSilent(isr);
-            CloseUtils.closeSilent(in);
+            CloseUtils.closeNoException(br);
+            CloseUtils.closeNoException(isr);
+            CloseUtils.closeNoException(in);
         }
     }
 

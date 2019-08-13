@@ -3,6 +3,7 @@ package com.zeroq6.blog.operate.web.controller;
 import com.zeroq6.blog.common.domain.AttachDomain;
 import com.zeroq6.blog.operate.manager.AttachManager;
 import com.zeroq6.blog.operate.service.AttachService;
+import com.zeroq6.common.utils.CloseUtils;
 import com.zeroq6.common.web.DownloadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,25 +37,21 @@ public class AttachController {
 
 
     /**
-     *
      * @param response
      * @param md5
      * @param name
      */
     @RequestMapping(value = "/download/{md5}/{name}", method = RequestMethod.GET)
     public void downloadFile(HttpServletResponse response, @PathVariable("md5") String md5, @PathVariable("name") String name) {
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
         try {
             File file = null;
             AttachDomain attachDomain = attachService.selectOne(new AttachDomain().setMd5(md5), true);
             if (null != attachDomain) {
                 file = new File(attachManager.getUploadPath() + File.separator + attachDomain.getName());
+                DownloadUtils.download(response, file, null);
+            } else {
+                DownloadUtils.download(response, null, null);
             }
-            if (null == attachDomain) {
-                throw new RuntimeException("Not Found");
-            }
-            DownloadUtils.download(response, file, null);
         } catch (Exception e) {
             logger.info("下载失败", e);
         }

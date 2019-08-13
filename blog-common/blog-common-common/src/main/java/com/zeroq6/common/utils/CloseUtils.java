@@ -13,7 +13,7 @@ public class CloseUtils {
 
 
 
-    public static void closeSilent(AutoCloseable autoCloseable) {
+    public static void closeNoException(AutoCloseable autoCloseable) {
         try {
             if (null != autoCloseable) {
                 autoCloseable.close();

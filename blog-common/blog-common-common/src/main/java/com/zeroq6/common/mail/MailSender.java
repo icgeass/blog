@@ -152,7 +152,7 @@ public class MailSender {
             LOGGER.error("邮件发送异常", e);
             throw new RuntimeException(e);
         } finally {
-            CloseUtils.closeSilent(os);
+            CloseUtils.closeNoException(os);
         }
 
     }

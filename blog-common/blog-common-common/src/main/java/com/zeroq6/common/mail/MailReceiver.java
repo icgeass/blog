@@ -1,6 +1,7 @@
 package com.zeroq6.common.mail;
 
 import com.sun.mail.pop3.POP3Store;
+import com.zeroq6.common.utils.CloseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,20 +57,8 @@ public class MailReceiver {
         } catch (Exception e) {
             LOGGER.error("接收邮件异常", e);
         } finally {
-            try {
-                if (null != emailFolder) {
-                    emailFolder.close(false);
-                }
-            } catch (Exception e) {
-                LOGGER.error("关闭Folder异常", e);
-            }
-            try {
-                if (null != emailStore) {
-                    emailStore.close();
-                }
-            } catch (Exception e) {
-                LOGGER.error("关闭POP3Store异常", e);
-            }
+            CloseUtils.closeNoException(emailFolder);
+            CloseUtils.closeNoException(emailStore);
         }
         return content;
 

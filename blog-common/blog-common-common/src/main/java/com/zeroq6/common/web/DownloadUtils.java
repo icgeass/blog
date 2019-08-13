@@ -1,5 +1,6 @@
 package com.zeroq6.common.web;
 
+import com.zeroq6.common.utils.CloseUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,10 @@ public class DownloadUtils {
         OutputStream outputStream = null;
         try {
             if (null == file) {
-                throw new RuntimeException("The file to download not exist");
+                throw new RuntimeException("The file record NOT in our database");
             }
             if (!file.exists()) {
-                throw new RuntimeException("Not Found");
+                throw new RuntimeException("The file to download not exist on our disk");
             }
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
             if (mimeType == null) {
@@ -57,20 +58,8 @@ public class DownloadUtils {
                 LOGGER.error("输出错误信息到前端异常", ee);
             }
         } finally {
-            if (null != outputStream) {
-                try {
-                    outputStream.close();
-                } catch (Exception e) {
-                    LOGGER.error("关闭输出流异常", e);
-                }
-            }
-            if (null != inputStream) {
-                try {
-                    inputStream.close();
-                } catch (Exception e) {
-                    LOGGER.error("关闭输入流异常", e);
-                }
-            }
+            CloseUtils.closeNoException(outputStream);
+            CloseUtils.closeNoException(inputStream);
         }
     }
 }
