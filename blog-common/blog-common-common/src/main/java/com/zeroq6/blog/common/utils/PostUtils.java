@@ -81,7 +81,7 @@ public class PostUtils {
         int lastEnd = 0;// 保存每个链接最后一会的下标
 
         while (matcher.find()) {
-            resultText.append(urlText.substring(lastEnd, matcher.start() - 1));
+            resultText.append(urlText.substring(lastEnd, matcher.start()));
             resultText.append("<a href=\"" + matcher.group() + "\" target=\"_blank\">" + matcher.group() + "</a>");
             lastEnd = matcher.end();
         }
@@ -89,4 +89,5 @@ public class PostUtils {
         return resultText.toString();
 
     }
+
 }
