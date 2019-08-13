@@ -82,7 +82,7 @@ public class PostUtils {
 
         while (matcher.find()) {
             resultText.append(urlText.substring(lastEnd, matcher.start() - 1));
-            resultText.append("<a href=\"" + matcher.group() + "\">" + matcher.group() + "</a>");
+            resultText.append("<a href=\"" + matcher.group() + "\" target=\"_blank\">" + matcher.group() + "</a>");
             lastEnd = matcher.end();
         }
         resultText.append(urlText.substring(lastEnd));
