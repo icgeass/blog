@@ -13,6 +13,7 @@ import com.zeroq6.blog.operate.manager.PostManager;
 import com.zeroq6.blog.operate.service.login.LoginService;
 import com.zeroq6.common.utils.GravatarUtils;
 import com.zeroq6.common.utils.MyDateUtils;
+import com.zeroq6.common.utils.TimeAgo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -170,7 +171,7 @@ public class PostService extends BaseService<PostDomain, Long> {
             for (CommentDomain item : commentDomainList) {
                 Map<String, Object> extendMap = item.getExtendMap();
                 extendMap.put("avatar", GravatarUtils.getAvatar(item.getEmail()));
-                extendMap.put("timeBefore", MyDateUtils.getDateBeforeNow(item.getCreatedTime()));
+                extendMap.put("timeBefore", TimeAgo.toRelative(item.getCreatedTime()));
                 extendMap.put("timeFmt", commentFmt.format(item.getCreatedTime()));
                 if (item.getParentType() == EmCommentParentType.PINGLUN.value()) {
                     extendMap.put("commentParent", commentService.selectByKey(item.getParentId()));

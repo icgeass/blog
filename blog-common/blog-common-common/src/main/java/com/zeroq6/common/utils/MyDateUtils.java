@@ -79,35 +79,4 @@ public class MyDateUtils {
     }
 
 
-    /**
-     * 最好的方式将系统时区统一设置GMT
-     * 如果系统时区更改，会导致存量的时间有所偏差
-     * @param date
-     * @return
-     */
-    public static String getDateBeforeNow(Date date) {
-        if (null == date) {
-            date = new Date(5000L);
-        }
-        String result = "a moment ago";
-        //
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        String[] dateDiff = sdf.format(new Date(new Date().getTime() - date.getTime() + date.getTimezoneOffset() * 60 * 1000)).split("-");
-        int[] dateBase = {1970, 1, 1, 0, 0, 0};
-        String[] desc = new String[]{"%s years ago", "%s months ago", "%s days ago", "%s hours ago", "%s minutes ago"};
-        for (int i = 0; i < dateDiff.length; i++) {
-            if (i > desc.length - 1) {
-                break;
-            }
-            int diff = Integer.valueOf(dateDiff[i]);
-            diff -= dateBase[i];
-            if (diff != 0) {
-                result = String.format(desc[i], diff + "");
-                break;
-            }
-        }
-        return result;
-    }
-
-
 }
