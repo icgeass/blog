@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * https://memorynotfound.com/calculate-relative-time-time-ago-java/
  */
 public class TimeAgo {
-    public static final Map<String, Long> times = new LinkedHashMap<>();
+    private static final Map<String, Long> times = new LinkedHashMap<>();
 
     static {
         times.put("year", TimeUnit.DAYS.toMillis(365));
