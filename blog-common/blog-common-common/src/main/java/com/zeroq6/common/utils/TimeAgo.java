@@ -40,7 +40,7 @@ public class TimeAgo {
             }
         }
         if ("".equals(res.toString())) {
-            return "0 seconds ago";
+            return "a moment ago";
         } else {
             res.setLength(res.length() - 2);
             res.append(" ago");
