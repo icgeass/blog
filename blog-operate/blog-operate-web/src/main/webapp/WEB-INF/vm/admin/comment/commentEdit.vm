@@ -1,0 +1,78 @@
+#set($layout='admin/layout/layout.vm')
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">评论编辑</h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <form id="pageform" class="form-inline" action="${request.contextPath}/admin/comment/save" method="post">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="username">用户名：</label>
+                    $!{comment.username}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="email">邮箱：</label>
+                    $!{comment.email}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="url">网址：</label>
+                    $!{comment.url}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="ip">ip地址：</label>
+                    $!{comment.ip}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="userAgent">浏览器代理：</label>
+                    $!{comment.userAgent}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="content">评论内容：</label><br/>
+                    <textarea class="form-control" name="content" style="width: 600px; height: 400px ;overflow: auto;word-break: break-all; resize: none;">$!{comment.content}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="remark">备注：</label>
+                    <input type="text" class="form-control" name="remark" maxlength="200    " value='$!{comment.remark}'>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="hidden" name="id" value="$!{comment.id}">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    </form>
+</div>
+
+
+

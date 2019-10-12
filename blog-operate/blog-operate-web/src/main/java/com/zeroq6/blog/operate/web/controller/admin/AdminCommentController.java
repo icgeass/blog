@@ -6,6 +6,7 @@ import com.zeroq6.blog.common.base.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -25,5 +26,24 @@ public class AdminCommentController {
         view.addAttribute("page", page);
         view.addAttribute("commentDomain", commentDomain);
         return "/admin/comment/commentList";
+    }
+
+    @RequestMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, Model view) {
+        view.addAttribute("comment", commentService.selectOne(new CommentDomain().setId(id), true));
+        return "/admin/comment/commentEdit";
+    }
+
+    @RequestMapping("/save")
+    public String save(CommentDomain commentDomain, Model view) {
+        commentService.updateByKey(commentDomain);
+        return "redirect:/admin/comment";
+    }
+
+
+    @RequestMapping("/delete/{id}")
+    public String del(@PathVariable Long id, Model view) {
+        commentService.deleteCommentById(id);
+        return "redirect:/admin/comment";
     }
 }

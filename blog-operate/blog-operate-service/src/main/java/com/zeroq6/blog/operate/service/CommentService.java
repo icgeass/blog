@@ -16,8 +16,11 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 自定义开始 自定义结束
@@ -45,11 +48,9 @@ public class CommentService extends BaseService<CommentDomain, Long> {
     }
 
 
-
-
-
     /**
      * 提交评论
+     *
      * @param commentDomain
      * @return
      */
@@ -65,7 +66,7 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             if (null != commentDomain.getUrl() && !UrlValidator.getInstance().isValid(commentDomain.getUrl())) {
                 throw new RuntimeException("url格式错误");
             }
-            if(StringUtils.isBlank(commentDomain.getContent())){
+            if (StringUtils.isBlank(commentDomain.getContent())) {
                 throw new RuntimeException("评论内容不能为空");
             }
             if (null == commentDomain.getPostId() || null == commentDomain.getParentType() || null == commentDomain.getParentId()) {
@@ -80,9 +81,9 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             //
             if (commentDomain.getParentType() == EmCommentParentType.PINGLUN.value()) {
                 this.selectOne(new CommentDomain().setPostId(commentDomain.getPostId()).setId(commentDomain.getParentId()), false);
-            }else if(commentDomain.getParentType() == EmCommentParentType.WENZHANG.value()){
+            } else if (commentDomain.getParentType() == EmCommentParentType.WENZHANG.value()) {
                 commentDomain.setParentId(commentDomain.getPostId());
-            }else{
+            } else {
                 throw new RuntimeException("评论父类型非法, " + commentDomain.getParentType());
             }
             return commentManager.post(commentDomain, post);
@@ -92,6 +93,38 @@ public class CommentService extends BaseService<CommentDomain, Long> {
         }
     }
 
+
+    @Transactional
+    public BaseResponse<String> deleteCommentById(Long id) {
+        try {
+            List<Long> commentIdList = getChildrenIdList(id);
+            if(!commentIdList.isEmpty()){
+                disableByCondition(new CommentDomain().setParentType(EmCommentParentType.PINGLUN.value()).put("idIn", commentIdList), commentIdList.size());
+            }
+            disableByKey(id);
+            return new BaseResponse<String>(true, null, null);
+        } catch (Exception e) {
+            logger.error("删除评论异常, " + id, e);
+            return new BaseResponse<String>(false, e.getMessage(), null);
+        }
+
+    }
+
+    private List<Long> getChildrenIdList(Long id) {
+        return getChildrenIdList(id, null);
+    }
+
+    private List<Long> getChildrenIdList(Long id, List<Long> commentIdList) {
+        if (commentIdList == null || commentIdList.isEmpty()) {
+            commentIdList = new ArrayList<Long>();
+        }
+        List<CommentDomain> commentDomainList = selectList(new CommentDomain().setParentType(EmCommentParentType.PINGLUN.value()).setParentId(id));
+        for (CommentDomain comment : commentDomainList) {
+            commentIdList.add(comment.getId());
+            getChildrenIdList(comment.getId(), commentIdList);
+        }
+        return commentIdList;
+    }
 
 
 }

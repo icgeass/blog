@@ -76,6 +76,7 @@
                     <th #sorting($!{commentDomain}, 'content')>评论内容</th>
                     <th #sorting($!{commentDomain}, 'post_id')>文章编号</th>
                     <th #sorting($!{commentDomain}, 'parent_type')>父类型</th>
+                    <th #sorting($!{commentDomain}, 'parent_id')>父id</th>
                     <th #sorting($!{commentDomain}, 'ip')>ip地址</th>
                     <th #sorting($!{commentDomain}, 'user_agent')>用户代理</th>
                     <th #sorting($!{commentDomain}, 'created_time')>创建时间</th>
@@ -91,11 +92,14 @@
                     <td>$PostUtils.substring($!{item.content}, 50)</td>
                     <td>$!{item.postId}</td>
                     <td>#emTitle('EmCommentParentType', $!{item.parentType})</td>
+                    <td>$!{item.parentId}</td>
                     <td>$!{item.ip}</td>
                     <td>$PostUtils.substring($!{item.userAgent}, 30)</td>
                     <td>$DateUtils.format($!{item.createdTime})</td>
                     <td>
                         <a href="${request.contextPath}/post/show/$!{item.postId}#c$!{item.id}" target="_blank" class="btn btn-info">查看</a>
+                        <a href="${request.contextPath}/admin/comment/edit/$!{item.id}" class="btn btn-warning">编辑</a>
+                        <a href="javascript:void(0);" class="btn btn-danger" onclick="delComment($!{item.id})">删除</a>
                     </td>
                 </tr>
 #end
@@ -106,6 +110,12 @@
     </div>
     </form>
 </div>
+
+<script>
+    function delComment(id) {
+        submitConfirmFun("pageform", "${request.contextPath}/admin/comment/delete/" + id, "确定删除编号为" + id + "的评论？这将删除与之相关的所有子评论")
+    }
+</script>
 
 #initList('comment', $!{commentDomain})
 
