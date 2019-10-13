@@ -63,6 +63,9 @@
                             <button type="button" id="query" name="query" class="btn btn-info">
                                 查询
                             </button>
+                            <button type="reset" id="reset" name="reset" class="btn btn-info">
+                                重置
+                            </button>
                         </div>
                     </div>
                 </div>
