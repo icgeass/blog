@@ -11,6 +11,8 @@
 
     <title>博客管理后台</title>
 
+    <link rel="Shortcut Icon" type="image/x-icon" href="${request.contextPath}/favicon.ico">
+
     <!-- Bootstrap Core CSS -->
     <link href="${request.contextPath}/static/admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 

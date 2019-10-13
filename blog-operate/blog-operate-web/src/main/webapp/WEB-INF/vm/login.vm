@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="Shortcut Icon" type="image/x-icon" href="${request.contextPath}/favicon.ico">
     <title>登录</title>
     <style type="text/css">
         input::-ms-clear {

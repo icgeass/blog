@@ -1,6 +1,10 @@
 #!/bin/bash
 set -exuo pipefail
 
+pkill -9 -U blog
+
+su - blog
+
 cd /export/git/blog
 git pull
 mvn clean -U install -Dmaven.test.skip=true -Pproduction
