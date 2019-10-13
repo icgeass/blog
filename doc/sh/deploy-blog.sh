@@ -3,13 +3,6 @@ set -exuo pipefail
 
 cd /export/git/blog
 git pull
-
-# pkill -9 -U blog
-
-su - blog
-
-cd /export/git/blog
-git pull
 mvn clean -U install -Dmaven.test.skip=true -Pproduction
 cp -r /export/git/blog/blog-operate/blog-operate-web/target/blog-operate-web-1.0.0-SNAPSHOT/* /export/App/www.6zeroq.com/
 cp /export/lock/www.6zeroq.com/web.xml /export/App/www.6zeroq.com/WEB-INF/web.xml
