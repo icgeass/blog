@@ -53,7 +53,7 @@ public class AdminAttachController {
     @RequestMapping("/delete/{id}")
     public String del(@PathVariable Long id, Model view) {
         attachManager.deleteById(id);
-        return "redirect:/admin/attach";
+        return "forward:/admin/attach";
     }
 
 }

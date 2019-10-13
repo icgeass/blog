@@ -55,6 +55,6 @@ public class AdminDictController {
     @RequestMapping("/delete/{id}")
     public String del(@PathVariable Long id, Model view) {
         dictService.disableByKey(id);
-        return "redirect:/admin/dict";
+        return "forward:/admin/dict";
     }
 }

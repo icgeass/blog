@@ -44,6 +44,6 @@ public class AdminCommentController {
     @RequestMapping("/delete/{id}")
     public String del(@PathVariable Long id, Model view) {
         commentService.deleteCommentById(id);
-        return "redirect:/admin/comment";
+        return "forward:/admin/comment";
     }
 }

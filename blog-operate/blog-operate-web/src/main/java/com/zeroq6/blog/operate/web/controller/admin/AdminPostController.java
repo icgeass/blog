@@ -93,7 +93,7 @@ public class AdminPostController {
     @RequestMapping("/delete/{id}")
     public String del(@PathVariable Long id, Model view) {
         postManager.deleteById(id);
-        return "redirect:/admin/post";
+        return "forward:/admin/post";
     }
 
 

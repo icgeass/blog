@@ -48,7 +48,7 @@ function sortingTable() {
 }
 
 function onEnterPageSizeClick() {
-    $("#pageSize").keydown(function (e) {
+    $("#pageSize,input").keydown(function (e) {
         if (e.keyCode == 13) {
             $("#pageform").submit(); //处理事件
         }
