@@ -13,8 +13,18 @@ function submitPage(pageNo) {
 }
 
 function submitFun(elementId, url) {
-    $("#" + elementId).attr("action", url);
-    $('#' + elementId).submit();
+    var form = $("#" + elementId);
+    // form表单分页值，初始为1，submitPage改变
+    var currentPage = $("#currentPage");
+    // a标签记录的当前分页值
+    var currentPageActive = $('#currentPageActive');
+    if (form.val() != null && currentPageActive.val() != null && currentPage.val() != null) {
+        currentPage.val(currentPageActive.html());
+    }
+    if (url != null) {
+        form.attr("action", url);
+    }
+    form.submit();
 }
 
 function submitConfirmFun(elementId, url, title) {
@@ -50,7 +60,7 @@ function sortingTable() {
 function onEnterPageSizeClick() {
     $("#pageSize,input").keydown(function (e) {
         if (e.keyCode == 13) {
-            $("#pageform").submit(); //处理事件
+            submitFun('pageform', null); //处理事件
         }
     });
 }

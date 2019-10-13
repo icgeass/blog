@@ -26,7 +26,7 @@
 #end
 #end
 #end
-        <a class="page-number current">$page.currentPage</a>
+        <a id="currentPageActive" class="page-number current">$page.currentPage</a>
 #if($prefixAndSuffixNum >= 0 && $appendingNum >= 1)
 #set($from = $page.currentPage + 1)
 #set($to = $page.currentPage + $appendingNum)
@@ -86,7 +86,7 @@
 #end
 #end
 #end
-        <li class="active"><a href="javascript:void(0);">$page.currentPage</a></li>
+        <li class="active"><a id="currentPageActive" href="javascript:void(0);">$page.currentPage</a></li>
 #if($prefixAndSuffixNum >= 0 && $appendingNum >= 1)
 #set($from = $page.currentPage + 1)
 #set($to = $page.currentPage + $appendingNum)
