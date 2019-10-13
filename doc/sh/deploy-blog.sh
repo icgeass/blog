@@ -1,6 +1,9 @@
 #!/bin/bash
 set -exuo pipefail
 
+cd /export/git/blog
+git pull
+
 # pkill -9 -U blog
 
 su - blog
