@@ -1,7 +1,7 @@
 #!/bin/bash
 set -exuo pipefail
 
-pkill -9 -U blog
+# pkill -9 -U blog
 
 su - blog
 
