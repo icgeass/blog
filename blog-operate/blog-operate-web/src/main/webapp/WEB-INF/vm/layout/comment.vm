@@ -54,19 +54,30 @@
                         </div>
                     </div>
 
-                    <script src="${request.contextPath}/static/default/js/js.cookie-2.1.4.min.js"></script>
+
                     <script type="text/javascript">
-                        // https://github.com/js-cookie/js-cookie
+                        // http://www.ruanyifeng.com/blog/2014/03/undefined-vs-null.html
+                        // JavaScript的最初版本是这样区分的：null是一个表示"无"的对象，转为数值时为0；undefined是一个表示"无"的原始值，转为数值时为NaN。
                         $(document).ready(function () {
-                            var commentInfoStr = Cookies.get('_commentInfo');
-                            if(commentInfoStr != undefined){
-                                var commentInfoJson = JSON.parse(Cookies.get('_commentInfo'));
-                                $('#username').val(commentInfoJson.username)
-                                $('#email').val(commentInfoJson.email)
-                                $('#url').val(commentInfoJson.url)
+                            var commentInfoKey = '_commentInfo'
+                            var commentInfoStr = localStorage.getItem(commentInfoKey);
+                            if (commentInfoStr != undefined || commentInfoStr != null) {
+                                var commentInfoJson = JSON.parse(commentInfoStr);
+                                if (new Date().getTime() - commentInfoJson.milliseconds > 100 * 60 * 60 * 24 * 31) {
+                                    localStorage.removeItem(commentInfoKey)
+                                } else {
+                                    $('#username').val(commentInfoJson.username)
+                                    $('#email').val(commentInfoJson.email)
+                                    $('#url').val(commentInfoJson.url)
+                                }
                             }
                             $('#submit').on('click', function () {
-                                Cookies.set('_commentInfo', {'username': $('#username').val(),'email': $('#email').val(),'url': $('#url').val()})
+                                localStorage.setItem(commentInfoKey, JSON.stringify({
+                                    'username': $('#username').val(),
+                                    'email': $('#email').val(),
+                                    'url': $('#url').val(),
+                                    'milliseconds': new Date().getTime()
+                                }))
                             })
                         });
                     </script>
