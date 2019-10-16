@@ -77,6 +77,8 @@ public class LoginController {
         String re = "/login";
         view.addAttribute("success", false);
         view.addAttribute("pubKey", rsaCrypt.getPublicKeyBase64());
+        view.addAttribute("serverTimeMillis", System.currentTimeMillis());
+
         try {
             String clientCookieValue = CookieUtils.get(request, loginCookieName);
             if (loginService.validateLogin(clientCookieValue, IpUtils.getClientIp(request), false)) {

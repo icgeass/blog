@@ -178,6 +178,7 @@
 <div class="dowebok">
     <div class="logo"></div>
     <input id="pubKey" type="hidden" value="${pubKey}">
+    <input id="serverTimeMillis" type="hidden" value="${serverTimeMillis}">
     <div class="form-item">
         <input id="username" type="text" autocomplete="off" placeholder="用户名">
     </div>
@@ -225,8 +226,8 @@
             var now = new Date();
             jsencrypt = new JSEncrypt();
             jsencrypt.setPublicKey($("#pubKey").val());
-            password = jsencrypt.encrypt(now.valueOf() + "," + sha1('_PASS_SLAT_' + password));
-            if ("false" == password) {
+            password = jsencrypt.encrypt(Number($(document).data('timeMillisDiff')) + now.getTime() + "," + sha1('_PASS_SLAT_' + password));
+            if ("false" == String(password)) {
                 showMessage("加密失败", true)
                 return;
             }
@@ -261,6 +262,10 @@
                 $('#submit').click();
             }
         })
+
+        //
+        $(document).data('timeMillisDiff', String(Number($('#serverTimeMillis').val()) - new Date().getTime()))
+
         //
         var message = '$!{message}'
         if (message != '') {

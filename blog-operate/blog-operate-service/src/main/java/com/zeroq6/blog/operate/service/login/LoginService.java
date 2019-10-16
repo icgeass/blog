@@ -75,8 +75,8 @@ public class LoginService {
     // 缓存登陆的一次验证
     private final LoadingCache<String, String> loginKeyCache =
             CacheBuilder.newBuilder()
-                    .maximumSize(maxLoginUser * maxOnlinePerUser * 2 + 10) // 最大在线数的2倍 + 10
-                    .expireAfterWrite(loginExpireInMillis * 2 + 10000, TimeUnit.MILLISECONDS) // 需要比登陆过期时间长
+                    .maximumSize(maxLoginUser * maxOnlinePerUser * 5) // 最大在线数的5倍
+                    .expireAfterWrite(loginExpireInMillis / 1000 * 2 + 30 , TimeUnit.SECONDS) // 需要比登陆过期时间长
                     .build(new CacheLoader<String, String>() {
                         @Override
                         public String load(String key) {
@@ -97,6 +97,9 @@ public class LoginService {
                 logger.info("loginKey重复请求，username={}", username);
                 return new BaseResponseCode<String>(CODE_FAILED_LOGIN_REPEAT, null, null);
             }
+            // 记录该次loginKey
+            loginKeyCache.put(password, password);
+
             // 解密
             String text = rsaCrypt.decryptFromBase64String(password);
 
@@ -109,8 +112,6 @@ public class LoginService {
                 return new BaseResponseCode<String>(CODE_FAILED_LOGIN_EXPIRE, null, null);
             }
 
-            // 记录该次loginKey
-            loginKeyCache.put(password, password);
 
             String passwordSha1 = text.substring(text.indexOf(",") + 1);
 
