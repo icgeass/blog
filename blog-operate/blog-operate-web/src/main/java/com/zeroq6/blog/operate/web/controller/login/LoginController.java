@@ -86,18 +86,14 @@ public class LoginController {
                 return null;
             } else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
                 // 登录错误次数验证
-                Map<String, String> query = new HashMap<String, String>();
-                query.put(counterTypeLoginIp, MyWebUtils.getClientIp(request));
-                query.put(counterTypeLoginUsername, username);
-                List<Counter> counterList = counterService.get(query);
-                for (Counter counter : counterList) {
-                    if (counter.isLock()) {
-                        addMessage(request, response, false, counter.getMessage(), view);
-                        logger.info("用户被锁定，counter={}", JsonUtils.toJSONString(counter, SerializerFeature.WriteDateUseDateFormat));
-                        return re;
-                    }
+                Map<String, String> key2Type = new HashMap<String, String>();
+                key2Type.put(counterTypeLoginIp, MyWebUtils.getClientIp(request));
+                key2Type.put(counterTypeLoginUsername, username);
+                String lockMessage = counterService.getLockMessage(key2Type);
+                if(null != lockMessage){
+                    logger.info("用户被锁定，lockMessage={}, counterList={}", lockMessage, JsonUtils.toJSONString(counterService.getCountListInfo(), SerializerFeature.WriteDateUseDateFormat));
+                    return null;
                 }
-
 
                 BaseResponseCode<String> result = loginService.login(username, password, IpUtils.getClientIp(request));
                 String resultCode = result.getCode();
@@ -109,17 +105,17 @@ public class LoginController {
                     cookie.setHttpOnly(true);
                     CookieUtils.set(response, cookie);
                     ResponseUtils.doRedirect(request, response, getRedirectUrl(request));
-                    counterService.updateSuccess(counterList);
+                    counterService.updateSuccess();
                     return null;
                 } else if (BaseResponseCode.CODE_EXCEPTION.equals(resultCode)) {
                     addMessage(request, response, false, "登录服务异常,请稍后重试", view);
                 } else {
-                    counterService.updateFailed(counterList);
+                    String counterMessage = counterService.updateFailedAndGetMessage();
                     String message = "未知错误";
                     if (LoginService.CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_BLANK.equals(resultCode)) {
-                        message = "用户名和密码不能为空";
+                        message = "用户名和密码不能为空"; // 不会出现
                     } else if (LoginService.CODE_FAILED_LOGIN_USERNAME_OR_PASSWORD_ERROR.equals(resultCode)) {
-                        message = counterService.getMessage(counterList);
+                        message = counterMessage;
                     } else if (LoginService.CODE_FAILED_LOGIN_REPEAT.equals(resultCode)) {
                         message = "非法请求，重复登录";
                     } else if (LoginService.CODE_FAILED_LOGIN_EXPIRE.equals(resultCode)) {

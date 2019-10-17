@@ -74,8 +74,8 @@ public class CounterConfigMap {
         return getConfig(type).getDatePatternString();
     }
 
-    public int getPriority(String type){
-        return getConfig(type).getPriority();
+    public int getOrder(String type){
+        return getConfig(type).getOrder();
     }
 
 

@@ -19,6 +19,8 @@ public class CounterService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final static ThreadLocal<List<Counter>> COUNTER_LIST_THREAD_LOCAL = new ThreadLocal<>();
+
 
     private CacheServiceApi cacheServiceApi;
 
@@ -39,7 +41,7 @@ public class CounterService {
      * @return
      * @throws Exception
      */
-    public Counter get(String type, String key) throws Exception {
+    private Counter getCounter(String type, String key) throws Exception {
         counterConfigMap.assertType(type);
         String cacheKey = genCacheKey(type, key);
         String value = cacheServiceApi.get(cacheKey);
@@ -55,8 +57,10 @@ public class CounterService {
         counter = JSON.parseObject(value, Counter.class);
 
         // 说明counter已经不应该在缓存中了，但是缓存返回了值，说明缓存不支持每次put设置过期时间
-        // 手动设置新counter
+        // 删除缓存counter并且手动设置新counter
+        // 惰性删除
         if (new Date().compareTo(DateUtils.addSeconds(counter.getLastUpdateTime(), counterConfigMap.getLockSeconds(type))) > 0) {
+            remove(counter);
             return new Counter(type, key, counterConfigMap.getMaxTimes(type), false, new Date(), null);
         }
 
@@ -78,22 +82,38 @@ public class CounterService {
     }
 
 
-    public List<Counter> get(Map<String, String> type2Key) throws Exception {
+    public String getLockMessage(Map<String, String> type2Key) throws Exception {
         if (null == type2Key || type2Key.isEmpty()) {
             throw new RuntimeException("type2key不能为空");
         }
-        List<Counter> re = new ArrayList<Counter>();
+        List<Counter> counterList = new ArrayList<Counter>();
+        String lockMessage = null;
+        Integer order = null;
         for (String type : type2Key.keySet()) {
-            re.add(get(type, type2Key.get(type)));
-        }
-        Collections.sort(re, new Comparator<Counter>() {
-            @Override
-            public int compare(Counter o1, Counter o2) {
-                return counterConfigMap.getPriority(o1.getType()) - counterConfigMap.getPriority(o2.getType());
+            Counter counter = getCounter(type, type2Key.get(type));
+            counterList.add(counter);
+            if (!counter.isLock()) {
+                continue;
             }
-        });
-        return re;
+
+            if (null == order || (order = counterConfigMap.getConfig(type).getOrder()) < order) {
+                lockMessage = counter.getMessage();
+            }
+        }
+        COUNTER_LIST_THREAD_LOCAL.set(counterList);
+        return lockMessage;
     }
+
+
+    public String getLockMessage(String type, String key) throws Exception {
+        if (StringUtils.isBlank(type) || StringUtils.isBlank(key)) {
+            throw new RuntimeException("type, key不能为空");
+        }
+        Map<String, String> typeKeyMap = new HashMap<>();
+        typeKeyMap.put(type, key);
+        return getLockMessage(typeKeyMap);
+    }
+
 
     /**
      * 操作成功，重置计数
@@ -101,7 +121,7 @@ public class CounterService {
      * @param counter
      * @throws Exception
      */
-    public void updateSuccess(Counter counter) throws Exception {
+    private void updateSuccess(Counter counter) throws Exception {
         String type = counter.getType();
         counter.setUnlockTime(new Date());
         counter.setLock(false);
@@ -111,13 +131,17 @@ public class CounterService {
         update(counter);
     }
 
-    public void updateSuccess(List<Counter> counterList) throws Exception {
+    private void updateSuccess(List<Counter> counterList) throws Exception {
         if (null == counterList || counterList.isEmpty()) {
             throw new RuntimeException("counterList不能为空");
         }
         for (Counter counter : counterList) {
             updateSuccess(counter);
         }
+    }
+
+    public void updateSuccess() throws Exception {
+        updateSuccess(COUNTER_LIST_THREAD_LOCAL.get());
     }
 
 
@@ -127,7 +151,7 @@ public class CounterService {
      * @param counter
      * @throws Exception
      */
-    public void updateFailed(Counter counter) throws Exception {
+    private String updateFailedAndGetMessage(Counter counter) throws Exception {
         String type = counter.getType();
         counter.setLeftTimes(counter.getLeftTimes() - 1);
         if (counter.getLeftTimes() <= 0) {
@@ -140,17 +164,41 @@ public class CounterService {
         }
         counter.setLastUpdateTime(new Date());
         update(counter);
+        return counter.getMessage();
     }
 
-    public void updateFailed(List<Counter> counterList) throws Exception {
+    private String updateFailedAndGetMessage(List<Counter> counterList) throws Exception {
         if (null == counterList || counterList.isEmpty()) {
             throw new RuntimeException("counterList不能为空");
         }
+        String message = null;
+        Integer order = null;
         for (Counter counter : counterList) {
-            updateFailed(counter);
+            String failedMessage = updateFailedAndGetMessage(counter);
+            Integer failedOrder = counterConfigMap.getConfig(counter.getType()).getOrder();
+            if (order == null || failedOrder < order) {
+                order = failedOrder;
+                message = failedMessage;
+            }
         }
+        return message;
     }
 
+    public String updateFailedAndGetMessage() throws Exception {
+        return updateFailedAndGetMessage(COUNTER_LIST_THREAD_LOCAL.get());
+    }
+
+
+    public static List<Counter> getCountListInfo(){
+        return COUNTER_LIST_THREAD_LOCAL.get();
+    }
+
+
+    public static void clearCountListInfo(){
+        COUNTER_LIST_THREAD_LOCAL.remove();
+    }
+
+    ////////////////////////////
 
     /**
      * 销毁缓存中counter
@@ -158,26 +206,11 @@ public class CounterService {
      * @param counter
      * @throws Exception
      */
-    public void remove(Counter counter) throws Exception {
+    private void remove(Counter counter) throws Exception {
         String type = counter.getType();
         counterConfigMap.assertType(type);
         cacheServiceApi.remove(genCacheKey(type, counter.getKey()));
     }
-
-    public String getMessage(List<Counter> counterList) throws Exception {
-        if (null == counterList || counterList.isEmpty()) {
-            return null;
-        }
-        Collections.sort(counterList, new Comparator<Counter>() {
-            @Override
-            public int compare(Counter o1, Counter o2) {
-                return counterConfigMap.getPriority(o1.getType()) - counterConfigMap.getPriority(o2.getType());
-            }
-        });
-        return counterList.get(0).getMessage();
-    }
-
-    ////////////////////////////
 
 
     private void update(Counter counter) throws Exception {

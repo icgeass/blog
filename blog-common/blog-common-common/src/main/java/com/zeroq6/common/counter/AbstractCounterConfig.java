@@ -5,8 +5,8 @@ package com.zeroq6.common.counter;
  */
 public abstract class AbstractCounterConfig {
 
-    // 优先级（数字越小，获取message时候排序越前）
-    private int priority = 0;
+    // 排序（数字越小，获取message时候排序越前）
+    private int order = Integer.MAX_VALUE;
     // 最大重试次数
     private int maxTimes = 5;
     // 锁定时长
@@ -18,12 +18,12 @@ public abstract class AbstractCounterConfig {
     // 时间格式
     private String datePatternString = "yyyy-MM-dd HH:mm:ss";
 
-    public int getPriority() {
-        return priority;
+    public int getOrder() {
+        return order;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public int getMaxTimes() {
