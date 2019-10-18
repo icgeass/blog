@@ -42,7 +42,7 @@
         <!--counter类型key，区分不同counter-->
         <property name="type" value="${counter.type.login.ip}"/>
         <!--传入key, 格式化后解锁时间, 剩余时间描述-->
-        <property name="msgLock" value="@{key}被锁定，将在@{unlockTimeAfterDesc}后解锁"/>
+        <property name="msgLock" value="@{key}被锁定，@{unlockTimeAfterDesc}后解锁"/>
         <!--传入key 剩余次数-->
         <property name="msgTryFailed" value="@{key}剩余重试次数@{leftTimes}"/>
     </bean>
