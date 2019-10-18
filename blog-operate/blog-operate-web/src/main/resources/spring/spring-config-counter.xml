@@ -8,13 +8,13 @@
     <bean id="counterService" class="com.zeroq6.common.counter.CounterService">
         <property name="cacheServiceApi" ref="cacheServiceApi"/>
         <property name="counterConfigMap" ref="counterConfigMap"/>
-     </bean>
-    
+    </bean>
+
     <bean id="counterConfigMap" class="com.zeroq6.common.counter.CounterConfigMap">
         <constructor-arg>
             <list>
-                <ref bean="usernameCounterConfig" />
-                <ref bean="ipCounterConfig" />
+                <ref bean="usernameCounterConfig"/>
+                <ref bean="ipCounterConfig"/>
             </list>
         </constructor-arg>
     </bean>
@@ -32,6 +32,7 @@
 
 
     <!--每个计数器对应的配置-->
+    <!--msgLock, msgTryFailed可使用的值：key，leftTimes，unlockTime（仅锁定时），unlockTimeAfterDesc（仅锁定时）-->
     <!--ip 计数器-->
     <bean id="ipCounterConfig" class="com.zeroq6.common.counter.CounterConfig" parent="AbstractCounterConfig">
         <property name="order" value="2"/>
@@ -41,9 +42,9 @@
         <!--counter类型key，区分不同counter-->
         <property name="type" value="${counter.type.login.ip}"/>
         <!--传入key, 格式化后解锁时间, 剩余时间描述-->
-        <property name="msgLock" value="IP: {0}被锁定，将在{2}后解锁"/>
+        <property name="msgLock" value="@{key}被锁定，将在@{unlockTimeAfterDesc}后解锁"/>
         <!--传入key 剩余次数-->
-        <property name="msgTryFailed" value="IP: {0}剩余重试次数{1}"/>
+        <property name="msgTryFailed" value="@{key}剩余重试次数@{leftTimes}"/>
     </bean>
 
 
@@ -56,9 +57,9 @@
         <!--counter类型key，区分不同counter-->
         <property name="type" value="${counter.type.login.username}"/>
         <!--传入key, 格式化后解锁时间, 剩余时间描述-->
-        <property name="msgLock" value="用户被锁定，将在{2}后解锁"/>
+        <property name="msgLock" value="用户被锁定，将在@{unlockTimeAfterDesc}后解锁"/>
         <!--传入key 剩余次数-->
-        <property name="msgTryFailed" value="用户名或密码错误，剩余重试次数{1}"/>
+        <property name="msgTryFailed" value="用户名或密码错误，剩余重试次数@{leftTimes}"/>
     </bean>
 
 </beans>

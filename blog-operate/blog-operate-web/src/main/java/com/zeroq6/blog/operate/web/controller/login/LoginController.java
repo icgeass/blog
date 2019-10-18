@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.zeroq6.blog.common.base.BaseResponseCode;
 import com.zeroq6.blog.operate.service.login.LoginService;
-import com.zeroq6.common.counter.Counter;
 import com.zeroq6.common.counter.CounterService;
 import com.zeroq6.common.security.RsaCrypt;
 import com.zeroq6.common.utils.JsonUtils;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -91,8 +89,9 @@ public class LoginController {
                 key2Type.put(counterTypeLoginUsername, username);
                 String lockMessage = counterService.getLockMessage(key2Type);
                 if(null != lockMessage){
-                    logger.info("用户被锁定，lockMessage={}, counterList={}", lockMessage, JsonUtils.toJSONString(counterService.getCountListInfo(), SerializerFeature.WriteDateUseDateFormat));
-                    return null;
+                    addMessage(request, response, false, lockMessage, view);
+                    logger.info("用户被锁定，lockMessage={}, counterList={}", lockMessage, JsonUtils.toJSONString(counterService.getCounterList(), SerializerFeature.WriteDateUseDateFormat));
+                    return re;
                 }
 
                 BaseResponseCode<String> result = loginService.login(username, password, IpUtils.getClientIp(request));

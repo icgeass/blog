@@ -4,7 +4,7 @@ package com.zeroq6.common.counter;
 import com.alibaba.fastjson.JSON;
 
 import com.zeroq6.common.cache.CacheServiceApi;
-import com.zeroq6.common.utils.MyStringUtils;
+import com.zeroq6.common.counter.mybatis.PropertyParser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -67,15 +67,15 @@ public class CounterService {
         if (counter.isLock()) {
             Date now = new Date();
             if (now.compareTo(counter.getUnlockTime()) > 0) {
-                counter.setUnlockTime(new Date());
+                counter.setUnlockTime(null);
                 counter.setLock(false);
                 counter.setLeftTimes(counterConfigMap.getMaxTimes(type));
                 counter.setMessage(null);
                 // 返回一个解锁后的counter即可，手动更新成功或失败时才写缓存，减小系统开销
                 // updateSuccess(counter); // 解锁则重置计数器
             } else {
-                counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type),
-                        new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(counter.getUnlockTime()), DateFormat.toDescBySeconds((counter.getUnlockTime().getTime() - now.getTime()) / 1000)}));
+                Properties properties = getMessageProperties(counter);
+                counter.setMessage(PropertyParser.parse(counterConfigMap.getMsgLock(type), properties));
             }
         }
         return counter;
@@ -91,12 +91,14 @@ public class CounterService {
         Integer order = null;
         for (String type : type2Key.keySet()) {
             Counter counter = getCounter(type, type2Key.get(type));
+            Integer currentOrder = counterConfigMap.getOrder(counter.getType());
             counterList.add(counter);
             if (!counter.isLock()) {
                 continue;
             }
 
-            if (null == order || (order = counterConfigMap.getConfig(type).getOrder()) < order) {
+            if (null == order || currentOrder < order) {
+                order = currentOrder;
                 lockMessage = counter.getMessage();
             }
         }
@@ -123,7 +125,7 @@ public class CounterService {
      */
     private void updateSuccess(Counter counter) throws Exception {
         String type = counter.getType();
-        counter.setUnlockTime(new Date());
+        counter.setUnlockTime(null);
         counter.setLock(false);
         counter.setLeftTimes(counterConfigMap.getMaxTimes(type));
         counter.setMessage(null);
@@ -141,7 +143,8 @@ public class CounterService {
     }
 
     public void updateSuccess() throws Exception {
-        updateSuccess(COUNTER_LIST_THREAD_LOCAL.get());
+        updateSuccess(getCounterList());
+        clearCounterList();
     }
 
 
@@ -154,13 +157,19 @@ public class CounterService {
     private String updateFailedAndGetMessage(Counter counter) throws Exception {
         String type = counter.getType();
         counter.setLeftTimes(counter.getLeftTimes() - 1);
+        //
+        Properties properties = null;
+
         if (counter.getLeftTimes() <= 0) {
-            Date d = DateUtils.addSeconds(new Date(), counterConfigMap.getLockSeconds(type));
+            Date unlockTime = DateUtils.addSeconds(new Date(), counterConfigMap.getLockSeconds(type));
+            //
             counter.setLock(true);
-            counter.setUnlockTime(d);
-            counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgLock(type), new Object[]{counter.getKey(), new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(d), DateFormat.toDescBySeconds(counterConfigMap.getLockSeconds(type))}));
+            counter.setUnlockTime(unlockTime);
+            properties = getMessageProperties(counter);
+            counter.setMessage(PropertyParser.parse(counterConfigMap.getMsgLock(type), properties));
         } else {
-            counter.setMessage(MyStringUtils.format(counterConfigMap.getMsgTryFailed(type), new Object[]{counter.getKey(), counter.getLeftTimes()}));
+            properties = getMessageProperties(counter);
+            counter.setMessage(PropertyParser.parse(counterConfigMap.getMsgTryFailed(type), properties));
         }
         counter.setLastUpdateTime(new Date());
         update(counter);
@@ -174,27 +183,29 @@ public class CounterService {
         String message = null;
         Integer order = null;
         for (Counter counter : counterList) {
-            String failedMessage = updateFailedAndGetMessage(counter);
-            Integer failedOrder = counterConfigMap.getConfig(counter.getType()).getOrder();
-            if (order == null || failedOrder < order) {
-                order = failedOrder;
-                message = failedMessage;
+            String currentMessage = updateFailedAndGetMessage(counter);
+            Integer currentOrder = counterConfigMap.getConfig(counter.getType()).getOrder();
+            if (order == null || currentOrder < order) {
+                order = currentOrder;
+                message = currentMessage;
             }
         }
         return message;
     }
 
     public String updateFailedAndGetMessage() throws Exception {
-        return updateFailedAndGetMessage(COUNTER_LIST_THREAD_LOCAL.get());
+        String re = updateFailedAndGetMessage(getCounterList());
+        clearCounterList();
+        return re;
     }
 
 
-    public static List<Counter> getCountListInfo(){
+    public static List<Counter> getCounterList() {
         return COUNTER_LIST_THREAD_LOCAL.get();
     }
 
 
-    public static void clearCountListInfo(){
+    public static void clearCounterList() {
         COUNTER_LIST_THREAD_LOCAL.remove();
     }
 
@@ -226,6 +237,29 @@ public class CounterService {
 
 
     //
+
+
+    private Properties getMessageProperties(Counter counter) {
+        String type = counter.getType();
+
+        Properties properties = new Properties();
+        properties.put("key", counter.getKey());
+        properties.put("leftTimes", String.valueOf(counter.getLeftTimes()));
+        Date now = new Date();
+
+        if (counter.getLeftTimes() <= 0) {
+
+            Date unlockTime = counter.getUnlockTime();
+            if (unlockTime == null) {
+                unlockTime = DateUtils.addSeconds(now, counterConfigMap.getLockSeconds(type));
+            }
+
+            properties.put("unlockTimeAfterDesc", DateFormat.toDescBySeconds((unlockTime.getTime() - now.getTime()) / 1000));
+            properties.put("unlockTime", new SimpleDateFormat(counterConfigMap.getDatePatternString(type)).format(unlockTime));
+        }
+        return properties;
+
+    }
 
     public static class DateFormat {
 

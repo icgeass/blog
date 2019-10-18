@@ -19,7 +19,7 @@ public class Counter {
     public Counter() {
         this.leftTimes = 5;
         this.isLock = false;
-        this.unlockTime = new Date();
+        this.unlockTime = null;
         this.message = null;
         //
         this.lastUpdateTime = new Date();
