@@ -113,7 +113,7 @@ public class BackupService {
             zipFile = new File(baseFolderPath + ".zip");
             List<String> folders = new ArrayList<>();
             folders.add(baseFolderPath);
-            BackupUtils.zipFolders(zipFile, folders);
+            BackupUtils.zipFolders(zipFile, folders, new File(tmpDir).getCanonicalPath() + File.separator);
         } catch (Exception e) {
             logger.error("下载Markdown异常", e);
             zipFile = null;

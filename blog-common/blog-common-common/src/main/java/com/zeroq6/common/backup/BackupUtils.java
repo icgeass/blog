@@ -2,6 +2,7 @@ package com.zeroq6.common.backup;
 
 import com.zeroq6.common.utils.CloseUtils;
 import com.zeroq6.common.utils.JsonUtils;
+import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -32,8 +33,12 @@ public class BackupUtils {
         });
     }
 
-
     public static void zipFolders(File zipFile, List<String> folders) {
+        zipFolders(zipFile, folders, null);
+    }
+
+
+    public static void zipFolders(File zipFile, List<String> folders, String pathPrefixRemoveInZipFile) {
         try {
             if (null == folders || folders.isEmpty()) {
                 throw new RuntimeException("folders不能为空");
@@ -81,12 +86,18 @@ public class BackupUtils {
                 while (iterator.hasNext()) {
                     File f = iterator.next();
 
-                    String path = f.getAbsolutePath();
+                    String path = f.getCanonicalPath();
 
                     ///
-                    ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(path);
+                    ArchiveEntry archiveEntry = null;
+                    if (StringUtils.isBlank(pathPrefixRemoveInZipFile)) {
+                        archiveEntry = new ZipArchiveEntry(path);
+                    } else {
+                        archiveEntry = os.createArchiveEntry(f, path.replaceFirst(pathPrefixRemoveInZipFile, ""));
+                    }
+                    os.putArchiveEntry(archiveEntry);
 
-                    os.putArchiveEntry(zipArchiveEntry);
+                    //
                     is = new FileInputStream(f);
                     IOUtils.copy(is, os);
                     os.closeArchiveEntry();
