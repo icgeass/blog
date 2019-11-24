@@ -84,7 +84,9 @@ public class BackupUtils {
                     String path = f.getAbsolutePath();
 
                     ///
-                    os.putArchiveEntry(new ZipArchiveEntry(path));
+                    ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(path);
+
+                    os.putArchiveEntry(zipArchiveEntry);
                     is = new FileInputStream(f);
                     IOUtils.copy(is, os);
                     os.closeArchiveEntry();

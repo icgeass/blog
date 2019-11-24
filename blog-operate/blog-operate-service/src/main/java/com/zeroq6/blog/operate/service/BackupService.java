@@ -1,8 +1,12 @@
 package com.zeroq6.blog.operate.service;
 
 import com.alibaba.fastjson.JSON;
+import com.zeroq6.blog.common.base.Page;
 import com.zeroq6.blog.common.domain.DictDomain;
+import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
+import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
+import com.zeroq6.blog.common.domain.enums.field.EmPostStatus;
 import com.zeroq6.blog.operate.domain.BackupConfigDomain;
 import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.velocity.MailConfigManager;
@@ -42,8 +46,13 @@ public class BackupService {
     @Value("${project.domain}")
     private String projectDoamin;
 
+    @Autowired
+    private PostService postService;
+
 
     private long zipFileSize = -1;
+
+    private final int fetchMarkdownPageSize = 20;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -56,6 +65,60 @@ public class BackupService {
         } catch (Exception e) {
             logger.error("备份异常", e);
         }
+    }
+
+
+    public File downloadMarkdown() {
+        File zipFile = null;
+        try {
+            int currentPage = 1;
+            String dataString = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            String baseFolderPath = tmpDir + File.separator + "backup_markdown_" + dataString;
+
+            //
+            List<PostDomain> postDomainList = postService.selectPage(new PostDomain().setPostType(EmPostPostType.WENZHANG.value()).setStatus(EmPostStatus.YI_FABU.value())
+                    , new Page<PostDomain>(currentPage, fetchMarkdownPageSize)).getData();
+
+            Map<String, Boolean> pathExistsMap = new HashMap<>();
+
+            while (true) {
+                for (PostDomain postDomain : postDomainList) {
+                    StringBuilder stringBuilder = new StringBuilder(postDomain.getContent());
+                    stringBuilder.append("\r\n---\r\n");
+                    List<DictDomain> tags = postService.getTagsByPostId(postDomain.getId());
+                    for (int i = 0; i < tags.size(); i++) {
+                        stringBuilder.append(tags.get(i).getDictValue());
+                        if (i != tags.size() - 1) {
+                            stringBuilder.append(",");
+                        }
+                    }
+                    DictDomain category = postService.getCategoryByPostId(postDomain.getId());
+                    File f = new File(baseFolderPath + File.separator
+                            + category.getDictValue() + File.separator + postDomain.getTitle() + ".md");
+                    File parentFile = f.getParentFile();
+                    String parentFileFullPath = parentFile.getCanonicalPath();
+                    if (!Boolean.TRUE.equals(pathExistsMap.get(parentFileFullPath)) && !parentFile.exists()) {
+                        parentFile.mkdirs();
+                        pathExistsMap.put(parentFileFullPath, Boolean.TRUE);
+                    }
+                    FileUtils.write(f, stringBuilder, "utf-8", false);
+                }
+                if (postDomainList.size() == fetchMarkdownPageSize) {
+                    postDomainList = postService.selectPage(new PostDomain().setPostType(EmPostPostType.WENZHANG.value()).setStatus(EmPostStatus.YI_FABU.value())
+                            , new Page<PostDomain>(++currentPage, fetchMarkdownPageSize)).getData();
+                } else {
+                    break;
+                }
+            }
+            zipFile = new File(baseFolderPath + ".zip");
+            List<String> folders = new ArrayList<>();
+            folders.add(baseFolderPath);
+            BackupUtils.zipFolders(zipFile, folders);
+        } catch (Exception e) {
+            logger.error("下载Markdown异常", e);
+            zipFile = null;
+        }
+        return zipFile;
     }
 
 

@@ -56,6 +56,26 @@ public class BackupController extends BaseController {
         }
         return null;
     }
+
+    @RequestMapping(value = "/markdown")
+    public String downloadMarkdown(HttpServletResponse response) throws Exception {
+        File zipFile = null;
+        try {
+            zipFile = backupService.downloadMarkdown();
+            if (null != zipFile) {
+                DownloadUtils.download(response, zipFile, null);
+            }
+        } catch (Exception e) {
+            logger.error("备份下载Markdown异常", e);
+            outJson(response, "error: " + e.getMessage());
+        } finally {
+            if (null != zipFile) {
+                FileUtils.deleteQuietly(zipFile);
+                zipFile = null;
+            }
+        }
+        return null;
+    }
 }
 
 
