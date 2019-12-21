@@ -12,7 +12,6 @@ import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.manager.PostManager;
 import com.zeroq6.blog.operate.service.login.LoginService;
 import com.zeroq6.common.utils.GravatarUtils;
-import com.zeroq6.common.utils.MyDateUtils;
 import com.zeroq6.common.utils.TimeAgo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.util.Assert;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 
 
 /**
@@ -67,15 +65,12 @@ public class PostService extends BaseService<PostDomain, Long> {
     }
 
 
-
-
-
     public BaseResponse<Map<String, Object>> getGuestBook() {
         try {
             PostDomain postDomain = selectOne(new PostDomain().setPostType(EmPostPostType.LIUYAN.value()), true);
-            if(null != postDomain){
+            if (null != postDomain) {
                 return show(postDomain.getId());
-            }else{
+            } else {
                 return new BaseResponse<Map<String, Object>>(true, "", new HashMap<String, Object>());
             }
         } catch (Exception e) {
@@ -117,6 +112,7 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     /**
      * 首页文章列表
+     *
      * @param page
      * @return
      */
@@ -144,6 +140,7 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     /**
      * 查看文章详情页
+     *
      * @param id
      * @return
      */
@@ -158,11 +155,11 @@ public class PostService extends BaseService<PostDomain, Long> {
             post.getExtendMap().put("content", PostUtils.parseMarkdownText(post.getContent()));
 
             DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, sysConfigKeyPostContentPrefix, true);
-            if(null != dictDomain){
+            if (null != dictDomain) {
                 post.put("postContentPrefix", dictDomain.getDictValue());
             }
             dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, sysConfigKeyPostContentSuffix, true);
-            if(null != dictDomain){
+            if (null != dictDomain) {
                 post.put("postContentSuffix", dictDomain.getDictValue());
             }
             Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -181,6 +178,9 @@ public class PostService extends BaseService<PostDomain, Long> {
             post.put("commentCount", commentDomainList.size());
             // 只有文章才查询标签，上一篇，下一篇文章
             if (post.getPostType() == EmPostPostType.WENZHANG.value()) {
+                if (post.getSource() != EmPostSource.YUANCHUANG.value()) {
+                    post.setTitle("[转]" + post.getTitle());
+                }
                 // 标签
                 dataMap.put("tags", this.getTagsByPostId(id));
 
@@ -210,6 +210,7 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     /**
      * 归档，可指定分类，标签
+     *
      * @param category
      * @param tag
      * @return
@@ -233,7 +234,7 @@ public class PostService extends BaseService<PostDomain, Long> {
                 for (RelationDomain relationDomain : relationDomainList) {
                     ids.add(relationDomain.getParentId() + "");
                 }
-            }else if (StringUtils.isNotBlank(category)) {
+            } else if (StringUtils.isNotBlank(category)) {
                 DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.FENLEI, category);
                 RelationDomain query2 = new RelationDomain();
                 query2.setType(EmRelationType.WEN_ZHANG_FENLEI.value());
@@ -246,7 +247,7 @@ public class PostService extends BaseService<PostDomain, Long> {
             if (null == ids || ids.isEmpty()) {
                 ids.add("-1"); // 如果查询不到则放置一个不存在id
             }
-            if(StringUtils.isNotBlank(tag) || StringUtils.isNotBlank(category)){
+            if (StringUtils.isNotBlank(tag) || StringUtils.isNotBlank(category)) {
                 query0.put("idIn", ids);
             }
             List<PostDomain> contentDomainList = postManager.selectList(query0);
@@ -277,7 +278,7 @@ public class PostService extends BaseService<PostDomain, Long> {
                 relationDomain.setType(EmRelationType.WEN_ZHANG_FENLEI.value());
                 // 标签
                 List<RelationDomain> tagsList = new ArrayList<RelationDomain>();
-                if(null != tags && !tags.isEmpty()){
+                if (null != tags && !tags.isEmpty()) {
                     for (String tag : tags) {
                         RelationDomain newTag = new RelationDomain();
                         newTag.setType(EmRelationType.WEN_ZHANG_BIAOQIAN.value());
@@ -287,7 +288,7 @@ public class PostService extends BaseService<PostDomain, Long> {
                 }
                 postManager.addPost(postDomain, relationDomain, tagsList);
             } else {
-                if(null != selectOne(new PostDomain().setPostType(EmPostPostType.LIUYAN.value()), true)){
+                if (null != selectOne(new PostDomain().setPostType(EmPostPostType.LIUYAN.value()), true)) {
                     throw new RuntimeException("留言只能发布一篇");
                 }
                 postManager.addPost(postDomain, null, null);
@@ -303,7 +304,7 @@ public class PostService extends BaseService<PostDomain, Long> {
     public BaseResponse<String> editPost(PostDomain postDomain, List<String> tags, String category) {
         try {
             PostDomain postDomainDb = selectByKey(postDomain.getId());
-            if(postDomainDb.getPostType() != postDomain.getPostType()){
+            if (postDomainDb.getPostType() != postDomain.getPostType()) {
                 throw new RuntimeException("暂不支持文章类型修改");
             }
             if (postDomain.getPostType() == EmPostPostType.WENZHANG.value()) {
@@ -357,7 +358,6 @@ public class PostService extends BaseService<PostDomain, Long> {
         DictDomain category = dictManager.selectByKey(Long.valueOf(relationCategory.getChildId()));
         return category;
     }
-
 
 
 }
