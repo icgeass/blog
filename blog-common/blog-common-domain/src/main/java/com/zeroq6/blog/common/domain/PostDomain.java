@@ -37,6 +37,10 @@ public class PostDomain extends BaseDomain<PostDomain> {
      * 状态，1，未发布，2，已发布
      */
     private Integer status;
+    /**
+     * 来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye
+     */
+    private Integer source;
 
     /**
      * 获取标题 title
@@ -125,6 +129,23 @@ public class PostDomain extends BaseDomain<PostDomain> {
      */
     public PostDomain setStatus(Integer status) {
         this.status = status;
+        return this;
+    }
+    /**
+     * 获取来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye source
+     *
+     * @return 来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye
+     */
+    public Integer getSource() {
+        return source;
+    }
+    /**
+     * 设置来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye source
+     *
+     * @param source 来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye
+     */
+    public PostDomain setSource(Integer source) {
+        this.source = source;
         return this;
     }
 

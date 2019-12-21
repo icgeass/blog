@@ -1888,3 +1888,9 @@ https://stackoverflow.com/questions/11796297/div-show-hide-media-query
 
 }
 
+.post .post-meta .source:before {
+    font-family: "FontAwesome";
+    content: "\f071";
+    margin: 0 0 30px 0; }
+
+

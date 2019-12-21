@@ -15,6 +15,7 @@
             content AS content, /*内容*/
             post_type AS postType, /*文章类型，1，文章，2，留言*/
             status AS status, /*状态，1，未发布，2，已发布*/
+            source AS source, /*来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye*/
             remark AS remark, /*备注*/
             modified_time AS modifiedTime, /*修改时间*/
             created_time AS createdTime, /*创建时间*/
@@ -41,6 +42,9 @@
         </if>
         <if test="status != null">
             <![CDATA[AND status = #{status}]]> /*状态，1，未发布，2，已发布*/
+        </if>
+        <if test="source != null">
+            <![CDATA[AND source = #{source}]]> /*来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye*/
         </if>
         <if test="remark != null">
             <![CDATA[AND remark = #{remark}]]> /*备注*/
@@ -94,6 +98,12 @@
                   #{item}
                 </foreach>
             </if>
+            <if test="extendMap.sourceIn!= null">
+                <![CDATA[AND source in ]]>
+                <foreach item="item" index="index" collection="extendMap.sourceIn" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
             <!--自定义开始 -->
 
             <!--自定义结束 -->
@@ -120,6 +130,9 @@
         </if>
         <if test="extendMap.where.status!= null">
             <![CDATA[AND status = #{extendMap.where.status}]]> /*状态，1，未发布，2，已发布*/
+        </if>
+        <if test="extendMap.where.source!= null">
+            <![CDATA[AND source = #{extendMap.where.source}]]> /*来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye*/
         </if>
         <if test="extendMap.where.remark!= null">
             <![CDATA[AND remark = #{extendMap.where.remark}]]> /*备注*/
@@ -153,6 +166,9 @@
             <if test="status!= null">
                 <![CDATA[ status = #{status}]]> /*状态，1，未发布，2，已发布*/,
             </if>
+            <if test="source!= null">
+                <![CDATA[ source = #{source}]]> /*来源，1，原创，2，其他，3，csdn，4，cnblogs，5，51cto，6，iteye*/,
+            </if>
             <if test="remark!= null">
                 <![CDATA[ remark = #{remark}]]> /*备注*/,
             </if>
@@ -179,9 +195,9 @@
     </sql>
 
 
-    <sql id="INSERT_COLUMN"><if test="title != null">title,</if><if test="username != null">username,</if><if test="content != null">content,</if><if test="postType != null">post_type,</if><if test="status != null">status,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
+    <sql id="INSERT_COLUMN"><if test="title != null">title,</if><if test="username != null">username,</if><if test="content != null">content,</if><if test="postType != null">post_type,</if><if test="status != null">status,</if><if test="source != null">source,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="title != null">#{title},</if><if test="username != null">#{username},</if><if test="content != null">#{content},</if><if test="postType != null">#{postType},</if><if test="status != null">#{status},</if><if test="remark != null">#{remark},</if>datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1</sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="title != null">#{title},</if><if test="username != null">#{username},</if><if test="content != null">#{content},</if><if test="postType != null">#{postType},</if><if test="status != null">#{status},</if>><if test="source != null">#{source},</if><if test="remark != null">#{remark},</if>datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.PostDomain">
         INSERT INTO <include refid="TABLE"/>
@@ -208,11 +224,11 @@
     <insert id="insertBatch" parameterType="java.util.List">
         INSERT INTO <include refid="TABLE"/>
         (
-        title,username,content,post_type,status,remark,modified_time,created_time,yn
+        title,username,content,post_type,status,source,remark,modified_time,created_time,yn
         )
         VALUES
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.title},#{item.username},#{item.content},#{item.postType},#{item.status},#{item.remark},datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1)
+            (#{item.title},#{item.username},#{item.content},#{item.postType},#{item.status},#{item.source},#{item.remark},datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1)
         </foreach>
 
     </insert>
