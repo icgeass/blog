@@ -197,7 +197,7 @@
 
     <sql id="INSERT_COLUMN"><if test="title != null">title,</if><if test="username != null">username,</if><if test="content != null">content,</if><if test="postType != null">post_type,</if><if test="status != null">status,</if><if test="source != null">source,</if><if test="remark != null">remark,</if>modified_time,created_time,yn</sql>
 
-    <sql id="INSERT_COLUMN_VALUES"><if test="title != null">#{title},</if><if test="username != null">#{username},</if><if test="content != null">#{content},</if><if test="postType != null">#{postType},</if><if test="status != null">#{status},</if>><if test="source != null">#{source},</if><if test="remark != null">#{remark},</if>datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1</sql>
+    <sql id="INSERT_COLUMN_VALUES"><if test="title != null">#{title},</if><if test="username != null">#{username},</if><if test="content != null">#{content},</if><if test="postType != null">#{postType},</if><if test="status != null">#{status},</if><if test="source != null">#{source},</if><if test="remark != null">#{remark},</if>datetime(CURRENT_TIMESTAMP,'localtime'),datetime(CURRENT_TIMESTAMP,'localtime'),1</sql>
 
     <insert id="insert" parameterType="com.zeroq6.blog.common.domain.PostDomain">
         INSERT INTO <include refid="TABLE"/>
