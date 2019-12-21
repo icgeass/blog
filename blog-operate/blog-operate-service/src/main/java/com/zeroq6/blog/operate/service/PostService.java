@@ -58,6 +58,8 @@ public class PostService extends BaseService<PostDomain, Long> {
 
     private SimpleDateFormat yyyy = new SimpleDateFormat("yyyy");
 
+    private final String reprintPrefix = "[转]";
+
 
     @Override
     public BaseManager<PostDomain, Long> getManager() {
@@ -178,9 +180,6 @@ public class PostService extends BaseService<PostDomain, Long> {
             post.put("commentCount", commentDomainList.size());
             // 只有文章才查询标签，上一篇，下一篇文章
             if (post.getPostType() == EmPostPostType.WENZHANG.value()) {
-                if (post.getSource() != EmPostSource.YUANCHUANG.value()) {
-                    post.setTitle("[转]" + post.getTitle());
-                }
                 // 标签
                 dataMap.put("tags", this.getTagsByPostId(id));
 
@@ -286,6 +285,9 @@ public class PostService extends BaseService<PostDomain, Long> {
                         tagsList.add(newTag);
                     }
                 }
+                if (postDomain.getSource() != EmPostSource.YUANCHUANG.value()) {
+                    postDomain.setTitle(getReprintTitle(postDomain.getTitle()));
+                }
                 postManager.addPost(postDomain, relationDomain, tagsList);
             } else {
                 if (null != selectOne(new PostDomain().setPostType(EmPostPostType.LIUYAN.value()), true)) {
@@ -329,6 +331,9 @@ public class PostService extends BaseService<PostDomain, Long> {
 
                     addTags.add(tagRelationDomain);
                 }
+                if (postDomain.getSource() != EmPostSource.YUANCHUANG.value()) {
+                    postDomain.setTitle(getReprintTitle(postDomain.getTitle()));
+                }
                 postManager.editPost(postDomain, category, addTags, deleteTags);
             } else {
                 postManager.editPost(postDomain, null, null, null);
@@ -357,6 +362,17 @@ public class PostService extends BaseService<PostDomain, Long> {
         RelationDomain relationCategory = relationService.selectOne(new RelationDomain().setType(EmRelationType.WEN_ZHANG_FENLEI.value()).setParentId(id + ""));
         DictDomain category = dictManager.selectByKey(Long.valueOf(relationCategory.getChildId()));
         return category;
+    }
+
+
+    private String getReprintTitle(String title) {
+        String result = title;
+        if (StringUtils.isNotBlank(title)) {
+            if (!title.startsWith(reprintPrefix)) {
+                result = reprintPrefix + result;
+            }
+        }
+        return result;
     }
 
 
