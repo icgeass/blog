@@ -90,8 +90,8 @@
 #foreach($!{item} in $!{page.data})
                 <tr>
                     <td>$!{item.id}</td>
-                    <td>$!{item.username}</td>
-                    <td>$!{item.email}</td>
+                    <td>$PostUtils.substring($!{item.username}, 16)</td>
+                    <td>$PostUtils.substring($!{item.email}, 20)</td>
                     <td>$PostUtils.substring($!{item.content}, 50)</td>
                     <td>$!{item.postId}</td>
                     <td>#emTitle('EmCommentParentType', $!{item.parentType})</td>
