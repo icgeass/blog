@@ -1,4 +1,5 @@
                 <div class="post"><h1 class="post-title">$!{post.title}</h1>
+                    <a href="#comments" class="disqus-comment-count">$!{post.extendMap.commentCount}条评论</a>
                     <div class="post-content">
                         $!{post.extendMap.content}
                     </div>
