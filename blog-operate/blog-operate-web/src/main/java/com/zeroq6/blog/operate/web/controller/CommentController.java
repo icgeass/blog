@@ -48,7 +48,10 @@ public class CommentController extends BaseController {
             if (StringUtils.isBlank(referer)) {
                 return redirect(commentDomain);
             }
-            if(commentDomain.getContent().length() > 1000){
+            if (!lenLessEqualThan(commentDomain.getUsername(), 32) ||
+                    !lenLessEqualThan(commentDomain.getEmail(), 32) ||
+                    !lenLessEqualThan(commentDomain.getUrl(), 100) ||
+                    !lenLessEqualThan(commentDomain.getContent(), 1000)) {
                 return redirect(commentDomain);
             }
             // ip UA
@@ -68,6 +71,11 @@ public class CommentController extends BaseController {
             logger.error("发表评论异常: " + JsonUtils.toJSONString(commentDomain), e);
         }
         return redirect(commentDomain);
+    }
+
+
+    private boolean lenLessEqualThan(String string, int len) {
+        return StringUtils.isNotBlank(string) && string.length() <= len;
     }
 
     private String redirect(CommentDomain commentDomain) {
