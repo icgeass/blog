@@ -45,7 +45,7 @@ public class CommentService extends BaseService<CommentDomain, Long> {
 
     private final static int MAX_PER_IP_DAY = 20;
 
-    private final static long POST_INTERVAL_MILLS = 15 * 1000;
+    private final static long POST_INTERVAL_MILLS = 10 * 1000;
 
     private volatile Map<String, Map<String, CommentPostLog>> commentDatePostLogMap = new ConcurrentHashMap<String, Map<String, CommentPostLog>>();
 
@@ -158,7 +158,7 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             logger.error("ip: {}, post too many times in a day", ip);
             return false;
         }
-        if (System.currentTimeMillis() - commentPostLog.getCurrentTimeMillis() < POST_INTERVAL_MILLS) {
+        if (commentPostLog.getCnt().get() != 0 && System.currentTimeMillis() - commentPostLog.getCurrentTimeMillis() < POST_INTERVAL_MILLS) {
             logger.error("ip: {}, post too fast", ip);
             return false;
         }
