@@ -1,14 +1,12 @@
 package com.zeroq6.blog.operate.web.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.zeroq6.blog.common.base.BaseController;
+import com.zeroq6.blog.common.base.BaseResponse;
 import com.zeroq6.blog.common.domain.CommentDomain;
-import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
 import com.zeroq6.blog.operate.service.CommentService;
 import com.zeroq6.blog.operate.service.PostService;
-import com.zeroq6.blog.common.base.BaseResponse;
 import com.zeroq6.common.utils.JsonUtils;
 import com.zeroq6.common.utils.MyWebUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Created by yuuki asuna on 2017/5/22.
@@ -49,6 +46,9 @@ public class CommentController extends BaseController {
             }
             String referer = request.getHeader("referer");
             if (StringUtils.isBlank(referer)) {
+                return redirect(commentDomain);
+            }
+            if(commentDomain.getContent().length() > 1000){
                 return redirect(commentDomain);
             }
             // ip UA
