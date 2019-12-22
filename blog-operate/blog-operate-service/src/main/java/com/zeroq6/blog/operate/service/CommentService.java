@@ -1,6 +1,5 @@
 package com.zeroq6.blog.operate.service;
 
-import com.alibaba.fastjson.JSON;
 import com.zeroq6.blog.common.base.BaseManager;
 import com.zeroq6.blog.common.base.BaseService;
 import com.zeroq6.blog.common.domain.CommentDomain;
@@ -10,7 +9,10 @@ import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
 import com.zeroq6.blog.common.domain.enums.field.EmPostStatus;
 import com.zeroq6.blog.operate.manager.CommentManager;
 import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.blog.operate.service.comment.CommentPostLog;
 import com.zeroq6.common.utils.JsonUtils;
+import com.zeroq6.common.utils.MyDateUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -18,9 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 自定义开始 自定义结束
@@ -40,6 +42,12 @@ public class CommentService extends BaseService<CommentDomain, Long> {
 
     @Autowired
     private PostService postService;
+
+    private final static int MAX_PER_IP_DAY = 20;
+
+    private final static long POST_INTERVAL_MILLS = 15 * 1000;
+
+    private volatile Map<String, Map<String, CommentPostLog>> commentDatePostLogMap = new ConcurrentHashMap<String, Map<String, CommentPostLog>>();
 
 
     @Override
@@ -72,6 +80,10 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             if (null == commentDomain.getPostId() || null == commentDomain.getParentType() || null == commentDomain.getParentId()) {
                 throw new RuntimeException("文章id，关联id，关联类型不能为空");
             }
+            if (!checkIpCount(commentDomain)) {
+                throw new RuntimeException("非法评论请求");
+            }
+
             // 文章id是否非法
             PostDomain query = new PostDomain();
             query.setId(commentDomain.getPostId());
@@ -98,7 +110,7 @@ public class CommentService extends BaseService<CommentDomain, Long> {
     public BaseResponse<String> deleteCommentById(Long id) {
         try {
             List<Long> commentIdList = getChildrenIdList(id);
-            if(!commentIdList.isEmpty()){
+            if (!commentIdList.isEmpty()) {
                 disableByCondition(new CommentDomain().setParentType(EmCommentParentType.PINGLUN.value()).put("idIn", commentIdList), commentIdList.size());
             }
             disableByKey(id);
@@ -124,6 +136,37 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             getChildrenIdList(comment.getId(), commentIdList);
         }
         return commentIdList;
+    }
+
+    private boolean checkIpCount(CommentDomain commentDomain) {
+        String date = MyDateUtils.format(new Date(), "yyyyMMdd");
+        String ip = commentDomain.getIp();
+        Map<String, CommentPostLog> commentIpPostLogMap = commentDatePostLogMap.get(date);
+        if (MapUtils.isEmpty(commentIpPostLogMap)) {
+            // 删除当天之前的评论记录
+            commentDatePostLogMap.clear();
+            commentIpPostLogMap = new ConcurrentHashMap<String, CommentPostLog>();
+            commentDatePostLogMap.put(date, commentIpPostLogMap);
+
+        }
+        CommentPostLog commentPostLog = commentIpPostLogMap.get(ip);
+        if (null == commentPostLog) {
+            commentPostLog = new CommentPostLog(System.currentTimeMillis(), new AtomicInteger(0));
+            commentIpPostLogMap.put(ip, commentPostLog);
+        }
+        if (commentPostLog.getCnt().get() > MAX_PER_IP_DAY) {
+            logger.error("ip: {}, post too many times in a day", ip);
+            return false;
+        }
+        if (System.currentTimeMillis() - commentPostLog.getCurrentTimeMillis() < POST_INTERVAL_MILLS) {
+            logger.error("ip: {}, post too fast", ip);
+            return false;
+        }
+        commentPostLog.getCnt().incrementAndGet();
+        commentPostLog.setCurrentTimeMillis(System.currentTimeMillis());
+        return true;
+
+
     }
 
 
