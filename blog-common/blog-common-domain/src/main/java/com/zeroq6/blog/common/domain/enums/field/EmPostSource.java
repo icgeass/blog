@@ -14,9 +14,9 @@ public enum EmPostSource implements EnumApi {
     YUANCHUANG(1, "原创"),
     QITA(2, "其他"),
     CSDN(3, "CSDN"),
-    CNBLOGS(4, "CNBLOGS"),
+    CNBLOGS(4, "cnblogs"),
     SOURCE_51CTO(5, "51CTO"),
-    ITEYE(6, "ITEYE"),
+    ITEYE(6, "ITeye"),
     BAIDU_ZHIDAO(7, "百度知道")
 ;
 
