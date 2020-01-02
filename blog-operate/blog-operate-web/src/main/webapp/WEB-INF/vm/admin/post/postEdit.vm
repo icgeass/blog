@@ -116,16 +116,24 @@
             mditor.value = '** hello **';
         });
         // https://developer.mozilla.org/zh-CN/docs/Web/API/Window/localStorage
-        key = window.location.pathname;
+        savedKey = window.location.pathname;
+        minLengthToSave = 20
         $('#submit').on('click', function () {
-            localStorage.setItem(key, mditor.value)
+            localStorage.setItem(savedKey, mditor.value)
         })
         $('#save').on('click', function () {
-            localStorage.setItem(key, mditor.value)
+            mditorValue = mditor.value
+            if ($.trim(mditorValue).length < minLengthToSave) {
+                if (confirm('保存将清空原暂存内容，确定执行？')) {
+                    localStorage.setItem(savedKey, mditor.value)
+                }
+            } else {
+                localStorage.setItem(savedKey, mditor.value)
+            }
         })
         $('#recover').on('click', function () {
             if (confirm('确定恢复上次提交或保存的数据？')) {
-                savedPostContent = localStorage.getItem(key)
+                savedPostContent = localStorage.getItem(savedKey)
                 if (savedPostContent != undefined && savedPostContent != null) {
                     mditor.value = savedPostContent
                 }
@@ -133,7 +141,7 @@
         })
         $('#clear').on('click', function () {
             if (confirm('确定清空本页面暂存的数据？')) {
-                localStorage.removeItem(key)
+                localStorage.removeItem(savedKey)
 
             }
         })
@@ -144,8 +152,8 @@
         })
         setInterval(function () {
             mditorValue = mditor.value
-            if ($.trim(mditorValue).length > 20) {
-                localStorage.setItem(key, mditor.value)
+            if ($.trim(mditorValue).length >= minLengthToSave) {
+                localStorage.setItem(savedKey, mditor.value)
             }
         }, 5000)
     });
