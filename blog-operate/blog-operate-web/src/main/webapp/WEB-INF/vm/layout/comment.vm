@@ -61,7 +61,7 @@
                         $(document).ready(function () {
                             var commentInfoKey = '_commentInfo'
                             var commentInfoStr = localStorage.getItem(commentInfoKey);
-                            if (commentInfoStr != undefined || commentInfoStr != null) {
+                            if (commentInfoStr != undefined && commentInfoStr != null) {
                                 var commentInfoJson = JSON.parse(commentInfoStr);
                                 if (new Date().getTime() - commentInfoJson.milliseconds > 1000 * 60 * 60 * 24 * 31) {
                                     localStorage.removeItem(commentInfoKey)

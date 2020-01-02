@@ -125,7 +125,10 @@
         })
         $('#recover').on('click', function () {
             if (confirm('确定恢复上次提交或保存的数据？')) {
-                mditor.value = localStorage.getItem(key)
+                savedPostContent = localStorage.getItem(key)
+                if (savedPostContent != undefined && savedPostContent != null) {
+                    mditor.value = savedPostContent
+                }
             }
         })
         $('#clear').on('click', function () {
