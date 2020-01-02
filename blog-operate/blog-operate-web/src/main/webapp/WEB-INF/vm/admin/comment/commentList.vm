@@ -92,12 +92,12 @@
                     <td>$!{item.id}</td>
                     <td>$PostUtils.substring($!{item.username}, 16)</td>
                     <td>$PostUtils.substring($!{item.email}, 20)</td>
-                    <td>$PostUtils.substring($!{item.content}, 50)</td>
+                    <td>$PostUtils.substring($!{item.content}, 30)</td>
                     <td>$!{item.postId}</td>
                     <td>#emTitle('EmCommentParentType', $!{item.parentType})</td>
                     <td>$!{item.parentId}</td>
                     <td>$!{item.ip}</td>
-                    <td>$PostUtils.substring($!{item.userAgent}, 30)</td>
+                    <td>$PostUtils.substring($!{item.userAgent}, 20)</td>
                     <td>$DateUtils.format($!{item.createdTime})</td>
                     <td>
                         #if($!item.extendMap.postDomain.postType == 1)
