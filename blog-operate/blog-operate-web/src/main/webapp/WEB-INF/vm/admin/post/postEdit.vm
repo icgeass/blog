@@ -117,7 +117,7 @@
         });
         // https://developer.mozilla.org/zh-CN/docs/Web/API/Window/localStorage
         savedKey = window.location.pathname;
-        minLengthToSave = 20
+        minLengthToSave = 10
         $('#submit').on('click', function () {
             localStorage.setItem(savedKey, mditor.value)
         })
