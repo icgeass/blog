@@ -143,7 +143,10 @@
             }
         })
         setInterval(function () {
-            localStorage.setItem(key, mditor.value)
+            mditorValue = mditor.value
+            if ($.trim(mditorValue).length > 20) {
+                localStorage.setItem(key, mditor.value)
+            }
         }, 5000)
     });
 
