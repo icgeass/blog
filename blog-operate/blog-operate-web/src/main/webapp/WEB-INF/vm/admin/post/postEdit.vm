@@ -125,10 +125,10 @@
             mditorValue = mditor.value
             if ($.trim(mditorValue).length < minLengthToSave) {
                 if (confirm('保存将清空原暂存内容，确定执行？')) {
-                    localStorage.setItem(savedKey, mditor.value)
+                    localStorage.setItem(savedKey, mditorValue)
                 }
             } else {
-                localStorage.setItem(savedKey, mditor.value)
+                localStorage.setItem(savedKey, mditorValue)
             }
         })
         $('#recover').on('click', function () {
