@@ -5,6 +5,8 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,11 +18,13 @@ public class PostUtils {
 
     public final static int SUBSTRING_LENGTH = 200;
 
-    private final static Parser parser = Parser.builder().build();
+    private final static Parser PARSER = Parser.builder().build();
 
-    private final static HtmlRenderer renderer = HtmlRenderer.builder().build();
+    private final static HtmlRenderer HTML_RENDERER = HtmlRenderer.builder().build();
 
     private final static String CLIPPED = "...";
+
+    private final static String PLACE_HOLDER = "##$^_^$##";
 
     public static String substring(String content) {
         return substring(content, SUBSTRING_LENGTH);
@@ -33,11 +37,28 @@ public class PostUtils {
         return content.length() > length ? content.substring(0, length) + CLIPPED : content;
     }
 
+    public static void main(String[] args) {
+        System.out.println();
+    }
+
     public static String parseMarkdownText(String markdownText) {
         if (null == markdownText) {
             return "";
         }
-        return urlToLink(renderer.render(parser.parse(markdownText)));
+        List<String> rawTextList = new ArrayList<String>();
+        int pos = -1;
+        while ((pos = markdownText.indexOf("<iframe", pos + 1)) != -1) {
+            String holder = markdownText.substring(pos, markdownText.indexOf("</iframe>", pos) + 9);
+            rawTextList.add(holder);
+            markdownText = markdownText.replace(holder, PLACE_HOLDER + "_" + rawTextList.size());
+        }
+
+        String result = urlToLink(HTML_RENDERER.render(PARSER.parse(markdownText)));
+        for (int i = 0; i < rawTextList.size(); i++) {
+            result = result.replace(PLACE_HOLDER + "_" + (i + 1), rawTextList.get(i));
+        }
+
+        return result;
     }
 
     public static String getHtmlText(String html) {
@@ -57,7 +78,7 @@ public class PostUtils {
         return result;
     }
 
-    public static String getHtmlTextSubstring(PostDomain postDomain){
+    public static String getHtmlTextSubstring(PostDomain postDomain) {
         return getHtmlTextSubstring(postDomain, SUBSTRING_LENGTH);
     }
 
