@@ -45,17 +45,29 @@ public class PostUtils {
         if (null == markdownText) {
             return "";
         }
-        List<String> rawTextList = new ArrayList<String>();
-        int pos = -1;
-        while ((pos = markdownText.indexOf("<iframe", pos + 1)) != -1) {
-            String holder = markdownText.substring(pos, markdownText.indexOf("</iframe>", pos) + 9);
+        List<String> rawTextList = null;
+        int beginPos = -1;
+        int endPos = -1;
+        String beginString = "<iframe";
+        String closeString = "</iframe>";
+        while ((beginPos = markdownText.indexOf(beginString, beginPos + 1)) != -1) {
+            endPos = markdownText.indexOf(closeString, beginPos);
+            if (endPos == -1) {
+                break;
+            }
+            if (null == rawTextList) {
+                rawTextList = new ArrayList<String>();
+            }
+            String holder = markdownText.substring(beginPos, endPos + closeString.length());
             rawTextList.add(holder);
             markdownText = markdownText.replace(holder, PLACE_HOLDER + "_" + rawTextList.size());
         }
 
         String result = urlToLink(HTML_RENDERER.render(PARSER.parse(markdownText)));
-        for (int i = 0; i < rawTextList.size(); i++) {
-            result = result.replace(PLACE_HOLDER + "_" + (i + 1), rawTextList.get(i));
+        if (null != rawTextList) {
+            for (int i = 0; i < rawTextList.size(); i++) {
+                result = result.replace(PLACE_HOLDER + "_" + (i + 1), rawTextList.get(i));
+            }
         }
 
         return result;
