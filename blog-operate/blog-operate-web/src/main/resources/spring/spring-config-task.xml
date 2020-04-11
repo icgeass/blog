@@ -5,10 +5,18 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <task:scheduled-tasks>
+
+    <task:scheduled-tasks scheduler="blogTaskExecutor">
         <task:scheduled ref="atomService" method="genAtomXmlWithoutException" cron="5 0 23 * * ?"/>
         <task:scheduled ref="dictManager" method="flushDictList" cron="5 1/25 * * * ?"/>
         <task:scheduled ref="backupService" method="backup" cron="30 1 0/10 * * ?"/>
     </task:scheduled-tasks>
+
+    <task:executor
+            id="blogTaskExecutor"
+            pool-size="3-3"
+            queue-capacity="0"
+            rejection-policy="DISCARD"
+            keep-alive="0"/>
 
 </beans>
