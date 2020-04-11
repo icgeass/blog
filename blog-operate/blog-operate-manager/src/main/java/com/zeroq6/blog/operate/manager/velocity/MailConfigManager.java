@@ -74,6 +74,13 @@ public class MailConfigManager implements InitializingBean {
             properties.setProperty("mail.transport.protocol", mailSenderConfig.getTransportProtocol());
             // 设置邮件服务器主机名
             properties.setProperty("mail.host", mailSenderConfig.getHost());
+            // 连接超时,5s
+            properties.setProperty("mail.smtp.connectiontimeout", "5000");
+            // 读超时,30s
+            properties.setProperty("mail.smtp.timeout", "30000");
+            // 写超时,30s
+            properties.setProperty("mail.smtp.writetimeout", "30000");
+
 
 
 
