@@ -1,17 +1,22 @@
 package com.zeroq6.blog.operate.service;
 
+import com.alibaba.fastjson.JSON;
 import com.zeroq6.blog.common.base.BaseManager;
 import com.zeroq6.blog.common.base.BaseService;
 import com.zeroq6.blog.common.domain.CommentDomain;
+import com.zeroq6.blog.common.domain.DictDomain;
 import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.common.domain.enums.field.EmCommentParentType;
+import com.zeroq6.blog.common.domain.enums.field.EmDictDictType;
 import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
 import com.zeroq6.blog.common.domain.enums.field.EmPostStatus;
 import com.zeroq6.blog.operate.manager.CommentManager;
 import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.blog.operate.manager.DictManager;
 import com.zeroq6.blog.operate.service.comment.CommentPostLog;
 import com.zeroq6.common.utils.JsonUtils;
 import com.zeroq6.common.utils.MyDateUtils;
+import com.zeroq6.common.utils.MyStringUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -43,9 +48,12 @@ public class CommentService extends BaseService<CommentDomain, Long> {
     @Autowired
     private PostService postService;
 
-    private final static int MAX_PER_IP_DAY = 20;
+    @Autowired
+    private DictManager dictManager;
 
-    private final static long POST_INTERVAL_MILLS = 10 * 1000;
+    private final static int MAX_PER_IP_DAY = 10;
+
+    private final static long POST_INTERVAL_MILLS = 30 * 1000;
 
     private volatile Map<String, Map<String, CommentPostLog>> commentDatePostLogMap = new ConcurrentHashMap<String, Map<String, CommentPostLog>>();
 
@@ -80,8 +88,14 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             if (null == commentDomain.getPostId() || null == commentDomain.getParentType() || null == commentDomain.getParentId()) {
                 throw new RuntimeException("文章id，关联id，关联类型不能为空");
             }
+            if(MyStringUtils.findSubStringTimes(commentDomain.getContent(), "http") > 3){
+                throw new RuntimeException("包含过多链接");
+            }
             if (!checkIpCount(commentDomain)) {
                 throw new RuntimeException("非法评论请求");
+            }
+            if(!checkbannedIpComment(commentDomain.getIp())){
+                throw new RuntimeException("ip被禁止评论");
             }
 
             // 文章id是否非法
@@ -169,5 +183,18 @@ public class CommentService extends BaseService<CommentDomain, Long> {
 
     }
 
+
+    private boolean checkbannedIpComment(String ip){
+        if(StringUtils.isBlank(ip)){
+            logger.error("ip为空");
+            return false;
+        }
+        DictDomain dictDomain = dictManager.getDictByTypeAndKey(EmDictDictType.XI_TONG_PEIZHI, "banned_ip_comment", true);
+        if(null == dictDomain){
+            return true; // 没有配置，均放行
+        }
+        List<String> bannedIpList = JSON.parseObject(dictDomain.getDictValue(), List.class);
+        return !bannedIpList.contains(ip);
+    }
 
 }
