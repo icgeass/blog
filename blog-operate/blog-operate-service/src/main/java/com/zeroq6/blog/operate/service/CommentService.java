@@ -91,11 +91,11 @@ public class CommentService extends BaseService<CommentDomain, Long> {
             if(MyStringUtils.findSubStringTimes(commentDomain.getContent(), "http") > 3){
                 throw new RuntimeException("包含过多链接");
             }
-            if (!checkIpCount(commentDomain)) {
-                throw new RuntimeException("非法评论请求");
-            }
             if(!checkbannedIpComment(commentDomain.getIp())){
                 throw new RuntimeException("ip被禁止评论");
+            }
+            if (!checkIpCount(commentDomain)) {
+                throw new RuntimeException("非法评论请求");
             }
 
             // 文章id是否非法
