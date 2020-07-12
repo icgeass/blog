@@ -97,8 +97,9 @@
                                     success : function (data) {
                                         if(data.success){
                                             checkSuccess = true;
+                                            captchaError(false);
                                         }else{
-                                            captchaError();
+                                            captchaError(true);
                                             reloadCaptcha();
                                         }
                                     },
@@ -109,10 +110,14 @@
                                 return checkSuccess;
                             })
                             // 验证码输入错误提示
-                            function captchaError() {
-                                $('#captchaValue').focus();
-                                $('#captchaValue').val("");
-                                $('#captchaValue')[0].placeholder = '验证码错误，请重新输入';
+                            function captchaError(flag) {
+                                if(flag){
+                                    $('#captchaValue').focus();
+                                    $('#captchaValue').val("");
+                                    $('#captchaValue')[0].placeholder = '验证码错误，请重新输入';
+                                }else{
+                                    $('#captchaValue')[0].placeholder = '请输入验证码';
+                                }
                             }
                             // 重新加载验证码
                             function reloadCaptcha() {
