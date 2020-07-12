@@ -1,6 +1,7 @@
 package com.zeroq6.blog.operate.service.captcha;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wf.captcha.ArithmeticCaptcha;
 import com.wf.captcha.SpecCaptcha;
@@ -59,7 +60,10 @@ public class CaptchaService {
             jsonObject.put("success", true);
             jsonObject.put("captchaKey", captchaKey);
             jsonObject.put("captchaImageBase64", captchaImageBase64);
-            cacheServiceApi.set(captchaKey, captchaValue);
+            JSONObject captchaValueJson = new JSONObject();
+            captchaValueJson.put("value", captchaValue);
+            captchaValueJson.put("times", 0);
+            cacheServiceApi.set(captchaKey, captchaValueJson.toJSONString());
         } catch (Exception e) {
             jsonObject.put("success", false);
             logger.error("getNewCaptcha error", e);
@@ -75,14 +79,18 @@ public class CaptchaService {
             if ("null".equals(captchaKey) || "null".equals(captchaValue)) {
                 return false;
             }
-            String rightValue = cacheServiceApi.get(captchaKey);
-            if (StringUtils.isBlank(rightValue)) {
+            String rightValueStr = cacheServiceApi.get(captchaKey);
+            if (StringUtils.isBlank(rightValueStr)) {
                 return false;
             }
-            boolean success = rightValue.equalsIgnoreCase(captchaValue);
+            JSONObject jsonValue = JSON.parseObject(rightValueStr);
+            if (jsonValue.getIntValue("times") > 0) {
+                return false;
+            }
+            boolean success = jsonValue.getString("value").equalsIgnoreCase(captchaValue);
             cacheServiceApi.remove(captchaKey);
             if (!success) {
-                logger.error("验证码错误，captchaKey={}， captchaValue={}，rightValue={}", captchaKey, captchaValue, rightValue);
+                logger.error("验证码错误，captchaKey={}， captchaValue={}，rightValue={}", captchaKey, captchaValue, rightValueStr);
             }
             return success;
         } catch (Exception e) {
