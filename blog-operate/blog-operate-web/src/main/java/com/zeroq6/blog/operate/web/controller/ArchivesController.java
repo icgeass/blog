@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by yuuki asuna on 2017/5/24.
  */
 @Controller
-@RequestMapping("archives")
+@RequestMapping("/archives")
 public class ArchivesController extends BaseController {
 
 

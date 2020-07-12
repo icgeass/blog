@@ -47,7 +47,10 @@
                                     <input type="hidden" name="postId" value="$!{post.id}">
                                     <input type="hidden" name="parentId" value="$!{post.id}">
                                     <input type="hidden" name="parentType" value="1">
+                                    <input type="hidden" id="captchaKey" name="extendMap.captchaKey" value="$!{captchaKey}">
                                     <textarea name="content" class="form-control" wrap="soft" placeholder="在这里输入你的评论" maxlength="1000" required></textarea>
+                                    <input type="text" id="captchaValue" name="extendMap.captchaValue" class="form-control" placeholder="请输入验证码"  maxlength="10" required>
+                                    <img id="captchaImageBase64" src="$!{captchaImageBase64}" />
                                     <input type="submit" id="submit" class="submit" value="提交评论" >
                                 </div>
                             </form>
@@ -71,13 +74,57 @@
                                     $('#url').val(commentInfoJson.url)
                                 }
                             }
+                            $('#captchaImageBase64').on('click', function () {
+                                reloadCaptcha();
+                            })
+                            // 提交前校验验证码
                             $('#submit').on('click', function () {
                                 localStorage.setItem(commentInfoKey, JSON.stringify({
                                     'username': $('#username').val(),
                                     'email': $('#email').val(),
                                     'url': $('#url').val(),
                                     'milliseconds': new Date().getTime()
-                                }))
+                                }));
+                                var checkSuccess = false;
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/captcha/validate?_=' + Math.random(),
+                                    async: false,
+                                    data : {
+                                        "captchaKey": $('#captchaKey').val(),
+                                        "captchaValue" : $('#captchaValue').val()
+                                    },
+                                    success : function (data) {
+                                        if(data.success){
+                                            checkSuccess = true;
+                                        }else{
+                                            captchaError();
+                                        }
+                                    }
+                                }).always(function() {
+                                    reloadCaptcha();
+                                });
+                                return checkSuccess;
                             })
+                            // 验证码输入错误提示
+                            function captchaError() {
+                                $('#captchaValue').focus();
+                                $('#captchaValue').val("");
+                                $('#captchaValue')[0].placeholder = '验证码错误，请重新输入';
+                                reloadCaptcha();
+                            }
+                            // 重新加载验证码
+                            function reloadCaptcha() {
+                                $.post("/captcha/new?_=" + Math.random(),
+                                        {},
+                                        function (data, status) {
+                                            if (data.success) {
+                                                $('#captchaKey').val(data.captchaKey);
+                                                $('#captchaImageBase64')[0].src = data.captchaImageBase64;
+                                                return;
+                                            }
+                                        });
+
+                            }
                         });
                     </script>

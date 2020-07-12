@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
  * Created by yuuki asuna on 2017/8/10.
  */
 @Controller
-@RequestMapping("attach")
+@RequestMapping("/attach")
 public class AttachController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

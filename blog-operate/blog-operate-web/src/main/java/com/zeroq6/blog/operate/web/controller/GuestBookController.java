@@ -3,6 +3,7 @@ package com.zeroq6.blog.operate.web.controller;
 import com.zeroq6.blog.common.base.BaseController;
 import com.zeroq6.blog.operate.service.PostService;
 import com.zeroq6.blog.common.base.BaseResponse;
+import com.zeroq6.blog.operate.service.captcha.CaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,9 @@ public class GuestBookController extends BaseController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private CaptchaService captchaService;
+
     @ModelAttribute
     public void loadState(Model model) {
         model.addAttribute(NAME_MENU, "guestbook");
@@ -35,6 +39,7 @@ public class GuestBookController extends BaseController {
             BaseResponse<Map<String, Object>> result = postService.getGuestBook();
             if (result.isSuccess()) {
                 view.addAllAttributes(result.getBody());
+                view.addAllAttributes(captchaService.getNewCaptcha());
                 return "/guestbook";
             }
         } catch (Exception e) {

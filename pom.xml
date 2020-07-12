@@ -25,8 +25,9 @@
         <project.domain>www.6zeroq.com</project.domain>
         <project.login.cookie.domain>6zeroq.com</project.login.cookie.domain>
         <!---->
-        <spring.version>4.3.16.RELEASE</spring.version>
+        <spring.version>4.3.27.RELEASE</spring.version>
         <jdk.version>1.8</jdk.version>
+        <fasterxml.jackson.version>2.8.7</fasterxml.jackson.version>
         <project.upload.path><![CDATA[/export/Data/${project.domain}/upload]]></project.upload.path>
         <!--日志配置-->
         <project.logger.fileName><![CDATA[/export/Logs/${project.domain}/${project.artifactId}.%d{yyyy-MM-dd}.log]]></project.logger.fileName>
@@ -176,7 +177,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-asm</artifactId>
-                <version>3.1.4.RELEASE</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -347,12 +348,17 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.6.7</version>
+                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.9.10.3</version>
+                <version>${fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
@@ -399,6 +405,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
                 <version>1.19</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>1.6.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

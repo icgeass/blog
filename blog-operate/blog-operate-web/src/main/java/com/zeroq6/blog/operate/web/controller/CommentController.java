@@ -7,6 +7,7 @@ import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.common.domain.enums.field.EmPostPostType;
 import com.zeroq6.blog.operate.service.CommentService;
 import com.zeroq6.blog.operate.service.PostService;
+import com.zeroq6.blog.operate.service.captcha.CaptchaService;
 import com.zeroq6.common.utils.JsonUtils;
 import com.zeroq6.common.utils.MyWebUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +38,9 @@ public class CommentController extends BaseController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private CaptchaService captchaService;
+
     @RequestMapping(value = "/post")
     public String post(CommentDomain commentDomain, HttpServletRequest request, Model view) {
         try {
@@ -52,6 +56,11 @@ public class CommentController extends BaseController {
                     !lenLessEqualThan(commentDomain.getEmail(), 32) ||
                     !lenLessEqualThan(commentDomain.getUrl(), 100) ||
                     !lenLessEqualThan(commentDomain.getContent(), 1000)) {
+                return redirect(commentDomain);
+            }
+
+            boolean captchaSuccess = captchaService.validate(String.valueOf(commentDomain.get("captchaKey")), String.valueOf(commentDomain.get("captchaValue")));
+            if (!captchaSuccess) {
                 return redirect(commentDomain);
             }
             // ip UA

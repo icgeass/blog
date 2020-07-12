@@ -6,6 +6,7 @@ import com.zeroq6.blog.common.domain.PostDomain;
 import com.zeroq6.blog.operate.service.PostService;
 import com.zeroq6.blog.common.base.BaseResponse;
 import com.zeroq6.blog.common.base.Page;
+import com.zeroq6.blog.operate.service.captcha.CaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,9 @@ public class PostController extends BaseController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private CaptchaService captchaService;
 
     @ModelAttribute
     public void loadState(Model model) {
@@ -56,6 +60,7 @@ public class PostController extends BaseController {
             BaseResponse<Map<String, Object>> result = postService.show(id);
             if (result.isSuccess()) {
                 view.addAllAttributes(result.getBody());
+                view.addAllAttributes(captchaService.getNewCaptcha());
                 return "/post";
             }
         } catch (Exception e) {
