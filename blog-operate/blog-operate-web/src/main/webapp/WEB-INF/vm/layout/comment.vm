@@ -102,7 +102,7 @@
                                             reloadCaptcha();
                                         }
                                     },
-                                    error : function () {
+                                    error : function (xhr, status, errorThrown) {
                                         reloadCaptcha();
                                     }
                                 });
