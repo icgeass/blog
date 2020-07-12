@@ -89,7 +89,7 @@ public class CaptchaService {
             }
             JSONObject jsonValue = JSON.parseObject(rightValueStr);
             int times = jsonValue.getIntValue(timesKey);
-            if (times > 0) {
+            if (times > 5) {
                 cacheServiceApi.remove(captchaKey);
                 return false;
             }

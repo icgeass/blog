@@ -99,10 +99,12 @@
                                             checkSuccess = true;
                                         }else{
                                             captchaError();
+                                            reloadCaptcha();
                                         }
+                                    },
+                                    error : function () {
+                                        reloadCaptcha();
                                     }
-                                }).always(function() {
-                                    reloadCaptcha();
                                 });
                                 return checkSuccess;
                             })
