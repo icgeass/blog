@@ -32,6 +32,10 @@ public class CaptchaService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final String timesKey = "times";
+
+    private final String valueKey = "value";
+
 
     @Autowired
     private CacheServiceApi cacheServiceApi;
@@ -61,8 +65,8 @@ public class CaptchaService {
             jsonObject.put("captchaKey", captchaKey);
             jsonObject.put("captchaImageBase64", captchaImageBase64);
             JSONObject captchaValueJson = new JSONObject();
-            captchaValueJson.put("value", captchaValue);
-            captchaValueJson.put("times", 0);
+            captchaValueJson.put(valueKey, captchaValue);
+            captchaValueJson.put(timesKey, 0);
             cacheServiceApi.set(captchaKey, captchaValueJson.toJSONString());
         } catch (Exception e) {
             jsonObject.put("success", false);
@@ -84,13 +88,18 @@ public class CaptchaService {
                 return false;
             }
             JSONObject jsonValue = JSON.parseObject(rightValueStr);
-            if (jsonValue.getIntValue("times") > 0) {
+            int times = jsonValue.getIntValue(timesKey);
+            if (times > 0) {
+                cacheServiceApi.remove(captchaKey);
                 return false;
             }
-            boolean success = jsonValue.getString("value").equalsIgnoreCase(captchaValue);
-            cacheServiceApi.remove(captchaKey);
+            boolean success = jsonValue.getString(valueKey).equalsIgnoreCase(captchaValue);
             if (!success) {
+                cacheServiceApi.remove(captchaKey);
                 logger.error("验证码错误，captchaKey={}， captchaValue={}，rightValue={}", captchaKey, captchaValue, rightValueStr);
+            } else {
+                jsonValue.put(timesKey, ++times);
+                cacheServiceApi.set(captchaKey, jsonValue.toJSONString());
             }
             return success;
         } catch (Exception e) {
