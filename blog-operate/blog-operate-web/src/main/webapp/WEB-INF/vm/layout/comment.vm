@@ -111,7 +111,6 @@
                                 $('#captchaValue').focus();
                                 $('#captchaValue').val("");
                                 $('#captchaValue')[0].placeholder = '验证码错误，请重新输入';
-                                reloadCaptcha();
                             }
                             // 重新加载验证码
                             function reloadCaptcha() {
