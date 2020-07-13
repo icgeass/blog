@@ -99,8 +99,8 @@
                                         url: '/captcha/validate?_=' + Math.random(),
                                         async: false,
                                         data : {
-                                            "captchaKey": $('#captchaKey').val(),
-                                            "captchaValue" : $('#captchaValue').val()
+                                            "captchaKey": $('#captchaKey').val().trim(),
+                                            "captchaValue" : $('#captchaValue').val().trim()
                                         },
                                         success : function (data) {
                                             if(data.success){
