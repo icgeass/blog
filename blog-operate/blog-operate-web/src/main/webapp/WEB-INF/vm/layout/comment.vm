@@ -132,7 +132,9 @@
                             function reloadCaptcha() {
                                 captchaSuccess = false;
                                 $.post("/captcha/new?_=" + Math.random(),
-                                        {},
+                                        {
+                                            "oldCaptchaKey" : $('#captchaKey').val().trim()
+                                        },
                                         function (data, status) {
                                             if (data.success) {
                                                 $('#captchaKey').val(data.captchaKey);

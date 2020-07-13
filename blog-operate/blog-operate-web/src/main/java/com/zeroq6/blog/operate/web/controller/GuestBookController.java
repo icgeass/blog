@@ -39,7 +39,7 @@ public class GuestBookController extends BaseController {
             BaseResponse<Map<String, Object>> result = postService.getGuestBook();
             if (result.isSuccess()) {
                 view.addAllAttributes(result.getBody());
-                view.addAllAttributes(captchaService.getNewCaptcha());
+                view.addAllAttributes(captchaService.getNewCaptcha(null));
                 return "/guestbook";
             }
         } catch (Exception e) {

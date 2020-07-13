@@ -41,7 +41,7 @@ public class CaptchaService {
     private CacheServiceApi cacheServiceApi;
 
 
-    public JSONObject getNewCaptcha() {
+    public JSONObject getNewCaptcha(String oldCaptchaKey) {
         JSONObject jsonObject = new JSONObject();
         try {
             int randType = random.nextInt(2);
@@ -68,6 +68,10 @@ public class CaptchaService {
             captchaValueJson.put(valueKey, captchaValue);
             captchaValueJson.put(timesKey, 0);
             cacheServiceApi.set(captchaKey, captchaValueJson.toJSONString());
+            //
+            if (StringUtils.isNotBlank(oldCaptchaKey)) {
+                cacheServiceApi.remove(oldCaptchaKey);
+            }
         } catch (Exception e) {
             jsonObject.put("success", false);
             logger.error("getNewCaptcha error", e);

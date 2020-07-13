@@ -60,7 +60,7 @@ public class PostController extends BaseController {
             BaseResponse<Map<String, Object>> result = postService.show(id);
             if (result.isSuccess()) {
                 view.addAllAttributes(result.getBody());
-                view.addAllAttributes(captchaService.getNewCaptcha());
+                view.addAllAttributes(captchaService.getNewCaptcha(null));
                 return "/post";
             }
         } catch (Exception e) {

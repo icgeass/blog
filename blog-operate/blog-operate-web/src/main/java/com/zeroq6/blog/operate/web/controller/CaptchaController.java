@@ -22,9 +22,9 @@ public class CaptchaController {
 
     @RequestMapping("/new")
     @ResponseBody
-    public JSONObject captcha() {
+    public JSONObject captcha(@RequestParam(name = "oldCaptchaKey", required = false, defaultValue = "") String oldCaptchaKey) {
         try{
-            return captchaService.getNewCaptcha();
+            return captchaService.getNewCaptcha(oldCaptchaKey);
         }catch (Exception e){
             logger.error("/captcha/new error", e);
         }
