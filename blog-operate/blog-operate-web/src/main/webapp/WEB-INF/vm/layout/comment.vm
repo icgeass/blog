@@ -78,6 +78,9 @@
                             $('#captchaImageBase64').on('click', function () {
                                 reloadCaptcha();
                             })
+                            $('#captchaValue').on('input', function () {
+                                captchaSuccess = false;
+                            })
                             // 提交前校验验证码
                             $('#submit').on('click', function () {
                                 localStorage.setItem(commentInfoKey, JSON.stringify({
