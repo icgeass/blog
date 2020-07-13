@@ -87,7 +87,7 @@
                                     'milliseconds': new Date().getTime()
                                 }));
                                 if($('#captchaValue').val().trim() === ''){
-                                    $('#captchaValue').focus();
+                                    captchaError(true)
                                     return false;
                                 }
                                 if(!captchaSuccess){
