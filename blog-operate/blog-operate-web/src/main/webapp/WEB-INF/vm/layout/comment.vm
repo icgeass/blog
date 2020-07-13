@@ -64,6 +64,7 @@
                         $(document).ready(function () {
                             var commentInfoKey = '_commentInfo'
                             var commentInfoStr = localStorage.getItem(commentInfoKey);
+                            var captchaSuccess = false
                             if (commentInfoStr != undefined && commentInfoStr != null) {
                                 var commentInfoJson = JSON.parse(commentInfoStr);
                                 if (new Date().getTime() - commentInfoJson.milliseconds > 1000 * 60 * 60 * 24 * 31) {
@@ -85,29 +86,34 @@
                                     'url': $('#url').val(),
                                     'milliseconds': new Date().getTime()
                                 }));
-                                var checkSuccess = false;
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/captcha/validate?_=' + Math.random(),
-                                    async: false,
-                                    data : {
-                                        "captchaKey": $('#captchaKey').val(),
-                                        "captchaValue" : $('#captchaValue').val()
-                                    },
-                                    success : function (data) {
-                                        if(data.success){
-                                            checkSuccess = true;
-                                            captchaError(false);
-                                        }else{
-                                            captchaError(true);
+                                if($('#captchaValue').val().trim() === ''){
+                                    $('#captchaValue').focus();
+                                    return false;
+                                }
+                                if(!captchaSuccess){
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/captcha/validate?_=' + Math.random(),
+                                        async: false,
+                                        data : {
+                                            "captchaKey": $('#captchaKey').val(),
+                                            "captchaValue" : $('#captchaValue').val()
+                                        },
+                                        success : function (data) {
+                                            if(data.success){
+                                                captchaSuccess = true;
+                                                captchaError(false);
+                                            }else{
+                                                captchaError(true);
+                                                reloadCaptcha();
+                                            }
+                                        },
+                                        error : function (xhr, status, errorThrown) {
                                             reloadCaptcha();
                                         }
-                                    },
-                                    error : function (xhr, status, errorThrown) {
-                                        reloadCaptcha();
-                                    }
-                                });
-                                return checkSuccess;
+                                    });
+                                }
+                                return captchaSuccess;
                             })
                             // 验证码输入错误提示
                             function captchaError(flag) {
@@ -121,6 +127,7 @@
                             }
                             // 重新加载验证码
                             function reloadCaptcha() {
+                                captchaSuccess = false;
                                 $.post("/captcha/new?_=" + Math.random(),
                                         {},
                                         function (data, status) {
