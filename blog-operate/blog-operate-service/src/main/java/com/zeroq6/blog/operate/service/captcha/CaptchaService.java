@@ -36,6 +36,8 @@ public class CaptchaService {
 
     private final String valueKey = "value";
 
+    private final String textKey = "text";
+
 
     @Autowired
     private CacheServiceApi cacheServiceApi;
@@ -49,17 +51,20 @@ public class CaptchaService {
             String captchaKey = UUID.randomUUID().toString().replace("-", "");
             String captchaImageBase64 = null;
             String captchaValue = null;
+            String text = null;
             if (randType == 0) {
                 SpecCaptcha captcha = new SpecCaptcha();
                 captcha.setLen(4);
                 captcha.setFont(randFont);
                 captchaImageBase64 = captcha.toBase64();
                 captchaValue = captcha.text();
+                text = captcha.text();
             } else {
-                ArithmeticCaptcha captcha = new ArithmeticCaptcha();
+                ArithmeticCaptcha captcha = new CustomArithmeticCaptcha();
                 captcha.setFont(randFont);
                 captchaImageBase64 = captcha.toBase64();
                 captchaValue = captcha.text();
+                text = captcha.getArithmeticString();
             }
             jsonObject.put("success", true);
             jsonObject.put("captchaKey", captchaKey);
@@ -67,6 +72,7 @@ public class CaptchaService {
             JSONObject captchaValueJson = new JSONObject();
             captchaValueJson.put(valueKey, captchaValue);
             captchaValueJson.put(timesKey, 0);
+            captchaValueJson.put(textKey, text);
             cacheServiceApi.set(captchaKey, captchaValueJson.toJSONString());
             //
             if (StringUtils.isNotBlank(oldCaptchaKey)) {
@@ -93,7 +99,7 @@ public class CaptchaService {
             }
             JSONObject jsonValue = JSON.parseObject(rightValueStr);
             int times = jsonValue.getIntValue(timesKey);
-            if (times > 5) {
+            if (times >= 5) {
                 cacheServiceApi.remove(captchaKey);
                 return false;
             }
