@@ -27,7 +27,7 @@
         <!---->
         <spring.version>4.3.27.RELEASE</spring.version>
         <jdk.version>1.8</jdk.version>
-        <fasterxml.jackson.version>2.11.1</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.13.4.1</fasterxml.jackson.version>
         <project.upload.path><![CDATA[/export/Data/${project.domain}/upload]]></project.upload.path>
         <!--日志配置-->
         <project.logger.fileName><![CDATA[/export/Logs/${project.domain}/${project.artifactId}.%d{yyyy-MM-dd}.log]]></project.logger.fileName>
