@@ -25,7 +25,7 @@
         <project.domain>www.6zeroq.com</project.domain>
         <project.login.cookie.domain>6zeroq.com</project.login.cookie.domain>
         <!---->
-        <spring.version>4.3.27.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
         <jdk.version>1.8</jdk.version>
         <fasterxml.jackson.version>2.11.1</fasterxml.jackson.version>
         <project.upload.path><![CDATA[/export/Data/${project.domain}/upload]]></project.upload.path>
